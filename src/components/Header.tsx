@@ -49,6 +49,9 @@ const Header = () => {
             <Link to="/workshops" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
               {t('nav.workshops', 'Workshops')}
             </Link>
+            <Link to="/subscriptions" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+              {t('nav.subscriptions', 'Subscriptions')}
+            </Link>
             <Link to="/blog" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
               {t('nav.blog', 'Blog')}
             </Link>
@@ -133,6 +136,13 @@ const Header = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 {t('nav.workshops', 'Workshops')}
+              </Link>
+              <Link
+                to="/subscriptions"
+                className="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {t('nav.subscriptions', 'Subscriptions')}
               </Link>
               <Link
                 to="/blog"
