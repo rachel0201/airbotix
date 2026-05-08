@@ -35,25 +35,218 @@
 
 @layer base {
   html {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    color: #1F1B2D;
+    font-size: 17px;
+    line-height: 1.65;
   }
-  
+
   body {
-    @apply antialiased;
+    @apply antialiased bg-canvas;
   }
 }
 
 @layer components {
+  /* === Legacy buttons (kept for pages not yet migrated) === */
   .btn-primary {
     @apply inline-flex items-center justify-center whitespace-nowrap bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
   }
-  
+
   .btn-secondary {
     @apply bg-secondary-100 hover:bg-secondary-200 text-secondary-900 font-medium py-2 px-4 rounded-lg transition-colors duration-200;
   }
-  
+
   .btn-outline {
     @apply inline-flex items-center justify-center whitespace-nowrap border-2 border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 no-underline;
+  }
+
+  /* ============================================================
+     Airbotix K-12 design system v2 — see DESIGN.md
+     ============================================================ */
+
+  /* --- Pill buttons --- */
+  .btn-pill-primary {
+    @apply inline-flex items-center justify-center whitespace-nowrap bg-brand-coral text-white text-[15px] font-semibold py-[14px] px-7 rounded-full hover:-translate-y-0.5 transition-all duration-200 no-underline;
+  }
+  .btn-pill-primary:hover { background-color: #FF5C46; }
+  .btn-pill-secondary {
+    @apply inline-flex items-center justify-center whitespace-nowrap bg-transparent text-ink text-[15px] font-semibold py-[12px] px-7 rounded-full border-2 border-ink hover:bg-ink hover:text-canvas transition-colors duration-200 no-underline;
+  }
+  .btn-pill-on-color {
+    @apply inline-flex items-center justify-center whitespace-nowrap bg-canvas text-ink text-[15px] font-semibold py-[14px] px-7 rounded-full hover:-translate-y-0.5 transition-all duration-200 no-underline;
+  }
+
+  /* --- Eyebrow micro-labels (brand-color, UPPERCASE, 0.10em) --- */
+  .eyebrow {
+    @apply inline-block text-[13px] font-bold uppercase mb-4 text-brand-coral;
+    letter-spacing: 0.10em;
+  }
+  .eyebrow-ink       { color: #1F1B2D; }
+  .eyebrow-bubblegum { color: #FF6BA9; }
+  .eyebrow-sunshine  { color: #C99A00; }
+  .eyebrow-sky       { color: #2D7FFF; }
+  .eyebrow-mint      { color: #1FC692; }
+
+  /* --- Sticker badge (rotated, hard offset shadow) --- */
+  .sticker {
+    @apply inline-block py-[7px] px-4 rounded-full text-[13px] font-bold uppercase shadow-sticker;
+    letter-spacing: 0.10em;
+    transform: rotate(-3deg);
+  }
+  .sticker.alt { transform: rotate(2deg); }
+  .sticker-coral     { @apply sticker bg-brand-coral text-ink; }
+  .sticker-bubblegum { @apply sticker bg-brand-bubblegum text-ink; }
+  .sticker-sunshine  { @apply sticker bg-brand-sunshine text-ink; }
+  .sticker-sky       { @apply sticker bg-brand-sky text-ink; }
+  .sticker-mint      { @apply sticker bg-brand-mint text-ink; }
+
+  /* --- Squiggle underline (under one keyword in a hero) --- */
+  .squiggle-word {
+    position: relative;
+    display: inline-block;
+  }
+  .squiggle-word::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    bottom: -0.18em;
+    height: 0.18em;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 14' preserveAspectRatio='none'><path d='M2 8 Q 7 2, 12 8 T 22 8 T 32 8 T 42 8 T 52 8 T 62 8 T 72 8 T 82 8 T 92 8 T 100 8' stroke='%23FF7A66' stroke-width='3' fill='none' stroke-linecap='round'/></svg>");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+  }
+
+  /* --- Hero typography --- */
+  .hero-display {
+    @apply font-bold text-ink;
+    font-size: clamp(48px, 8vw, 96px);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+  }
+  .section-heading {
+    @apply font-bold text-ink;
+    font-size: clamp(36px, 5vw, 52px);
+    line-height: 1.10;
+    letter-spacing: -0.015em;
+  }
+  .lead-text {
+    @apply text-ink-soft;
+    font-size: clamp(18px, 2vw, 20px);
+    line-height: 1.55;
+    font-weight: 500;
+    max-width: 720px;
+  }
+
+  /* --- Stat tile --- */
+  .stat-tile {
+    @apply bg-canvas-pure rounded-3xl text-center relative shadow-card-soft;
+    padding: 48px 32px;
+  }
+  .stat-tile.coral     { @apply shadow-brand-coral; }
+  .stat-tile.bubblegum { @apply shadow-brand-bubblegum; }
+  .stat-tile.sunshine  { @apply shadow-brand-sunshine; }
+  .stat-tile.sky       { @apply shadow-brand-sky; }
+  .stat-tile.mint      { @apply shadow-brand-mint; }
+  .stat-num {
+    @apply font-extrabold leading-none mb-3;
+    font-size: 80px;
+    letter-spacing: -0.04em;
+  }
+  .stat-num-text {
+    @apply font-extrabold leading-none mb-3;
+    font-size: 48px;
+    letter-spacing: -0.02em;
+  }
+  .stat-label {
+    @apply text-[13px] font-bold text-slate2 uppercase;
+    letter-spacing: 0.10em;
+  }
+
+  /* --- Vibrant program cards (40px radius — K-12 signature) --- */
+  .program-card {
+    @apply rounded-hero text-white flex flex-col justify-between relative overflow-hidden;
+    padding: 36px 28px;
+    min-height: 320px;
+  }
+  .program-card-coral     { @apply program-card bg-grad-coral     shadow-brand-coral; }
+  .program-card-bubblegum { @apply program-card bg-grad-bubblegum shadow-brand-bubblegum; }
+  .program-card-sunshine  { @apply program-card bg-grad-sunshine  shadow-brand-sunshine text-ink; }
+  .program-card-sky       { @apply program-card bg-grad-sky       shadow-brand-sky; }
+  .program-card-mint      { @apply program-card bg-grad-mint      shadow-brand-mint; }
+
+  .pc-tag {
+    @apply text-[12px] font-bold uppercase opacity-85 mb-[14px];
+    letter-spacing: 0.14em;
+  }
+  .pc-title {
+    @apply text-[28px] md:text-[30px] font-bold leading-tight mb-2;
+    letter-spacing: -0.015em;
+  }
+  .pc-desc {
+    @apply text-sm leading-relaxed opacity-90 m-0;
+  }
+  .pc-cta {
+    @apply text-[13px] font-bold uppercase mt-6 self-start py-2 px-4 rounded-full;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(4px);
+    letter-spacing: 0.05em;
+  }
+  .program-card-sunshine .pc-cta { background: rgba(31, 27, 45, 0.18); }
+
+  /* Decorative blob inside program card */
+  .pc-blob {
+    @apply absolute rounded-full pointer-events-none;
+    bottom: -60px; right: -50px;
+    width: 220px; height: 220px;
+    background: rgba(255, 255, 255, 0.18);
+  }
+  .program-card-sunshine .pc-blob { background: rgba(31, 27, 45, 0.08); }
+
+  /* --- White content card (24px radius — the workhorse) --- */
+  .card-base {
+    @apply bg-canvas-pure rounded-2xl shadow-card-soft;
+    padding: 32px;
+  }
+  .card-feature {
+    @apply bg-surface rounded-2xl;
+    padding: 40px;
+  }
+
+  /* --- Promo card (vibrant CTA strip) --- */
+  .promo-card-coral {
+    @apply rounded-hero text-white shadow-brand-coral bg-grad-coral relative overflow-hidden;
+    padding: 80px 64px;
+  }
+
+  /* --- Soft blob bg helper --- */
+  .blob-bg {
+    @apply absolute rounded-full pointer-events-none;
+    filter: blur(50px);
+    opacity: 0.55;
+    z-index: 0;
+  }
+  .with-blob > * { position: relative; z-index: 1; }
+
+  /* --- Hand-drawn arrow (Caveat) --- */
+  .hand-arrow {
+    @apply font-handwritten font-bold;
+    font-size: 24px;
+  }
+
+  /* --- Polaroid photo frame --- */
+  .polaroid {
+    @apply bg-canvas-pure shadow-card-soft inline-block;
+    padding: 14px 14px 22px;
+    border-radius: 8px;
+    transform: rotate(-2deg);
+  }
+  .polaroid img,
+  .polaroid .polaroid-img {
+    @apply block w-full h-auto rounded;
+  }
+  .polaroid .polaroid-caption {
+    @apply font-handwritten text-center text-ink mt-3;
+    font-size: 22px;
   }
 
   /* Simple line-clamp utilities without Tailwind plugin */

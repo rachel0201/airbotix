@@ -21,27 +21,6 @@ const values = [
   },
 ]
 
-const team = [
-  {
-    name: 'Kingsley An',
-    role: 'Director & Co-Founder',
-    bio: 'Passionate about bringing cutting-edge engineering and AI into education and industry. Focuses on creating innovative solutions and partnerships that deliver real value to clients and communities.',
-    initials: 'KA',
-  },
-  {
-    name: 'Ray Qian',
-    role: 'CTO & Co-founder',
-    bio: 'Expert instructor in competitive robotics with decades of experience. Has led regional and national competition teams, developing robotics and AI courses for learners from primary school to university level.',
-    initials: 'RQ',
-  },
-  {
-    name: 'Daniel Park',
-    role: 'Lead Robotics Instructor',
-    bio: 'Robotics specialist with experience mentoring national competition teams.',
-    initials: 'DP',
-  },
-]
-
 const About = () => {
   return (
     <div>
@@ -75,29 +54,25 @@ const About = () => {
         </div>
       </section>
 
-      {/* Impact */}
+      {/* Pilot Snapshot */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">Our Impact</h2>
-            <p className="text-gray-600 mt-2">Growing reach across schools, communities, and regions.</p>
+            <h2 className="text-3xl font-bold text-gray-900">Where We Are Today</h2>
+            <p className="text-gray-600 mt-2">An early-stage pilot focused on getting the curriculum and student experience right before scaling.</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center">
-              <div className="text-3xl font-bold text-primary-600">5k+</div>
-              <div className="text-gray-600 mt-1">Students Reached</div>
+              <div className="text-3xl font-bold text-primary-600">100+</div>
+              <div className="text-gray-600 mt-1">Students Taught</div>
             </div>
             <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center">
-              <div className="text-3xl font-bold text-primary-600">120+</div>
-              <div className="text-gray-600 mt-1">Workshops Delivered</div>
-            </div>
-            <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center">
-              <div className="text-3xl font-bold text-primary-600">35+</div>
+              <div className="text-3xl font-bold text-primary-600">2</div>
               <div className="text-gray-600 mt-1">Partner Schools</div>
             </div>
             <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center">
-              <div className="text-3xl font-bold text-primary-600">8</div>
-              <div className="text-gray-600 mt-1">Regions Served</div>
+              <div className="text-3xl font-bold text-primary-600">Australia</div>
+              <div className="text-gray-600 mt-1">Pilot Market</div>
             </div>
           </div>
         </div>
@@ -115,28 +90,6 @@ const About = () => {
               <div key={v.title} className="p-6 border border-gray-200 rounded-2xl bg-white">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">{v.title}</h3>
                 <p className="text-gray-700">{v.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Team */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">Our Team</h2>
-            <p className="text-gray-600 mt-2">Experienced educators and engineers united by a shared mission.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {team.map((member) => (
-              <div key={member.name} className="p-6 border border-gray-200 rounded-2xl bg-white text-center">
-                <div className="mx-auto w-16 h-16 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center text-lg font-semibold mb-4">
-                  {member.initials}
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900">{member.name}</h3>
-                <div className="text-primary-700 font-medium mb-2">{member.role}</div>
-                <p className="text-gray-700">{member.bio}</p>
               </div>
             ))}
           </div>
