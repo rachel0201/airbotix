@@ -4,8 +4,8 @@ const programs = [
   {
     tone: 'coral',
     tag: 'AI CODING',
-    title: 'Code with AI.',
-    desc: 'Project-based AI coding for ages 8–17. Frontier LLMs with age-appropriate scaffolding.',
+    title: 'Kids-safe AI to build with.',
+    desc: 'A coding LLM tailored for ages 8–17. Frontier AI with safety guardrails, age-appropriate scaffolding, and parent visibility built in.',
     cta: 'Coming 2026 →',
     sticker: { label: 'NEW', color: 'sunshine' },
   },
