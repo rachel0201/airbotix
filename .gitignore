@@ -111,11 +111,5 @@ Thumbs.db
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
-# Sensitive fundraising / internal materials — do NOT commit to public repo
-BP.md
-pitch-deck.html
-pitch-deck.md
-design-preview.html
-
 # Claude Code local settings
 .claude/settings.local.json

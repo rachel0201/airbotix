@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Airbotix — Pre-Seed Pitch</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css" />
+
+  <style>
+    :root {
+      /* === Airbotix K-12 design system v2 === */
+      --brand-coral:     #FF7A66;
+      --brand-bubblegum: #FF6BA9;
+      --brand-sunshine:  #FFD43B;
+      --brand-sky:       #5DAEFF;
+      --brand-mint:      #3DD9A9;
+
+      --grad-coral:     linear-gradient(135deg, #FF9A80 0%, #FF5B7E 100%);
+      --grad-bubblegum: linear-gradient(135deg, #FF8FBE 0%, #FF4F8F 100%);
+      --grad-sunshine:  linear-gradient(135deg, #FFE26B 0%, #FFB638 100%);
+      --grad-sky:       linear-gradient(135deg, #7FC2FF 0%, #3D8FFF 100%);
+      --grad-mint:      linear-gradient(135deg, #6BE7BF 0%, #1FC692 100%);
+
+      --shadow-coral:     0 16px 40px -8px rgba(255, 122, 102, 0.40);
+      --shadow-bubblegum: 0 16px 40px -8px rgba(255, 107, 169, 0.40);
+      --shadow-sunshine:  0 16px 40px -8px rgba(255, 212, 59, 0.45);
+      --shadow-sky:       0 16px 40px -8px rgba(93, 174, 255, 0.40);
+      --shadow-mint:      0 16px 40px -8px rgba(61, 217, 169, 0.40);
+      --shadow-card:      0 8px 24px -6px rgba(31, 27, 45, 0.10);
+      --shadow-sticker:   4px 4px 0 0 rgba(31, 27, 45, 0.95);
+
+      /* Wash backgrounds (alternate adjacent slides) */
+      --wash-coral:     #FFEFE9;
+      --wash-bubblegum: #FFEAF3;
+      --wash-sunshine:  #FFF7D6;
+      --wash-sky:       #E8F2FF;
+      --wash-mint:      #DCF6EC;
+
+      /* Surface */
+      --canvas:       #FFFEF7;  /* warm canvas */
+      --canvas-pure:  #FFFFFF;
+      --surface:      #FFF8EE;
+      --surface-soft: #FFF1DE;
+      --hairline:     #EFE8DA;
+
+      /* Text */
+      --ink:       #1F1B2D;
+      --ink-soft:  #3D3851;
+      --slate:     #6B6478;
+      --steel:     #9C95AB;
+      --stone:     #C7C0D5;
+      --on-dark:   #FFFEF7;
+
+      /* Backward-compat aliases (old plum → new bubblegum, etc.) */
+      --brand-plum:  var(--brand-bubblegum);
+      --grad-plum:   var(--grad-bubblegum);
+      --shadow-plum: var(--shadow-bubblegum);
+      --charcoal:    var(--ink-soft);
+      --muted:       var(--stone);
+      --coral-wash:  var(--wash-coral);
+      --hairline-soft: #F5EFE3;
+      --ink-strong: #000000;
+    }
+
+    /* ========= Base typography (Plus Jakarta Sans) ========= */
+    html, body {
+      background: #E8E2D5; /* warm letterbox zone, harmonizes with cream canvas */
+      font-family: "Plus Jakarta Sans", "Inter", "PingFang SC", "Hiragino Sans GB",
+        "Microsoft YaHei", system-ui, sans-serif;
+    }
+
+    .reveal {
+      font-family: "Plus Jakarta Sans", "Inter", "PingFang SC", "Hiragino Sans GB",
+        "Microsoft YaHei", system-ui, sans-serif;
+      color: var(--ink);
+    }
+
+    /* ----- Lock 16:9 frame, prevent content overflow ----- */
+    .reveal .slides > section {
+      background: var(--canvas);
+      box-shadow: 0 16px 48px rgba(31, 27, 45, 0.18);
+      overflow: hidden;
+      box-sizing: border-box;
+      padding: 56px 64px;
+      text-align: left;
+      width: 1280px;
+      height: 720px;
+    }
+    .reveal .slides > section.cover,
+    .reveal .slides > section.closing {
+      background: var(--ink);
+    }
+    /* Wash backgrounds for content slides — alternate the page rhythm */
+    .reveal .slides > section.bg-wash-coral     { background: var(--wash-coral); }
+    .reveal .slides > section.bg-wash-bubblegum { background: var(--wash-bubblegum); }
+    .reveal .slides > section.bg-wash-sunshine  { background: var(--wash-sunshine); }
+    .reveal .slides > section.bg-wash-sky       { background: var(--wash-sky); }
+    .reveal .slides > section.bg-wash-mint      { background: var(--wash-mint); }
+
+    .reveal h1,
+    .reveal h2,
+    .reveal h3,
+    .reveal h4 {
+      font-family: inherit;
+      text-transform: none;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+
+    .reveal h1 {
+      font-size: 60px;
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.020em;
+      margin: 0 0 24px 0;
+    }
+
+    .reveal h2 {
+      font-size: 40px;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.6px;
+      margin: 0 0 16px 0;
+    }
+
+    .reveal h3 {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--ink);
+      margin: 0 0 6px 0;
+      letter-spacing: 0;
+    }
+
+    .reveal p {
+      font-size: 17px;
+      line-height: 1.55;
+      color: var(--slate);
+      margin: 0 0 12px 0;
+    }
+
+    .reveal ul,
+    .reveal ol {
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--ink);
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .reveal li {
+      margin-bottom: 10px;
+      color: var(--charcoal);
+    }
+
+    .reveal strong {
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .reveal em {
+      font-style: normal;
+      color: var(--slate);
+    }
+
+    /* ========= Eyebrow / micro labels ========= */
+    .eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--brand-coral);
+      margin-bottom: 16px;
+    }
+    .eyebrow.ink {
+      color: var(--ink);
+    }
+    .eyebrow.plum {
+      color: var(--brand-plum);
+    }
+    .eyebrow.sky {
+      color: var(--brand-sky);
+    }
+    .eyebrow.sunshine {
+      color: #c98c00;
+    }
+
+    /* ========= Stage badge (legacy — see .sticker for K-12 v2) ========= */
+    .stage-badge {
+      display: inline-block;
+      background: var(--ink);
+      color: var(--on-dark);
+      padding: 7px 16px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    /* ========= Sticker badge (rotated, hard offset shadow) ========= */
+    .sticker {
+      display: inline-block;
+      padding: 7px 14px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      box-shadow: var(--shadow-sticker);
+      transform: rotate(-3deg);
+      transform-origin: center;
+      color: var(--ink);
+    }
+    .sticker.alt { transform: rotate(2deg); }
+    .sticker.coral     { background: var(--brand-coral); }
+    .sticker.bubblegum { background: var(--brand-bubblegum); }
+    .sticker.sunshine  { background: var(--brand-sunshine); }
+    .sticker.sky       { background: var(--brand-sky); }
+    .sticker.mint      { background: var(--brand-mint); }
+
+    /* ========= Squiggle underline ========= */
+    .squiggle-word {
+      position: relative;
+      display: inline-block;
+    }
+    .squiggle-word::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0;
+      bottom: -0.18em;
+      height: 0.18em;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 14' preserveAspectRatio='none'><path d='M2 8 Q 7 2, 12 8 T 22 8 T 32 8 T 42 8 T 52 8 T 62 8 T 72 8 T 82 8 T 92 8 T 100 8' stroke='%23FF7A66' stroke-width='3' fill='none' stroke-linecap='round'/></svg>");
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+    }
+
+    /* ========= Soft blob (decorative bg) ========= */
+    .blob-bg {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(50px);
+      opacity: 0.50;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ========= Hand-drawn arrow (Caveat) ========= */
+    .hand-arrow {
+      font-family: "Caveat", cursive;
+      font-weight: 700;
+      font-size: 22px;
+      display: inline-block;
+    }
+
+    /* ========= Problem card (white card with brand-color top bar) ========= */
+    .problem-card {
+      background: var(--canvas-pure);
+      border-radius: 24px;
+      padding: 28px 26px;
+      box-shadow: var(--shadow-card);
+      position: relative;
+      overflow: hidden;
+    }
+    .problem-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+    }
+    .problem-card.coral::before     { background: var(--grad-coral); }
+    .problem-card.bubblegum::before { background: var(--grad-bubblegum); }
+    .problem-card.sunshine::before  { background: var(--grad-sunshine); }
+    .problem-card.sky::before       { background: var(--grad-sky); }
+    .problem-card.mint::before      { background: var(--grad-mint); }
+    .problem-card .problem-tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .problem-card.coral     .problem-tag { color: var(--brand-coral); }
+    .problem-card.bubblegum .problem-tag { color: var(--brand-bubblegum); }
+    .problem-card.sunshine  .problem-tag { color: #C99A00; }
+    .problem-card.sky       .problem-tag { color: #2D7FFF; }
+    .problem-card.mint      .problem-tag { color: #1FC692; }
+    .problem-card h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.005em;
+      line-height: 1.30;
+      margin: 0 0 10px 0;
+    }
+    .problem-card p {
+      font-size: 14px;
+      color: var(--ink-soft);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    /* ========= Buttons ========= */
+    .btn {
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 22px;
+      border-radius: 9999px;
+      letter-spacing: 0;
+    }
+    .btn-primary {
+      background: var(--ink);
+      color: var(--on-dark);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--ink);
+      border: 1.5px solid var(--ink);
+    }
+
+    /* ========= Tables ========= */
+    .reveal table {
+      font-size: 15px;
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 8px 0;
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .reveal table th {
+      background: var(--surface);
+      font-weight: 600;
+      color: var(--steel);
+      padding: 14px 20px;
+      text-align: left;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--hairline);
+    }
+    .reveal table td {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--hairline-soft);
+      color: var(--charcoal);
+      font-size: 15px;
+    }
+    .reveal table tr:last-child td {
+      border-bottom: none;
+    }
+    .reveal table td.highlight {
+      color: var(--brand-coral);
+      font-weight: 600;
+    }
+    .reveal table tr.us {
+      background: var(--coral-wash);
+    }
+    .reveal table tr.us td {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* ========= Cover slide (video bg + ink overlay) ========= */
+    .cover {
+      text-align: left !important;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+    .cover-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to right,
+        rgba(11, 16, 32, 0.88) 0%,
+        rgba(11, 16, 32, 0.62) 55%,
+        rgba(11, 16, 32, 0.25) 100%
+      );
+      z-index: 1;
+    }
+    .cover-content {
+      position: relative;
+      z-index: 2;
+    }
+    .cover .word-mark {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--brand-coral);
+      letter-spacing: 0.18em;
+      margin-bottom: 24px;
+    }
+    .cover h1 {
+      font-size: 76px;
+      letter-spacing: -1.8px;
+      line-height: 1.05;
+      max-width: 1000px;
+      margin-bottom: 28px;
+      color: var(--on-dark);
+    }
+    .cover .tagline {
+      font-size: 22px;
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 400;
+      max-width: 900px;
+      margin-bottom: 56px;
+    }
+    .cover .meta-row {
+      display: flex;
+      gap: 48px;
+      align-items: flex-start;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.7;
+    }
+    .cover .meta-block strong {
+      display: block;
+      color: var(--on-dark);
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 2px;
+    }
+    /* Light stage badge for use on dark backgrounds */
+    .stage-badge.light {
+      background: var(--canvas);
+      color: var(--ink);
+    }
+
+    /* ========= Three column layout ========= */
+    .three-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    /* ========= White content card ========= */
+    .card {
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      padding: 28px;
+    }
+    .card.surface {
+      background: var(--surface);
+      border: none;
+    }
+    .card-stat {
+      background: var(--canvas-pure);
+      border-radius: 28px;
+      padding: 44px 28px;
+      text-align: center;
+      position: relative;
+      box-shadow: var(--shadow-card);
+    }
+    /* Tile-level brand shadow tint */
+    .card-stat.glow-coral     { box-shadow: var(--shadow-coral); }
+    .card-stat.glow-bubblegum { box-shadow: var(--shadow-bubblegum); }
+    .card-stat.glow-sunshine  { box-shadow: var(--shadow-sunshine); }
+    .card-stat.glow-sky       { box-shadow: var(--shadow-sky); }
+    .card-stat.glow-mint      { box-shadow: var(--shadow-mint); }
+
+    .card-stat .stat-num {
+      font-size: 80px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      margin-bottom: 10px;
+    }
+    .card-stat .stat-num.coral     { color: var(--brand-coral); }
+    .card-stat .stat-num.plum      { color: var(--brand-bubblegum); } /* legacy alias */
+    .card-stat .stat-num.bubblegum { color: var(--brand-bubblegum); }
+    .card-stat .stat-num.sky       { color: var(--brand-sky); }
+    .card-stat .stat-num.mint      { color: var(--brand-mint); }
+    .card-stat .stat-num.sunshine  { color: #C99A00; }
+    .card-stat .stat-num.text {
+      font-size: 44px;
+      letter-spacing: -0.020em;
+    }
+    .card-stat .stat-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--slate);
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+    }
+    .card-stat .sticker-overlay {
+      position: absolute;
+      top: -10px;
+      right: 20px;
+    }
+
+    /* ========= Vibrant program cards (40px radius — K-12 signature) ========= */
+    .program-card {
+      border-radius: 40px;
+      padding: 32px 28px;
+      color: var(--on-dark);
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+    .program-card .pc-tag {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 14px;
+    }
+    .program-card h3 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      color: var(--on-dark);
+      margin-bottom: 8px;
+      line-height: 1.10;
+    }
+    .program-card p {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.92);
+      line-height: 1.5;
+      margin: 0;
+    }
+    .program-card .pc-status {
+      margin-top: 18px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.95;
+      padding: 7px 14px;
+      background: rgba(255, 255, 255, 0.22);
+      border-radius: 9999px;
+      align-self: flex-start;
+      backdrop-filter: blur(4px);
+    }
+    /* Decorative inner blob */
+    .program-card .pc-blob {
+      position: absolute;
+      bottom: -60px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      pointer-events: none;
+    }
+    .program-card.bubblegum { background: var(--grad-bubblegum); box-shadow: var(--shadow-bubblegum); }
+    .program-card.mint      { background: var(--grad-mint);      box-shadow: var(--shadow-mint); }
+    .program-card.coral { background: var(--grad-coral); box-shadow: var(--shadow-coral); }
+    .program-card.plum { background: var(--grad-plum); box-shadow: var(--shadow-plum); }
+    .program-card.sunshine {
+      background: var(--grad-sunshine);
+      box-shadow: var(--shadow-sunshine);
+      color: var(--ink-strong);
+    }
+    .program-card.sunshine h3 { color: var(--ink-strong); }
+    .program-card.sunshine p { color: rgba(11, 16, 32, 0.78); }
+    .program-card.sunshine .pc-status {
+      background: rgba(11, 16, 32, 0.12);
+      color: var(--ink-strong);
+    }
+    .program-card.sky { background: var(--grad-sky); box-shadow: var(--shadow-sky); }
+
+    /* ========= Numbered list ========= */
+    .numbered {
+      list-style: none;
+      padding: 0;
+      counter-reset: num;
+      margin-top: 12px;
+    }
+    .numbered li {
+      counter-increment: num;
+      padding: 18px 0 18px 64px;
+      position: relative;
+      border-bottom: 1px solid var(--hairline-soft);
+      font-size: 18px;
+      color: var(--charcoal);
+    }
+    .numbered li:last-child { border-bottom: none; }
+    .numbered li::before {
+      content: counter(num);
+      position: absolute;
+      left: 0;
+      top: 14px;
+      width: 40px;
+      height: 40px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--on-dark);
+    }
+    .numbered li:nth-child(1)::before { background: var(--brand-coral); }
+    .numbered li:nth-child(2)::before { background: var(--brand-plum); }
+    .numbered li:nth-child(3)::before { background: var(--brand-sky); color: var(--on-dark); }
+    .numbered li:nth-child(4)::before { background: var(--brand-sunshine); color: var(--ink); }
+    .numbered li strong { color: var(--ink); }
+
+    /* ========= Callout ========= */
+    .callout {
+      background: var(--surface);
+      border-left: 4px solid var(--ink);
+      padding: 18px 24px;
+      border-radius: 0 12px 12px 0;
+      font-size: 16px;
+      color: var(--ink);
+      margin: 18px 0 0 0;
+      line-height: 1.5;
+    }
+    .callout.coral { border-left-color: var(--brand-coral); }
+    .callout strong { color: var(--ink); }
+
+    /* ========= Flywheel ========= */
+    .flywheel {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 24px;
+      background: var(--surface);
+      border-radius: 9999px;
+      margin: 16px 0 24px 0;
+      font-weight: 600;
+      font-size: 17px;
+      letter-spacing: -0.2px;
+    }
+    .flywheel .step { padding: 8px 4px; }
+    .flywheel .step.coral { color: var(--brand-coral); }
+    .flywheel .step.plum { color: var(--brand-plum); }
+    .flywheel .step.sky { color: var(--brand-sky); }
+    .flywheel .step.sunshine { color: #c98c00; }
+    .flywheel .arrow {
+      color: var(--stone);
+      font-weight: 400;
+      font-size: 18px;
+    }
+
+    /* ========= Allocation bars ========= */
+    .alloc { margin: 16px 0; }
+    .alloc-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+    .alloc-label {
+      width: 240px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .alloc-bar {
+      flex: 1;
+      height: 22px;
+      background: var(--surface);
+      border-radius: 9999px;
+      overflow: hidden;
+      margin: 0 16px;
+    }
+    .alloc-fill { height: 100%; border-radius: 9999px; }
+    .alloc-fill.coral { background: var(--grad-coral); }
+    .alloc-fill.plum { background: var(--grad-plum); }
+    .alloc-fill.sky { background: var(--grad-sky); }
+    .alloc-fill.sunshine { background: var(--grad-sunshine); }
+    .alloc-fill.ink { background: var(--ink); }
+    .alloc-pct {
+      width: 50px;
+      text-align: right;
+      font-weight: 700;
+      color: var(--ink);
+      font-size: 15px;
+    }
+
+    /* ========= Era table (slide 2) ========= */
+    .era-table {
+      width: 100%;
+      max-width: 800px;
+      margin: 24px 0;
+      border: none;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .era-table tr {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      align-items: center;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--hairline-soft);
+      background: var(--canvas);
+    }
+    .era-table tr.us {
+      background: var(--coral-wash);
+      border-bottom: none;
+    }
+    .era-table .era-label {
+      font-size: 14px;
+      color: var(--steel);
+      font-weight: 500;
+    }
+    .era-table .era-skill {
+      font-size: 18px;
+      color: var(--charcoal);
+      font-weight: 500;
+    }
+    .era-table tr.us .era-label { color: var(--brand-coral); font-weight: 700; }
+    .era-table tr.us .era-skill { color: var(--ink); font-weight: 700; font-size: 22px; letter-spacing: -0.3px; }
+
+    /* ========= Team cards ========= */
+    .team-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 24px;
+    }
+    .team-card {
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: 24px;
+      padding: 28px;
+    }
+    .team-card .role {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--brand-coral);
+      margin-bottom: 8px;
+    }
+    .team-card h3 {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.4px;
+      margin-bottom: 6px;
+    }
+    .team-card .credential {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--brand-sky);
+      background: rgba(77, 157, 255, 0.1);
+      padding: 4px 10px;
+      border-radius: 9999px;
+      margin-bottom: 12px;
+    }
+    .team-card p {
+      font-size: 14px;
+      color: var(--slate);
+      line-height: 1.5;
+    }
+    .team-card p.placeholder { color: var(--muted); font-style: italic; }
+
+    /* ========= Comp matrix ========= */
+    .matrix th,
+    .matrix td {
+      text-align: center;
+      padding: 12px 12px;
+      font-size: 14px;
+    }
+    .matrix th:first-child,
+    .matrix td:first-child {
+      text-align: left;
+      font-weight: 500;
+    }
+    .matrix .check { color: #16a34a; font-weight: 700; font-size: 18px; }
+    .matrix .cross { color: var(--muted); font-size: 16px; }
+    .matrix .partial { color: #ca8a04; font-size: 13px; }
+
+    /* ========= Closing slide (inverted) ========= */
+    .closing {
+      background: var(--ink);
+      color: var(--on-dark);
+      padding: 56px 64px !important;
+      border-radius: 0;
+      text-align: center !important;
+    }
+    .closing .word-mark {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--brand-coral);
+      letter-spacing: 0.18em;
+      margin-bottom: 32px;
+    }
+    .closing h1 {
+      font-size: 60px;
+      letter-spacing: -1.4px;
+      color: var(--on-dark);
+      max-width: 1000px;
+      margin: 0 auto 40px;
+      line-height: 1.1;
+    }
+    .closing .contact {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 32px;
+      line-height: 1.9;
+    }
+    .closing .contact strong { color: var(--on-dark); font-weight: 600; }
+
+    /* ========= Reveal overrides ========= */
+    .reveal .progress { color: var(--brand-coral); }
+    .reveal .slide-number {
+      color: var(--steel);
+      background: rgba(255, 255, 255, 0.85);
+      font-family: "DM Sans", sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .reveal .controls { color: var(--ink); }
+
+    /* Slide-level helpers */
+    .slide-header {
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- =====================================================
+           Slide 1 — Cover (video bg + ink overlay)
+           ===================================================== -->
+      <section class="cover">
+        <video
+          class="cover-video"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+          poster="public/media/hero-students-poster.jpg"
+          aria-hidden="true"
+        >
+          <source src="public/media/hero-students.mp4" type="video/mp4" />
+        </video>
+        <div class="cover-overlay" aria-hidden="true"></div>
+
+        <div class="cover-content">
+          <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 28px;">
+            <span class="sticker bubblegum">PRE-SEED · MAY 2026</span>
+            <span class="sticker sunshine alt">FOR K-12</span>
+          </div>
+          <div class="word-mark">AIRBOTIX</div>
+          <h1>Teaching the next generation to code <span class="squiggle-word" style="color: var(--brand-coral);">with AI.</span></h1>
+          <p class="tagline">K-12 AI coding curriculum & platform · Australia</p>
+          <div class="meta-row">
+            <div class="meta-block">
+              <strong>Lightman</strong>
+              Co-Founder
+            </div>
+            <div class="meta-block">
+              <strong>Joe</strong>
+              Co-Founder & CTO · ex-Google
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Open with the one-liner. Don't over-explain on slide 1.
+          Investors should know in 10 seconds: K-12 AI education, AU-based, ex-Google CTO, raising pre-seed.
+          The video is muted, looped, and autoplays — establishes brand emotion immediately.
+        </aside>
+      </section>
+
+      <!-- =====================================================
+           Slide 2 — The Thesis
+           ===================================================== -->
+      <section class="bg-wash-bubblegum">
+        <span class="eyebrow">THE THESIS</span>
+        <h1>AI coding will be the next <span class="squiggle-word" style="color: var(--brand-coral);">universal literacy.</span></h1>
+
+        <table class="era-table">
+          <tr><td class="era-label">1900s</td><td class="era-skill">Reading & writing</td></tr>
+          <tr><td class="era-label">1980s</td><td class="era-skill">Operating a computer</td></tr>
+          <tr><td class="era-label">2000s</td><td class="era-skill">Using the internet</td></tr>
+          <tr class="us"><td class="era-label">2020s+</td><td class="era-skill">Coding with AI</td></tr>
+        </table>
+
+        <div class="callout coral">
+          Children born in 2020 graduate university in <strong>2042</strong>. By then, AI fluency is table stakes for every knowledge profession.
+        </div>
+
+        <aside class="notes">
+          The thesis. Don't lead with "kids AI safety platform" — lead with the secular trend.
+          This page decides whether the investor leans in or zones out.
+        </aside>
+      </section>
+
+      <!-- =====================================================
+           Slide 3 — The Problem
+           ===================================================== -->
+      <section>
+        <span class="eyebrow">THE GAP</span>
+        <h1>The K-12 system is not&nbsp;ready.</h1>
+
+        <div class="three-col">
+          <div class="problem-card coral">
+            <span class="problem-tag">KIDS</span>
+            <h3>No scaffolding for learners.</h3>
+            <p>Generic LLMs are built for adults. Kids consume answers passively instead of building with AI.</p>
+          </div>
+          <div class="problem-card bubblegum">
+            <span class="problem-tag">PARENTS</span>
+            <h3>No structured path.</h3>
+            <p>Know AI matters. Tutoring is A$80–150/hr and not AI-native. No way to see what kids are learning.</p>
+          </div>
+          <div class="problem-card sky">
+            <span class="problem-tag">SCHOOLS</span>
+            <h3>No implementation plan.</h3>
+            <p>AU curriculum mandates AI literacy. Most schools have no age-appropriate tooling or trained teachers.</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          The market is not asking for "another coding bootcamp." <strong>It is asking for AI literacy infrastructure that doesn't yet exist.</strong>
+        </div>
+
+        <aside class="notes">
+          Three audiences, three pains. Keep tight.
+          The "AU curriculum mandates" line is critical for AU VCs.
+        </aside>
+      </section>
+
+      <!-- =====================================================
+           Slide 4 — Market
+           ===================================================== -->
+      <section class="bg-wash-mint">
+        <span class="eyebrow eyebrow-mint" style="color: #1FC692;">THE MARKET</span>
+        <h1>Massive market, opening now.</h1>
+
+        <div class="three-col" style="margin-top: 32px;">
+          <div class="card-stat glow-coral">
+            <div class="stat-num text coral">US$300B+</div>
+            <div class="stat-label">TAM · Global K-12 EdTech (2030)</div>
+            <p style="margin-top: 14px; font-size: 14px;">AI/STEM segment growing 20%+ CAGR.</p>
+          </div>
+          <div class="card-stat glow-bubblegum">
+            <div class="stat-num text bubblegum">A$200–600M</div>
+            <div class="stat-label">SAM · AU + overseas Chinese</div>
+            <p style="margin-top: 14px; font-size: 14px;">4M AU students × A$300–800/yr STEM spend.</p>
+          </div>
+          <div class="card-stat glow-sky">
+            <div class="stat-num text sky">5–10K</div>
+            <div class="stat-label">SOM (3yr) · paying students</div>
+            <p style="margin-top: 14px; font-size: 14px;">Single-digit-million ARR; 10× upside from there.</p>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Don't read the numbers aloud. Just point and say "growing fast, addressable from AU."
+          Refine with HolonIQ / IBISWorld in diligence.
+        </aside>
+      </section>
+
+      <!-- =====================================================
+           Slide 5 — Why Now
+           ===================================================== -->
+      <section class="bg-wash-sunshine">
+        <span class="eyebrow" style="color: #C99A00;">WHY NOW</span>
+        <h1>Four tailwinds converging.</h1>
+
+        <ol class="numbered">
+          <li><strong>AI capability</strong> — frontier LLMs can tutor at scale, in real time.</li>
+          <li><strong>AI cost</strong> — inference down ~95% in 18 months. Consumer pricing viable.</li>
+          <li><strong>Curriculum reform</strong> — AU Digital Technologies F-10 mandates AI literacy.</li>
+          <li><strong>Parent demand</strong> — post-ChatGPT, AI education is now top-3 household priority.</li>
+        </ol>
+
+        <div class="callout coral">
+          The category window is open <strong>now</strong>. In 5 years, the category leaders will be entrenched.
+        </div>
+
+        <aside class="notes">
+          The "why this won't wait" argument. Time the four points evenly.
+        </aside>
+      </section>
+
+      <!-- =====================================================
+           Slide 6 — 3-Layer Approach (vibrant program cards)
+           ===================================================== -->
+      <section>
+        <span class="eyebrow">OUR APPROACH</span>
+        <h1>A 3-layer stack, one student journey.</h1>
+
+        <div class="three-col" style="margin-top: 24px;">
+          <div class="program-card sky" style="position: relative;">
+            <span class="sticker sunshine" style="position: absolute; top: 16px; right: 16px;">LIVE NOW</span>
+            <div class="pc-blob"></div>
+            <div style="position: relative; z-index: 1;">
+              <div class="pc-tag">LAYER 1 · CURRICULUM</div>
+              <h3>In-school workshops</h3>
+              <p>AI + robotics integrated. Curriculum-aligned. Delivered in partner schools across Australia.</p>
+            </div>
+            <div class="pc-status" style="position: relative; z-index: 1;">100+ STUDENTS</div>
+          </div>
+
+          <div class="program-card coral" style="position: relative;">
+            <div class="pc-blob"></div>
+            <div style="position: relative; z-index: 1;">
+              <div class="pc-tag">LAYER 2 · PLATFORM</div>
+              <h3>Kids-safe AI coding LLM.</h3>
+              <p>Frontier AI wrapped in age-appropriate guardrails. Kids build & imagine freely; parents see exactly what they're doing. Subscription + token margin.</p>
+            </div>
+            <div class="pc-status" style="position: relative; z-index: 1;">BUILDING · MVP 12 MO</div>
+          </div>
+
+          <div class="program-card bubblegum" style="position: relative;">
+            <div class="pc-blob"></div>
+            <div style="position: relative; z-index: 1;">
+              <div class="pc-tag">LAYER 3 · HACKATHONS</div>
+              <h3>Hackathons & uni pipeline</h3>
+              <p>Quarterly student hackathons. University admissions partnerships for top performers.</p>
+            </div>
+            <div class="pc-status" style="position: relative; z-index: 1;">ROADMAP · YEAR 2</div>
+          </div>
+        </div>
+
+        <div class="callout">
+          Workshops drive platform signups → Platform produces hackathon-ready students → Hackathons drive new workshops. <strong>A compounding loop, not a funnel.</strong>
+        </div>
+
+        <aside class="notes">
+          We did NOT start with software — we started with paying customers.
+          The 3 vibrant cards represent the brand color identity: Sky=Schools, Coral=Coding, Sunshine=Hackathon.
+        </aside>
+      </section>
+
+      <!-- =====================================================
+           Slide 7 — Business Model
+           ===================================================== -->
+      <section class="bg-wash-coral">
+        <span class="eyebrow">BUSINESS MODEL</span>
+        <h1>Four streams. Blended 65–75% GM.</h1>
+
+        <table>
+          <tr>
+            <th style="width: 26%;">Stream</th>
+            <th>Pricing</th>
+            <th style="width: 14%;">Margin</th>
+            <th>Role</th>
+          </tr>
+          <tr>
+            <td><strong>B2C subscription</strong></td>
+            <td>A$29–79 / month / student</td>
+            <td class="highlight">~80%</td>
+            <td>Recurring base</td>
+          </tr>
+          <tr>
+            <td><strong>LLM token resale</strong></td>
+            <td>Markup over wholesale API</td>
+            <td>30–50%</td>
+            <td>Margin upside</td>
+          </tr>
+          <tr>
+            <td><strong>B2B school license</strong></td>
+            <td>Annual per-school / per-student</td>
+            <td class="highlight">~85%</td>
+            <td>Anchor accounts</td>
+          </tr>
+          <tr>
+            <td><strong>Workshops & hackathons</strong></td>
+            <td>Per-event fees</td>
+            <td>~50%</td>
+            <td>CAC channel</td>
+          </tr>
+        </table>
+
+        <div class="callout coral">
+          Workshops are not a cost center — <strong>they are our cheapest acquisition channel.</strong>
+        </div>
+
+        <aside class="notes">
+          Be ready for: "Why is token resale a real margin and not commoditized?"
+          Answer: integrated into curriculum + parent UX, not raw API access.
+        </aside>
+      </section>
+
+      <!-- =====================================================
+           Slide 8 — Traction
+           ===================================================== -->
+      <section class="bg-wash-sky">
+        <span class="eyebrow sky">WHERE WE ARE</span>
+        <h1>Traction, honestly.</h1>
+
+        <div class="three-col" style="margin-top: 24px;">
+          <div class="card-stat glow-coral">
+            <span class="sticker coral sticker-overlay">PILOT</span>
+            <div class="stat-num coral">100+</div>
+            <div class="stat-label">Students Taught</div>
+          </div>
+          <div class="card-stat glow-bubblegum">
+            <div class="stat-num bubblegum">2</div>
+            <div class="stat-label">Partner Schools</div>
+          </div>
+          <div class="card-stat glow-sky">
+            <div class="stat-num text sky">Australia</div>
+            <div class="stat-label">Pilot Market</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 28px;">
+          <h3 style="font-size: 16px; color: var(--steel); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;">What this proves</h3>
+          <ul style="margin-top: 12px;">
+            <li>Kids stay engaged with project-based AI curriculum.</li>
+            <li>Parents pay for AI coding outcomes.</li>
+            <li>Schools want recurring partners, not one-off vendors.</li>
+          </ul>
+        </div>
+
+        <aside class="notes">
+          The most important slide. DO NOT inflate.
+          Pre-seed VCs want honest small numbers + sharp learnings, not hockey-stick claims.
+          The "what this proves" line is what they actually buy.
+        </aside>
+      </section>
+
+      <!-- =====================================================
+           Slide 9 — Go-to-Market
+           ===================================================== -->
+      <section class="bg-wash-mint">
+        <span class="eyebrow" style="color: #1FC692;">GO-TO-MARKET</span>
+        <h1>A workshop-led flywheel.</h1>
+
+        <div class="flywheel">
+          <span class="step coral">Workshops</span>
+          <span class="arrow">→</span>
+          <span class="step plum">Subscriptions</span>
+          <span class="arrow">→</span>
+          <span class="step sunshine">Hackathons</span>
+          <span class="arrow">→</span>
+          <span class="step sky">Referrals</span>
+          <span class="arrow">→</span>
+          <span class="step coral">Workshops</span>
+        </div>
+
+        <ol class="numbered">
+          <li><strong>Now</strong> — Workshop graduates become the first platform cohort.</li>
+          <li><strong>Year 1</strong> — Scale 2 → 20 AU schools; launch parent dashboard.</li>
+          <li><strong>Year 2+</strong> — Overseas Chinese-family cohort; B2B school district sales; first university partnership.</li>
+        </ol>
+
+        <div class="callout coral">
+          Software-first competitors have CACs of A$200+ via paid digital. <strong>Our CAC is workshop-led — structurally cheaper, structurally stickier.</strong>
+        </div>
+
+        <aside class="notes">
+          The flywheel is the durable moat. Software-first competitors can't reproduce it.
+        </aside>
+      </section>
+
+      <!-- =====================================================
+           Slide 10 — Competition
+           ===================================================== -->
+      <section class="bg-wash-bubblegum">
+        <span class="eyebrow">COMPETITIVE EDGE</span>
+        <h1>Why we win.</h1>
+
+        <table class="matrix">
+          <tr>
+            <th></th>
+            <th>AI-native</th>
+            <th>Robotics</th>
+            <th>AU curric.</th>
+            <th>Parent layer</th>
+            <th>Cross-border CN</th>
+          </tr>
+          <tr>
+            <td>Code.org</td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+          </tr>
+          <tr>
+            <td>Tynker</td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="partial">partial</span></td>
+            <td><span class="cross">—</span></td>
+          </tr>
+          <tr>
+            <td>Kira Learning (US)</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="partial">partial</span></td>
+            <td><span class="cross">—</span></td>
+          </tr>
+          <tr>
+            <td>Replit</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+          </tr>
+          <tr class="us">
+            <td>Airbotix</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+          </tr>
+        </table>
+
+        <div class="callout coral">
+          Distribution + curriculum + cross-border GTM. <strong>Hard to copy from a software-first start.</strong>
+        </div>
+
+        <aside class="notes">
+          The 5 columns are the moat. Be ready to defend each one.
+          "Cross-border CN" is the lever AU VCs don't have but Chinese VCs love.
+        </aside>
+      </section>
+
+      <!-- =====================================================
+           Slide 11 — Team
+           ===================================================== -->
+      <section class="bg-wash-sky">
+        <span class="eyebrow sky">THE TEAM</span>
+        <h1>Builders who ship.</h1>
+
+        <div class="team-grid">
+          <div class="team-card">
+            <div class="role">CO-FOUNDER & CEO</div>
+            <h3>Lightman</h3>
+            <span class="credential">FOUNDER · JR ACADEMY · AI ENGINEER</span>
+            <p>Built JR Academy (匠人学院) into a leading AI & coding education platform serving the global Chinese-speaking community. Brings hands-on AI engineering and proven EdTech operating experience.</p>
+          </div>
+          <div class="team-card">
+            <div class="role">CO-FOUNDER & CTO</div>
+            <h3>Joe</h3>
+            <span class="credential">EX-GOOGLE · SR. SOFTWARE ENGINEER</span>
+            <p>Brings frontier-grade engineering to a category where most competitors are pedagogy-first and software-thin.</p>
+          </div>
+        </div>
+
+        <p style="margin-top: 28px; font-size: 14px; color: var(--steel);">
+          <strong style="color: var(--ink);">Hiring with this round:</strong> Lead Curriculum Designer · Senior Engineer<br />
+          <strong style="color: var(--ink);">Advisors lining up:</strong> AU education · AI research · Cross-border investment
+        </p>
+
+        <aside class="notes">
+          Joe's ex-Google credential is the headline. Lightman's section needs personal credentials filled in.
+        </aside>
+      </section>
+
+      <!-- =====================================================
+           Slide 12 — Use of Funds & Ask
+           ===================================================== -->
+      <section class="bg-wash-sunshine">
+        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+          <span class="sticker coral">VALIDATION ROUND</span>
+          <span class="sticker mint alt">9 MO RUNWAY</span>
+        </div>
+        <h1>Raising <span style="color: var(--brand-coral);">A$150K</span>.</h1>
+
+        <p style="font-size: 16px; color: var(--ink-soft); max-width: 720px; margin: 0 0 18px 0; line-height: 1.55;">
+          Not a scale round. Built around <strong>one priority — a school partnerships lead</strong> who walks into schools while founders build product. BD is the bottleneck for everything else.
+        </p>
+
+        <div class="alloc">
+          <div class="alloc-row">
+            <div class="alloc-label">School partnerships lead (BD) + travel</div>
+            <div class="alloc-bar"><div class="alloc-fill coral" style="width: 40%;"></div></div>
+            <div class="alloc-pct">40%</div>
+          </div>
+          <div class="alloc-row">
+            <div class="alloc-label">Product & engineering (founders + contractors)</div>
+            <div class="alloc-bar"><div class="alloc-fill plum" style="width: 25%;"></div></div>
+            <div class="alloc-pct">25%</div>
+          </div>
+          <div class="alloc-row">
+            <div class="alloc-label">Curriculum & content production</div>
+            <div class="alloc-bar"><div class="alloc-fill sunshine" style="width: 15%;"></div></div>
+            <div class="alloc-pct">15%</div>
+          </div>
+          <div class="alloc-row">
+            <div class="alloc-label">Workshop materials + ops</div>
+            <div class="alloc-bar"><div class="alloc-fill sky" style="width: 10%;"></div></div>
+            <div class="alloc-pct">10%</div>
+          </div>
+          <div class="alloc-row">
+            <div class="alloc-label">Infra + LLM API + compliance</div>
+            <div class="alloc-bar"><div class="alloc-fill ink" style="width: 10%;"></div></div>
+            <div class="alloc-pct">10%</div>
+          </div>
+        </div>
+
+        <h3 style="font-size: 14px; color: var(--steel); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 22px; margin-bottom: 10px;">
+          9-month validation milestones
+        </h3>
+        <ul style="font-size: 15px;">
+          <li><strong>School partnerships lead hired</strong> (month 1) — owns school BD pipeline.</li>
+          <li>Platform MVP live; existing 100+ students as cohort 1.</li>
+          <li><strong>5–7 partner schools</strong> (BD-driven from current 2).</li>
+          <li><strong>100–200 paying subscriptions</strong> with retention data.</li>
+          <li>Path to <strong>A$200–400K ARR</strong> → ready for Seed (A$1–2M).</li>
+        </ul>
+
+        <aside class="notes">
+          Validation round, not a scale round. Frame as discipline.
+          Investors love founders who know what stage they're at.
+          Founders forgo / minimise salary — A$150K is for product, content, ops.
+        </aside>
+      </section>
+
+      <!-- =====================================================
+           Slide 13 — Closing (inverted ink)
+           ===================================================== -->
+      <section data-background-color="#1F1B2D" class="closing">
+        <div class="word-mark">AIRBOTIX</div>
+        <h1>Build the AI literacy infrastructure for the next <span class="squiggle-word" style="color: var(--brand-coral);">billion kids.</span></h1>
+        <div class="contact">
+          <strong>Lightman</strong> · lightman@airbotix.ai<br />
+          <strong>Joe</strong> · joe@airbotix.ai<br /><br />
+          airbotix.ai
+        </div>
+        <aside class="notes">
+          End on the vision, not the ask.
+          Have the BP, financial model, and demo ready in the data room.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: "c/t",
+      controls: true,
+      progress: true,
+      center: false,
+      transition: "slide",
+      // Locked 16:9 — PowerPoint / Keynote / Google Slides default.
+      // Reveal letterboxes to preserve this ratio on every screen.
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      minScale: 0.2,
+      maxScale: 2.0,
+      plugins: [RevealNotes],
+    });
+  </script>
+</body>
+</html>
