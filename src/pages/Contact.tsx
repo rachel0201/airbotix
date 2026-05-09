@@ -14,6 +14,9 @@ const initialState: FormState = {
   message: '',
 }
 
+const inputClass =
+  'w-full rounded-xl border border-hairline bg-canvas-pure text-ink px-4 py-3 text-[15px] placeholder:text-stone focus:border-brand-coral focus:ring-2 focus:ring-brand-coral/20 outline-none transition-colors'
+
 const Contact = () => {
   const [form, setForm] = useState<FormState>(initialState)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -33,7 +36,6 @@ const Contact = () => {
   const validate = (): string | null => {
     if (!form.fullName.trim()) return 'Please enter your full name'
     if (!form.email.trim()) return 'Please enter your email address'
-    // Simple email check
     const emailOk = /.+@.+\..+/.test(form.email)
     if (!emailOk) return 'Please enter a valid email address'
     if (!form.message.trim()) return 'Please enter a message'
@@ -57,10 +59,7 @@ const Contact = () => {
         const endpoint = `https://formspree.io/f/${formspreeId}`
         const response = await fetch(endpoint, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({
             name: form.fullName,
             email: form.email,
@@ -77,7 +76,6 @@ const Contact = () => {
         setSuccessMessage('Thank you! Your message has been sent.')
         setForm(initialState)
       } else if (fallbackEmail) {
-        // Fallback to mailto
         const mailto = new URL(`mailto:${fallbackEmail}`)
         const subject = form.subject || 'New Contact Message from Airbotix Website'
         const body = `Name: ${form.fullName}\nEmail: ${form.email}\n\n${form.message}`
@@ -98,25 +96,37 @@ const Contact = () => {
   }
 
   return (
-    <div>
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-primary-50 to-secondary-50 py-16 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Contact Us</h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            Have a question or want to book a workshop? Send us a message and we’ll get back to you shortly.
-          </p>
+    <div className="bg-canvas">
+      {/* ============================================================
+          Hero
+          ============================================================ */}
+      <section className="relative overflow-hidden py-24 md:py-32 bg-canvas">
+        <div className="blob-bg bg-brand-mint" style={{ width: 480, height: 480, top: -100, right: -180, opacity: 0.30 }} aria-hidden="true" />
+
+        <div className="relative max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="max-w-3xl">
+            <span className="eyebrow eyebrow-mint">CONTACT</span>
+            <h1 className="hero-display">
+              Let's talk about <span className="squiggle-word text-brand-coral">your kids.</span>
+            </h1>
+            <p className="lead-text mt-7">
+              Have a question, or want to bring a workshop to your school? Drop us a message — we
+              read every one and reply within 1–2 business days.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* Form */}
-      <section className="py-16 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="p-6 md:p-8 border border-gray-200 rounded-2xl shadow-sm">
+      {/* ============================================================
+          Form
+          ============================================================ */}
+      <section className="py-16 md:py-20 bg-wash-mint">
+        <div className="max-w-3xl mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="bg-canvas-pure rounded-3xl shadow-card-soft p-8 md:p-12">
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="fullName" className="block text-sm font-semibold text-ink mb-2">
                     Full Name
                   </label>
                   <input
@@ -125,13 +135,13 @@ const Contact = () => {
                     type="text"
                     value={form.fullName}
                     onChange={handleChange}
-                    className="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500"
+                    className={inputClass}
                     placeholder="Your name"
                     required
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="email" className="block text-sm font-semibold text-ink mb-2">
                     Email
                   </label>
                   <input
@@ -140,7 +150,7 @@ const Contact = () => {
                     type="email"
                     value={form.email}
                     onChange={handleChange}
-                    className="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500"
+                    className={inputClass}
                     placeholder="you@example.com"
                     required
                   />
@@ -148,8 +158,8 @@ const Contact = () => {
               </div>
 
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
-                  Subject (optional)
+                <label htmlFor="subject" className="block text-sm font-semibold text-ink mb-2">
+                  Subject <span className="text-stone font-normal">(optional)</span>
                 </label>
                 <input
                   id="subject"
@@ -157,13 +167,13 @@ const Contact = () => {
                   type="text"
                   value={form.subject}
                   onChange={handleChange}
-                  className="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500"
+                  className={inputClass}
                   placeholder="How can we help?"
                 />
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="message" className="block text-sm font-semibold text-ink mb-2">
                   Message
                 </label>
                 <textarea
@@ -172,32 +182,36 @@ const Contact = () => {
                   rows={6}
                   value={form.message}
                   onChange={handleChange}
-                  className="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500"
-                  placeholder="Tell us about your needs, preferred dates, class size, etc."
+                  className={inputClass}
+                  placeholder="Tell us about your school, students' ages, preferred dates, etc."
                   required
                 />
               </div>
 
               {errorMessage && (
-                <div className="text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+                <div className="text-red-700 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-[14px]">
                   {errorMessage}
                 </div>
               )}
               {successMessage && (
-                <div className="text-green-700 bg-green-50 border border-green-200 rounded-lg px-4 py-3">
+                <div className="text-emerald-700 bg-wash-mint border border-brand-mint/30 rounded-xl px-4 py-3 text-[14px]">
                   {successMessage}
                 </div>
               )}
 
-              <div className="flex justify-end">
-                <button type="submit" className="btn-primary" disabled={isSubmitting}>
-                  {isSubmitting ? 'Sending...' : 'Send Message'}
+              <div className="flex justify-end pt-2">
+                <button
+                  type="submit"
+                  className="btn-pill-primary"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Sending...' : 'Send Message →'}
                 </button>
               </div>
             </form>
             {!formspreeId && (
-              <p className="text-xs text-gray-500 mt-4">
-                Tip: Set <code>VITE_FORMSPREE_ID</code> in your environment to enable direct submissions without opening an email client.
+              <p className="text-[12px] text-stone mt-5">
+                Tip: Set <code className="bg-surface px-1.5 py-0.5 rounded text-ink-soft">VITE_FORMSPREE_ID</code> to enable direct submissions.
               </p>
             )}
           </div>
@@ -208,4 +222,3 @@ const Contact = () => {
 }
 
 export default Contact
-

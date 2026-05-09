@@ -51,7 +51,7 @@ const Media = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50" ref={revealRef}>
+    <div className="min-h-screen bg-canvas" ref={revealRef}>
       {/* Hero Section */}
       <section className="relative h-[48vh] overflow-hidden">
         <div className="absolute inset-0">
@@ -81,12 +81,12 @@ const Media = () => {
       {/* Main Content */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Sticky anchor tabs (no routing, smooth scroll) */}
-        <div className="reveal mb-6 sticky top-4 z-20">
+        <div className="reveal mb-6 sticky top-24 z-20">
           <div className="flex justify-center">
-            <div className="flex space-x-1 bg-white/90 backdrop-blur-sm rounded-lg p-1 shadow-md">
-              <button onClick={() => scrollTo(classroomRef)} className="px-4 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50">📚 Classroom</button>
-              <button onClick={() => scrollTo(activitiesRef)} className="px-4 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50">🎮 Activities</button>
-              <button onClick={() => scrollTo(outcomesRef)} className="px-4 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50">🏆 Outcomes</button>
+            <div className="flex gap-1 bg-canvas-pure/95 backdrop-blur-sm rounded-full p-1.5 shadow-card-soft border border-hairline">
+              <button onClick={() => scrollTo(classroomRef)} className="px-5 py-2 rounded-full text-sm font-semibold text-ink-soft hover:text-ink hover:bg-surface transition-colors">📚 Classroom</button>
+              <button onClick={() => scrollTo(activitiesRef)} className="px-5 py-2 rounded-full text-sm font-semibold text-ink-soft hover:text-ink hover:bg-surface transition-colors">🎮 Activities</button>
+              <button onClick={() => scrollTo(outcomesRef)} className="px-5 py-2 rounded-full text-sm font-semibold text-ink-soft hover:text-ink hover:bg-surface transition-colors">🏆 Outcomes</button>
             </div>
           </div>
         </div>
@@ -95,8 +95,8 @@ const Media = () => {
         {classroomItems.length > 0 && (
           <section id="classroom" ref={classroomRef} className="reveal mb-14 scroll-mt-24">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2"><span>📚</span> Classroom Learning</h2>
-              <span className="text-sm text-gray-500">{classroomItems.length} items</span>
+              <h2 className="text-2xl font-bold text-ink flex items-center gap-2 tracking-tight"><span>📚</span> Classroom Learning</h2>
+              <span className="text-[13px] font-medium text-slate-500">{classroomItems.length} items</span>
             </div>
             <Gallery items={classroomItems} onItemClick={(i) => {
               const id = classroomItems[i].id
@@ -109,8 +109,8 @@ const Media = () => {
         {activityItems.length > 0 && (
           <section id="activities" ref={activitiesRef} className="reveal mb-14 scroll-mt-24">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2"><span>🎮</span> Interactive Activities</h2>
-              <span className="text-sm text-gray-500">{activityItems.length} items</span>
+              <h2 className="text-2xl font-bold text-ink flex items-center gap-2 tracking-tight"><span>🎮</span> Interactive Activities</h2>
+              <span className="text-[13px] font-medium text-slate-500">{activityItems.length} items</span>
             </div>
             <Gallery items={activityItems} onItemClick={(i) => {
               const id = activityItems[i].id
@@ -123,8 +123,8 @@ const Media = () => {
         {outcomeItems.length > 0 && (
           <section id="outcomes" ref={outcomesRef} className="reveal scroll-mt-24">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2"><span>🏆</span> Learning Outcomes</h2>
-              <span className="text-sm text-gray-500">{outcomeItems.length} items</span>
+              <h2 className="text-2xl font-bold text-ink flex items-center gap-2 tracking-tight"><span>🏆</span> Learning Outcomes</h2>
+              <span className="text-[13px] font-medium text-slate-500">{outcomeItems.length} items</span>
             </div>
             <Gallery items={outcomeItems} onItemClick={(i) => {
               const id = outcomeItems[i].id
@@ -135,31 +135,51 @@ const Media = () => {
         )}
 
         {/* Stats Section */}
-        <div className="mt-16 bg-white rounded-xl shadow-sm p-8 reveal">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div>
-              <div className="text-3xl font-bold text-primary-600 mb-2">{pacificCampMedia.filter(item => item.category === 'classroom').length}</div>
-              <div className="text-gray-600">Classroom Teaching Scenarios</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-secondary-600 mb-2">{pacificCampMedia.filter(item => item.category === 'activities').length}</div>
-              <div className="text-gray-600">Interactive Activity Experiences</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-accent-600 mb-2">{pacificCampMedia.filter(item => item.category === 'outcomes').length}</div>
-              <div className="text-gray-600">Learning Achievement Showcases</div>
-            </div>
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-5 reveal">
+          <div className="stat-tile coral">
+            <div className="stat-num text-brand-coral">{pacificCampMedia.filter(item => item.category === 'classroom').length}</div>
+            <div className="stat-label">Classroom Scenarios</div>
+          </div>
+          <div className="stat-tile bubblegum">
+            <div className="stat-num text-brand-bubblegum">{pacificCampMedia.filter(item => item.category === 'activities').length}</div>
+            <div className="stat-label">Activity Experiences</div>
+          </div>
+          <div className="stat-tile sky">
+            <div className="stat-num text-brand-sky">{pacificCampMedia.filter(item => item.category === 'outcomes').length}</div>
+            <div className="stat-label">Outcome Showcases</div>
           </div>
         </div>
 
         {/* CTA Section */}
-        <div className="mt-16 text-center reveal">
-          <div className="bg-gradient-to-r from-primary-600 to-secondary-600 rounded-2xl p-8 text-white">
-            <h2 className="text-3xl font-bold mb-4">Experience Airbotix Innovative Education</h2>
-            <p className="text-xl mb-6 text-white/90">Join our next educational experience camp and start your AI and technology learning journey</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/contact" className="bg-white text-primary-600 hover:bg-gray-50 font-semibold px-8 py-3 rounded-lg transition-colors">Contact Us</a>
-              <a href="/book" className="bg-primary-700 text-white hover:bg-primary-800 font-semibold px-8 py-3 rounded-lg transition-colors">Book Experience</a>
+        <div className="mt-16 reveal">
+          <div className="promo-card-coral">
+            <div
+              className="absolute rounded-full pointer-events-none"
+              style={{ top: -160, right: -160, width: 460, height: 460, background: 'rgba(255,255,255,0.12)' }}
+              aria-hidden="true"
+            />
+            <span
+              className="sticker-sunshine alt"
+              style={{ position: 'absolute', top: 36, right: 56 }}
+            >
+              JOIN THE NEXT CAMP
+            </span>
+            <div className="relative">
+              <span className="text-[13px] font-bold uppercase tracking-[0.10em] text-white/85">
+                EXPERIENCE
+              </span>
+              <h2 className="text-[40px] md:text-[52px] font-bold leading-[1.05] tracking-tight mt-3 mb-5 max-w-2xl">
+                Real kids. Real builds. Real fun.
+              </h2>
+              <p className="text-white/90 text-[18px] max-w-xl mb-9 leading-relaxed">
+                Join our next educational experience camp and start your AI & technology learning journey.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <a href="/contact" className="btn-pill-on-color">Contact Us</a>
+                <a href="/book" className="inline-flex items-center justify-center bg-transparent text-white text-[15px] font-semibold py-[14px] px-7 rounded-full border-2 border-white/70 hover:bg-white hover:text-ink transition-colors no-underline">
+                  Book Experience
+                </a>
+              </div>
             </div>
           </div>
         </div>

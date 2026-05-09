@@ -133,39 +133,46 @@ const Book = () => {
   }
 
   return (
-    <div>
-      <section className="bg-gradient-to-br from-primary-50 to-secondary-50 py-16 md:py-20">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Book a Workshop</h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            Tell us a few details and we’ll get back to you to confirm availability and next steps.
-          </p>
+    <div className="bg-canvas">
+      <section className="relative overflow-hidden py-24 md:py-28 bg-canvas">
+        <div className="blob-bg bg-brand-coral" style={{ width: 480, height: 480, top: -120, right: -180, opacity: 0.25 }} aria-hidden="true" />
+
+        <div className="relative max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="max-w-3xl">
+            <span className="eyebrow">BOOK A WORKSHOP</span>
+            <h1 className="hero-display">
+              Bring Airbotix to <span className="squiggle-word text-brand-coral">your school.</span>
+            </h1>
+            <p className="lead-text mt-7">
+              Tell us a few details and we'll get back to you to confirm availability and next steps.
+            </p>
+          </div>
         </div>
       </section>
 
-      <section className="py-16 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="p-6 md:p-8 border border-gray-200 rounded-2xl shadow-sm">
+      <section className="py-16 md:py-20 bg-wash-coral">
+        <div className="max-w-3xl mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="bg-canvas-pure rounded-3xl shadow-card-soft p-8 md:p-12">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Workshop</label>
+                  <label className="block text-sm font-semibold text-ink mb-2">Workshop</label>
                   <input
                     name="workshopId"
                     value={form.workshopId}
                     onChange={handleChange}
-                    className="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500"
+                    className="w-full rounded-xl border border-hairline bg-canvas-pure text-ink px-4 py-3 text-[15px] placeholder:text-stone focus:border-brand-coral focus:ring-2 focus:ring-brand-coral/20 outline-none transition-colors"
                     placeholder="e.g., ai-intro"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Organization / School</label>
+                  <label className="block text-sm font-semibold text-ink mb-2">Organization / School</label>
                   <input
                     name="organization"
                     value={form.organization}
                     onChange={handleChange}
-                    className="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500"
+                    className="w-full rounded-xl border border-hairline bg-canvas-pure text-ink px-4 py-3 text-[15px] placeholder:text-stone focus:border-brand-coral focus:ring-2 focus:ring-brand-coral/20 outline-none transition-colors"
                     placeholder="Your school or organization"
                     required
                   />
@@ -174,24 +181,24 @@ const Book = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Contact Name</label>
+                  <label className="block text-sm font-semibold text-ink mb-2">Contact Name</label>
                   <input
                     name="contactName"
                     value={form.contactName}
                     onChange={handleChange}
-                    className="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500"
+                    className="w-full rounded-xl border border-hairline bg-canvas-pure text-ink px-4 py-3 text-[15px] placeholder:text-stone focus:border-brand-coral focus:ring-2 focus:ring-brand-coral/20 outline-none transition-colors"
                     placeholder="Your name"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <label className="block text-sm font-semibold text-ink mb-2">Email</label>
                   <input
                     name="email"
                     type="email"
                     value={form.email}
                     onChange={handleChange}
-                    className="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500"
+                    className="w-full rounded-xl border border-hairline bg-canvas-pure text-ink px-4 py-3 text-[15px] placeholder:text-stone focus:border-brand-coral focus:ring-2 focus:ring-brand-coral/20 outline-none transition-colors"
                     placeholder="you@example.com"
                     required
                   />
@@ -200,89 +207,89 @@ const Book = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone (optional)</label>
+                  <label className="block text-sm font-semibold text-ink mb-2">Phone (optional)</label>
                   <input
                     name="phone"
                     value={form.phone}
                     onChange={handleChange}
-                    className="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500"
+                    className="w-full rounded-xl border border-hairline bg-canvas-pure text-ink px-4 py-3 text-[15px] placeholder:text-stone focus:border-brand-coral focus:ring-2 focus:ring-brand-coral/20 outline-none transition-colors"
                     placeholder="Mobile or landline"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Preferred Date</label>
+                  <label className="block text-sm font-semibold text-ink mb-2">Preferred Date</label>
                   <input
                     name="preferredDate"
                     type="date"
                     value={form.preferredDate}
                     onChange={handleChange}
-                    className="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500"
+                    className="w-full rounded-xl border border-hairline bg-canvas-pure text-ink px-4 py-3 text-[15px] placeholder:text-stone focus:border-brand-coral focus:ring-2 focus:ring-brand-coral/20 outline-none transition-colors"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Location (City/Suburb)</label>
+                  <label className="block text-sm font-semibold text-ink mb-2">Location (City/Suburb)</label>
                   <input
                     name="location"
                     value={form.location}
                     onChange={handleChange}
-                    className="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500"
+                    className="w-full rounded-xl border border-hairline bg-canvas-pure text-ink px-4 py-3 text-[15px] placeholder:text-stone focus:border-brand-coral focus:ring-2 focus:ring-brand-coral/20 outline-none transition-colors"
                     placeholder="e.g., Melbourne"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Students</label>
+                  <label className="block text-sm font-semibold text-ink mb-2">Students</label>
                   <input
                     name="studentsCount"
                     value={form.studentsCount}
                     onChange={handleChange}
-                    className="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500"
+                    className="w-full rounded-xl border border-hairline bg-canvas-pure text-ink px-4 py-3 text-[15px] placeholder:text-stone focus:border-brand-coral focus:ring-2 focus:ring-brand-coral/20 outline-none transition-colors"
                     placeholder="Approx. number of students"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Grade Range</label>
+                <label className="block text-sm font-semibold text-ink mb-2">Grade Range</label>
                 <input
                   name="gradeRange"
                   value={form.gradeRange}
                   onChange={handleChange}
-                  className="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500"
+                  className="w-full rounded-xl border border-hairline bg-canvas-pure text-ink px-4 py-3 text-[15px] placeholder:text-stone focus:border-brand-coral focus:ring-2 focus:ring-brand-coral/20 outline-none transition-colors"
                   placeholder="e.g., Grades 5-6"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Notes (optional)</label>
+                <label className="block text-sm font-semibold text-ink mb-2">Notes (optional)</label>
                 <textarea
                   name="notes"
                   rows={6}
                   value={form.notes}
                   onChange={handleChange}
-                  className="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500"
+                  className="w-full rounded-xl border border-hairline bg-canvas-pure text-ink px-4 py-3 text-[15px] placeholder:text-stone focus:border-brand-coral focus:ring-2 focus:ring-brand-coral/20 outline-none transition-colors"
                   placeholder="Anything else we should know (equipment, accessibility, objectives, etc.)"
                 />
               </div>
 
               {errorMessage && (
-                <div className="text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3">{errorMessage}</div>
+                <div className="text-red-700 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-[14px]">{errorMessage}</div>
               )}
               {successMessage && (
-                <div className="text-green-700 bg-green-50 border border-green-200 rounded-lg px-4 py-3">{successMessage}</div>
+                <div className="text-emerald-700 bg-wash-mint border border-brand-mint/30 rounded-xl px-4 py-3 text-[14px]">{successMessage}</div>
               )}
 
-              <div className="flex justify-end">
-                <button type="submit" className="btn-primary" disabled={isSubmitting}>
-                  {isSubmitting ? 'Submitting...' : 'Submit Booking Request'}
+              <div className="flex justify-end pt-2">
+                <button type="submit" className="btn-pill-primary" disabled={isSubmitting}>
+                  {isSubmitting ? 'Submitting...' : 'Submit Booking Request →'}
                 </button>
               </div>
             </form>
             {!formspreeId && (
-              <p className="text-xs text-gray-500 mt-4">
-                Tip: Set <code>VITE_FORMSPREE_BOOK_ID</code> in your environment to enable direct submissions.
+              <p className="text-[12px] text-stone mt-5">
+                Tip: Set <code className="bg-surface px-1.5 py-0.5 rounded text-ink-soft">VITE_FORMSPREE_BOOK_ID</code> in your environment to enable direct submissions.
               </p>
             )}
           </div>

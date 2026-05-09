@@ -10,31 +10,30 @@ const Header = () => {
   const { t } = useTranslation()
   const { user, isAuthenticated, logout } = useAuthStore()
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen)
-  }
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
   const handleLogout = async () => {
     await logout()
     setIsMenuOpen(false)
   }
 
+  const navLink = "text-ink-soft hover:text-ink px-3 py-2 rounded-md text-[15px] font-medium transition-colors"
+  const navLinkMobile = "block text-ink-soft hover:text-ink px-3 py-2 rounded-md text-base font-medium"
+
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="bg-canvas/95 backdrop-blur-sm border-b border-hairline-soft sticky top-0 z-50">
+      <div className="max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center">
-              {/* Mobile Logo - Vertical */}
-              <img 
-                src={RESPONSIVE_LOGOS.HEADER.MOBILE} 
+              <img
+                src={RESPONSIVE_LOGOS.HEADER.MOBILE}
                 alt={ALT_TEXTS.LOGO_MAIN}
                 className={`${LOGO_SIZES.HEADER.HEIGHT} ${LOGO_SIZES.HEADER.WIDTH} ${LOGO_SIZES.HEADER.MAX_WIDTH} block md:hidden`}
               />
-              {/* Desktop Logo - Horizontal */}
-              <img 
-                src={RESPONSIVE_LOGOS.HEADER.DESKTOP} 
+              <img
+                src={RESPONSIVE_LOGOS.HEADER.DESKTOP}
                 alt={ALT_TEXTS.LOGO_MAIN}
                 className={`${LOGO_SIZES.HEADER.HEIGHT} ${LOGO_SIZES.HEADER.WIDTH} ${LOGO_SIZES.HEADER.MAX_WIDTH} hidden md:block`}
               />
@@ -42,66 +41,45 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-              {t('nav.home', 'Home')}
-            </Link>
-            <Link to="/workshops" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-              {t('nav.workshops', 'Workshops')}
-            </Link>
-            <Link to="/blog" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-              {t('nav.blog', 'Blog')}
-            </Link>
-            <Link to="/media" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-              {t('nav.media', 'Media')}
-            </Link>
-            <Link to="/about" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-              {t('nav.about', 'About')}
-            </Link>
-            <Link to="/faq" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-              {t('nav.faq', 'FAQ')}
-            </Link>
-            <Link to="/contact" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-              {t('nav.contact', 'Contact')}
-            </Link>
+          <nav className="hidden md:flex items-center space-x-2">
+            <Link to="/" className={navLink}>{t('nav.home', 'Home')}</Link>
+            <Link to="/workshops" className={navLink}>{t('nav.workshops', 'Workshops')}</Link>
+            <Link to="/blog" className={navLink}>{t('nav.blog', 'Blog')}</Link>
+            <Link to="/media" className={navLink}>{t('nav.media', 'Media')}</Link>
+            <Link to="/about" className={navLink}>{t('nav.about', 'About')}</Link>
+            <Link to="/faq" className={navLink}>{t('nav.faq', 'FAQ')}</Link>
+            <Link to="/contact" className={navLink}>{t('nav.contact', 'Contact')}</Link>
           </nav>
 
-          {/* Right Section - Language Toggle, Auth Actions */}
+          {/* Right Section */}
           <div className="hidden md:flex items-center space-x-4">
             <LanguageToggle />
             {isAuthenticated ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-700">
-                  {user?.email}
-                </span>
-                <Link to="/dashboard" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+              <div className="flex items-center space-x-3">
+                <span className="text-sm text-ink-soft">{user?.email}</span>
+                <Link to="/dashboard" className={navLink}>
                   {t('nav.dashboard', 'Dashboard')}
                 </Link>
-                <button
-                  onClick={handleLogout}
-                  className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
+                <button onClick={handleLogout} className={navLink}>
                   {t('nav.logout', 'Logout')}
                 </button>
               </div>
             ) : (
               <>
-                <Link to="/login" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                  {t('nav.login', 'Login')}
-                </Link>
-                <Link to="/book" className="btn-primary">
-                  {t('nav.bookWorkshop', 'Book Workshop')}
+                <Link to="/login" className={navLink}>{t('nav.login', 'Login')}</Link>
+                <Link to="/book" className="btn-pill-primary">
+                  {t('nav.bookWorkshop', 'Book a Workshop')}
                 </Link>
               </>
             )}
           </div>
 
-          {/* Mobile menu button and language toggle */}
+          {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-2">
             <LanguageToggle />
             <button
               onClick={toggleMenu}
-              className="text-gray-700 hover:text-primary-600 focus:outline-none focus:text-primary-600"
+              className="text-ink-soft hover:text-ink focus:outline-none"
               aria-label={isMenuOpen ? t('nav.closeMenu', 'Close menu') : t('nav.openMenu', 'Open menu')}
               title={isMenuOpen ? t('nav.closeMenu', 'Close menu') : t('nav.openMenu', 'Open menu')}
             >
@@ -119,92 +97,30 @@ const Header = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-200">
-              <Link
-                to="/"
-                className="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {t('nav.home', 'Home')}
-              </Link>
-              <Link
-                to="/workshops"
-                className="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {t('nav.workshops', 'Workshops')}
-              </Link>
-              <Link
-                to="/blog"
-                className="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {t('nav.blog', 'Blog')}
-              </Link>
-              <Link
-                to="/media"
-                className="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {t('nav.media', 'Media')}
-              </Link>
-              <Link
-                to="/about"
-                className="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {t('nav.about', 'About')}
-              </Link>
-              <Link
-                to="/faq"
-                className="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {t('nav.faq', 'FAQ')}
-              </Link>
-              <Link
-                to="/contact"
-                className="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {t('nav.contact', 'Contact')}
-              </Link>
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-hairline-soft">
+              <Link to="/" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.home', 'Home')}</Link>
+              <Link to="/workshops" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.workshops', 'Workshops')}</Link>
+              <Link to="/blog" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.blog', 'Blog')}</Link>
+              <Link to="/media" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.media', 'Media')}</Link>
+              <Link to="/about" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.about', 'About')}</Link>
+              <Link to="/faq" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.faq', 'FAQ')}</Link>
+              <Link to="/contact" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.contact', 'Contact')}</Link>
 
-              {/* Authentication Section */}
               {isAuthenticated ? (
-                <div className="pt-4 border-t border-gray-200 mt-4">
-                  <div className="px-3 py-2 text-sm text-gray-700">
-                    {user?.email}
-                  </div>
-                  <Link
-                    to="/dashboard"
-                    className="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
+                <div className="pt-4 border-t border-hairline-soft mt-4">
+                  <div className="px-3 py-2 text-sm text-ink-soft">{user?.email}</div>
+                  <Link to="/dashboard" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>
                     {t('nav.dashboard', 'Dashboard')}
                   </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="block w-full text-left text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium"
-                  >
+                  <button onClick={handleLogout} className={`${navLinkMobile} w-full text-left`}>
                     {t('nav.logout', 'Logout')}
                   </button>
                 </div>
               ) : (
-                <div className="pt-4 border-t border-gray-200 mt-4 space-y-2">
-                  <Link
-                    to="/login"
-                    className="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {t('nav.login', 'Login')}
-                  </Link>
-                  <Link
-                    to="/book"
-                    className="btn-primary w-full"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {t('nav.bookWorkshop', 'Book Workshop')}
+                <div className="pt-4 border-t border-hairline-soft mt-4 space-y-2">
+                  <Link to="/login" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.login', 'Login')}</Link>
+                  <Link to="/book" className="btn-pill-primary w-full" onClick={() => setIsMenuOpen(false)}>
+                    {t('nav.bookWorkshop', 'Book a Workshop')}
                   </Link>
                 </div>
               )}

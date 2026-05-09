@@ -4,7 +4,6 @@ import { blogPosts } from '../../data/blog-posts'
 import { blogCategories } from '../../data/blog-categories'
 import BlogCard from '../../components/Blog/BlogCard'
 import {
-  BLOG_PAGE_TITLES,
   BLOG_PAGE_DESCRIPTIONS,
   BLOG_BUTTON_TEXTS,
   BLOG_CATEGORY_NAMES,
@@ -17,78 +16,71 @@ const BlogList = () => {
   const [isLoading, setIsLoading] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
 
-  // Smart loading state - only show for actual API calls or complex operations
   const handleCategoryChange = (category: string) => {
-    // Only show loading if it's a different category and we have many posts
     if (category !== selectedCategory && blogPosts.length > 10) {
       setIsLoading(true)
-      setTimeout(() => {
-        setIsLoading(false)
-      }, 200)
+      setTimeout(() => setIsLoading(false), 200)
     }
     setSelectedCategory(category)
   }
 
-  const handleSearchChange = (term: string) => {
-    // Direct search without loading state for better UX
-    setSearchTerm(term)
-  }
+  const handleSearchChange = (term: string) => setSearchTerm(term)
 
-  // Keep focus on search input
   useEffect(() => {
     if (searchInputRef.current && document.activeElement !== searchInputRef.current) {
       searchInputRef.current.focus()
     }
   }, [])
 
-  // Filter posts based on category and search term
   const filteredPosts = useMemo(() => {
     let filtered = blogPosts.filter(post => post.isPublished)
-
-    if (selectedCategory) {
-      filtered = filtered.filter(post => post.category === selectedCategory)
-    }
-
+    if (selectedCategory) filtered = filtered.filter(post => post.category === selectedCategory)
     if (searchTerm) {
       const term = searchTerm.toLowerCase()
-      filtered = filtered.filter(post => 
+      filtered = filtered.filter(post =>
         post.title.toLowerCase().includes(term) ||
         post.excerpt.toLowerCase().includes(term) ||
         post.tags.some(tag => tag.toLowerCase().includes(term))
       )
     }
-
     return filtered.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime())
   }, [selectedCategory, searchTerm])
 
-
+  const filterBtn = (active: boolean) =>
+    `px-5 py-2 rounded-full text-sm font-semibold transition-colors ${
+      active ? 'bg-ink text-canvas' : 'bg-canvas text-ink-soft border border-hairline hover:bg-surface'
+    } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`
 
   return (
-    <div>
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-50 to-secondary-50 py-16 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">{BLOG_PAGE_TITLES.MAIN}</h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            {BLOG_PAGE_DESCRIPTIONS.HERO}
-          </p>
+    <div className="bg-canvas">
+      {/* ============================================================
+          Hero
+          ============================================================ */}
+      <section className="relative overflow-hidden py-24 md:py-28 bg-canvas">
+        <div className="blob-bg bg-brand-sky" style={{ width: 480, height: 480, top: -100, right: -180, opacity: 0.30 }} aria-hidden="true" />
+
+        <div className="relative max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="max-w-3xl">
+            <span className="eyebrow eyebrow-sky">BLOG</span>
+            <h1 className="hero-display">
+              Notes from the <span className="squiggle-word text-brand-coral">classroom.</span>
+            </h1>
+            <p className="lead-text mt-7">{BLOG_PAGE_DESCRIPTIONS.HERO}</p>
+          </div>
         </div>
       </section>
 
-      {/* Filters and Search */}
-      <section className="py-8 bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            {/* Category Filters */}
+      {/* ============================================================
+          Filters and Search
+          ============================================================ */}
+      <section className="py-6 bg-canvas border-b border-hairline">
+        <div className="max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => handleCategoryChange('')}
                 disabled={isLoading}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  selectedCategory === '' 
-                    ? 'bg-primary-600 text-white' 
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={filterBtn(selectedCategory === '')}
               >
                 {BLOG_CATEGORY_NAMES.ALL}
               </button>
@@ -97,11 +89,7 @@ const BlogList = () => {
                   key={category.id}
                   onClick={() => handleCategoryChange(category.slug)}
                   disabled={isLoading}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                    selectedCategory === category.slug 
-                      ? 'bg-primary-600 text-white' 
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={filterBtn(selectedCategory === category.slug)}
                 >
                   {category.name}
                 </button>
@@ -109,17 +97,17 @@ const BlogList = () => {
             </div>
 
             {/* Search */}
-            <div className="relative w-full md:w-64">
+            <div className="relative w-full md:w-72">
               <input
                 ref={searchInputRef}
                 type="text"
                 placeholder={BLOG_SEARCH_PLACEHOLDERS.ARTICLES}
                 value={searchTerm}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2.5 rounded-full border border-hairline bg-canvas-pure text-ink text-[14px] placeholder:text-stone focus:border-brand-coral focus:ring-2 focus:ring-brand-coral/20 outline-none transition-colors"
               />
               <svg
-                className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
+                className="absolute left-3 top-3 h-4 w-4 text-stone"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -131,48 +119,44 @@ const BlogList = () => {
         </div>
       </section>
 
-      {/* Blog Posts */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ============================================================
+          Blog Posts
+          ============================================================ */}
+      <section className="py-20 md:py-24 bg-canvas">
+        <div className="max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12">
           {isLoading ? (
-            <div className="text-center py-12">
-                              <div className="inline-flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-                  <span className="ml-3 text-lg text-gray-600">{BLOG_BUTTON_TEXTS.LOADING_ARTICLES}</span>
-                </div>
-            </div>
-          ) : filteredPosts.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="max-w-md mx-auto">
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  {searchTerm || selectedCategory ? BLOG_PAGE_DESCRIPTIONS.NO_ARTICLES_FOUND : BLOG_PAGE_DESCRIPTIONS.NO_ARTICLES_AVAILABLE}
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  {searchTerm || selectedCategory 
-                    ? BLOG_PAGE_DESCRIPTIONS.TRY_ADJUSTING
-                    : BLOG_PAGE_DESCRIPTIONS.CHECK_BACK_SOON
-                  }
-                </p>
-                {(searchTerm || selectedCategory) && (
-                  <button
-                    onClick={() => {
-                      setSearchTerm('')
-                      setSelectedCategory('')
-                    }}
-                    className="btn-primary"
-                  >
-                    {BLOG_BUTTON_TEXTS.CLEAR_FILTERS}
-                  </button>
-                )}
+            <div className="text-center py-16">
+              <div className="inline-flex items-center justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-coral"></div>
+                <span className="ml-3 text-lg text-ink-soft">{BLOG_BUTTON_TEXTS.LOADING_ARTICLES}</span>
               </div>
             </div>
+          ) : filteredPosts.length === 0 ? (
+            <div className="text-center py-16 max-w-md mx-auto">
+              <div className="w-16 h-16 bg-wash-coral rounded-full flex items-center justify-center mx-auto mb-5">
+                <svg className="w-7 h-7 text-brand-coral" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-ink mb-3 tracking-tight">
+                {searchTerm || selectedCategory ? BLOG_PAGE_DESCRIPTIONS.NO_ARTICLES_FOUND : BLOG_PAGE_DESCRIPTIONS.NO_ARTICLES_AVAILABLE}
+              </h3>
+              <p className="text-ink-soft mb-7">
+                {searchTerm || selectedCategory
+                  ? BLOG_PAGE_DESCRIPTIONS.TRY_ADJUSTING
+                  : BLOG_PAGE_DESCRIPTIONS.CHECK_BACK_SOON}
+              </p>
+              {(searchTerm || selectedCategory) && (
+                <button
+                  onClick={() => { setSearchTerm(''); setSelectedCategory('') }}
+                  className="btn-pill-primary"
+                >
+                  {BLOG_BUTTON_TEXTS.CLEAR_FILTERS}
+                </button>
+              )}
+            </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPosts.map((post) => (
                 <BlogCard key={post.id} post={post} />
               ))}
@@ -181,16 +165,38 @@ const BlogList = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-primary-600">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Stay Updated with Airbotix</h2>
-          <p className="text-primary-100 max-w-2xl mx-auto mb-8">
-            Get the latest insights on AI and robotics education, plus exclusive resources for parents and educators.
-          </p>
-          <Link to="/contact" className="bg-white text-primary-600 hover:bg-gray-50 font-semibold text-lg px-8 py-3 rounded-lg transition-colors">
-            Subscribe to Our Newsletter
-          </Link>
+      {/* ============================================================
+          Final CTA — sky promo
+          ============================================================ */}
+      <section className="py-20 md:py-24 bg-canvas">
+        <div className="max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="rounded-hero p-12 md:p-16 text-white shadow-brand-sky bg-grad-sky relative overflow-hidden">
+            <div
+              className="absolute rounded-full pointer-events-none"
+              style={{ top: -160, right: -160, width: 460, height: 460, background: 'rgba(255,255,255,0.12)' }}
+              aria-hidden="true"
+            />
+            <span
+              className="sticker-sunshine alt"
+              style={{ position: 'absolute', top: 36, right: 56 }}
+            >
+              MONTHLY DIGEST
+            </span>
+            <div className="relative">
+              <span className="text-[13px] font-bold uppercase tracking-[0.10em] text-white/85">
+                STAY IN TOUCH
+              </span>
+              <h2 className="text-[40px] md:text-[52px] font-bold leading-[1.05] tracking-tight mt-3 mb-5 max-w-2xl">
+                Stay updated with Airbotix.
+              </h2>
+              <p className="text-white/90 text-[18px] max-w-xl mb-9 leading-relaxed">
+                Latest insights on AI and robotics education, plus exclusive resources for parents and educators.
+              </p>
+              <Link to="/contact" className="btn-pill-on-color">
+                Subscribe to Our Newsletter
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </div>
@@ -198,4 +204,3 @@ const BlogList = () => {
 }
 
 export default BlogList
-

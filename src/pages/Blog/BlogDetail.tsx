@@ -29,8 +29,8 @@ const BlogDetail = () => {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center">
-          <h1 className="text-2xl font-semibold text-gray-900 mb-4">{BLOG_PAGE_TITLES.DETAIL}</h1>
-          <p className="text-gray-600 mb-6">{BLOG_PAGE_DESCRIPTIONS.NOT_FOUND}</p>
+          <h1 className="text-2xl font-semibold text-ink mb-4">{BLOG_PAGE_TITLES.DETAIL}</h1>
+          <p className="text-ink-soft mb-6">{BLOG_PAGE_DESCRIPTIONS.NOT_FOUND}</p>
           <Link to="/blog" className="btn-primary">{BLOG_BUTTON_TEXTS.BACK_TO_BLOG}</Link>
         </div>
       </div>
@@ -45,19 +45,20 @@ const BlogDetail = () => {
   const getCategoryColor = (category: string) => {
     const cat = blogCategories.find(c => c.slug === category)
     switch (cat?.color) {
-      case 'primary': return 'bg-primary-100 text-primary-800'
-      case 'secondary': return 'bg-secondary-100 text-secondary-800'
-      case 'green': return 'bg-green-100 text-green-800'
-      default: return 'bg-gray-100 text-gray-800'
+      case 'primary':   return 'bg-wash-coral text-brand-coral'
+      case 'secondary': return 'bg-wash-bubblegum text-brand-bubblegum'
+      case 'green':     return 'bg-wash-mint text-emerald-700'
+      default:          return 'bg-surface text-ink-soft'
     }
   }
 
   return (
-    <div>
+    <div className="bg-canvas">
       {/* Header */}
-      <section className="bg-gradient-to-br from-primary-50 to-secondary-50 py-12 md:py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link to="/blog" className="text-primary-700 hover:underline mb-4 inline-block">
+      <section className="relative overflow-hidden py-16 md:py-20 bg-canvas">
+        <div className="blob-bg bg-brand-sky" style={{ width: 460, height: 460, top: -100, right: -160, opacity: 0.25 }} aria-hidden="true" />
+        <div className="relative max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
+          <Link to="/blog" className="text-brand-coral hover:underline mb-5 inline-block font-semibold text-sm">
             ← {BLOG_BUTTON_TEXTS.BACK_TO_BLOG}
           </Link>
           
@@ -69,12 +70,12 @@ const BlogDetail = () => {
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+          <h1 className="text-3xl md:text-4xl font-bold text-ink mb-4 leading-tight">
             {post.title}
           </h1>
 
           {/* Meta Information */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-gray-600 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-ink-soft mb-6">
             <div className="flex items-center">
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -96,7 +97,7 @@ const BlogDetail = () => {
           </div>
 
           {/* Excerpt */}
-          <p className="text-lg text-gray-700 leading-relaxed">
+          <p className="text-lg text-ink-soft leading-relaxed">
             {post.excerpt}
           </p>
         </div>
@@ -121,18 +122,18 @@ const BlogDetail = () => {
           <article className="prose prose-lg max-w-none">
             <div 
               dangerouslySetInnerHTML={{ __html: post.content }}
-              className="text-gray-700 leading-relaxed"
+              className="text-ink-soft leading-relaxed"
             />
           </article>
 
           {/* Tags */}
-          <div className="mt-12 pt-8 border-t border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Tags</h3>
+          <div className="mt-12 pt-8 border-t border-hairline">
+            <h3 className="text-lg font-semibold text-ink mb-4">Tags</h3>
             <div className="flex flex-wrap gap-2">
               {post.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full"
+                  className="px-3 py-1 bg-surface text-ink-soft text-sm rounded-full"
                 >
                   {tag}
                 </span>
@@ -141,8 +142,8 @@ const BlogDetail = () => {
           </div>
 
           {/* Share Section */}
-          <div className="mt-8 pt-8 border-t border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Share this article</h3>
+          <div className="mt-8 pt-8 border-t border-hairline">
+            <h3 className="text-lg font-semibold text-ink mb-4">Share this article</h3>
             <div className="flex gap-3">
               <button 
                 className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -180,10 +181,10 @@ const BlogDetail = () => {
       {relatedPosts.length > 0 && (
         <section className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-8">Related Articles</h2>
+            <h2 className="text-2xl font-semibold text-ink mb-8">Related Articles</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {relatedPosts.map((relatedPost) => (
-                <article key={relatedPost.id} className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+                <article key={relatedPost.id} className="bg-white border border-hairline rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                   {relatedPost.featuredImage && (
                     <div className="aspect-[16/9] overflow-hidden">
                       <img
@@ -198,20 +199,20 @@ const BlogDetail = () => {
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(relatedPost.category)}`}>
                         {relatedPost.category.charAt(0).toUpperCase() + relatedPost.category.slice(1)}
                       </span>
-                      <span className="text-sm text-gray-500">{formatDate(relatedPost.publishDate)}</span>
+                      <span className="text-sm text-slate-500">{formatDate(relatedPost.publishDate)}</span>
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                    <h3 className="text-lg font-semibold text-ink mb-2 line-clamp-2">
                       <Link
                         to={`/blog/${relatedPost.slug}`}
-                        className="hover:text-primary-700 focus:underline outline-none"
+                        className="hover:text-brand-coral focus:underline outline-none"
                       >
                         {relatedPost.title}
                       </Link>
                     </h3>
-                    <p className="text-gray-600 mb-4 line-clamp-3">{relatedPost.excerpt}</p>
+                    <p className="text-ink-soft mb-4 line-clamp-3">{relatedPost.excerpt}</p>
                     <Link
                       to={`/blog/${relatedPost.slug}`}
-                      className="text-primary-600 hover:text-primary-700 font-medium"
+                      className="text-brand-coral hover:underline font-semibold text-sm"
                     >
                       Read More →
                     </Link>
@@ -224,19 +225,31 @@ const BlogDetail = () => {
       )}
 
       {/* CTA Section */}
-      <section className="py-16 bg-primary-600">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">Ready to explore AI and robotics?</h2>
-          <p className="text-primary-100 max-w-2xl mx-auto mb-8">
-            Join our workshops and give your child the skills they need for the future.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/workshops" className="bg-white text-primary-600 hover:bg-gray-50 font-semibold text-lg px-8 py-3 rounded-lg transition-colors">
-              View Workshops
-            </Link>
-            <Link to="/contact" className="border-2 border-white text-white hover:bg-white hover:text-primary-600 font-semibold text-lg px-8 py-3 rounded-lg transition-colors">
-              Contact Us
-            </Link>
+      <section className="py-20 md:py-24 bg-canvas">
+        <div className="max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="promo-card-coral">
+            <div
+              className="absolute rounded-full pointer-events-none"
+              style={{ top: -160, right: -160, width: 460, height: 460, background: 'rgba(255,255,255,0.12)' }}
+              aria-hidden="true"
+            />
+            <div className="relative">
+              <span className="text-[13px] font-bold uppercase tracking-[0.10em] text-white/85">
+                NEXT STEP
+              </span>
+              <h2 className="text-[40px] md:text-[52px] font-bold leading-[1.05] tracking-tight mt-3 mb-5 max-w-2xl">
+                Ready to explore AI & robotics?
+              </h2>
+              <p className="text-white/90 text-[18px] max-w-xl mb-9 leading-relaxed">
+                Join our workshops and give your child the skills they need for the future.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link to="/workshops" className="btn-pill-on-color">View Workshops</Link>
+                <Link to="/contact" className="inline-flex items-center justify-center bg-transparent text-white text-[15px] font-semibold py-[14px] px-7 rounded-full border-2 border-white/70 hover:bg-white hover:text-ink transition-colors no-underline">
+                  Contact Us
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
