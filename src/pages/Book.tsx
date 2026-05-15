@@ -29,7 +29,7 @@ const pickerOptions: PickerOption[] = [
     type: '1on1',
     tone: 'bubblegum',
     title: '1-on-1 tutoring',
-    desc: 'Private online sessions with a senior instructor. From A$80/hour, or 10/20-pack discounts.',
+    desc: 'Private online sessions with a senior instructor. From A$70/hour, or 10/20-pack discounts.',
   },
   {
     type: 'school',
@@ -359,9 +359,9 @@ const Book = () => {
                   <Field label="Package preference" name="pack_choice" value={form.pack_choice} onChange={handleChange}>
                     <select id="pack_choice" name="pack_choice" value={form.pack_choice} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border-2 border-hairline focus:border-brand-coral focus:outline-none transition-colors text-[15px] bg-canvas">
                       <option value="">Decide later</option>
-                      <option value="single">Single session — A$80</option>
-                      <option value="10-pack">10-pack — A$750 (A$75/hour)</option>
-                      <option value="20-pack">20-pack — A$1,400 (A$70/hour)</option>
+                      <option value="single">Single session — A$70</option>
+                      <option value="10-pack">10-pack — A$650 (A$65/hour)</option>
+                      <option value="20-pack">20-pack — A$1,200 (A$60/hour)</option>
                     </select>
                   </Field>
                 </>

@@ -24,7 +24,7 @@ const programs = [
     tone: 'bubblegum',
     tag: '1-ON-1 TUTORING',
     title: 'Private AI coding sessions.',
-    desc: 'Personalised online tutoring with senior instructors. Bring an idea, leave with a real project. From A$80/hour.',
+    desc: 'Personalised online tutoring with senior instructors. Bring an idea, leave with a real project. From A$70/hour.',
     cta: 'Book a session →',
     href: '/programs/one-on-one',
     sticker: { label: 'NEW', color: 'mint' },

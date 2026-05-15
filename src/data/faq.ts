@@ -80,7 +80,7 @@ export const faqCategories = [
       {
         question: 'How much does it cost?',
         answer:
-          'A$80 per single hour-long session, A$750 for a 10-pack (A$75/hour, save A$50), A$1,400 for a 20-pack (A$70/hour, save A$200). Stars unused in a pack roll over for 12 months.',
+          'A$70 per single hour-long session, A$650 for a 10-pack (A$65/hour, save A$50), A$1,200 for a 20-pack (A$60/hour, save A$200). Sessions unused in a pack roll over for 12 months.',
       },
       {
         question: 'Same instructor each time?',
@@ -171,7 +171,7 @@ export const faqCategories = [
       {
         question: 'How much does everything cost?',
         answer:
-          'Group Classes: A$480 per 8-week term (AI Creative Lab) or A$600 per 10-week term (AI Coding Studio). 1-on-1: A$80/hour, with discounts on 10-pack and 20-pack. Platform: pay-as-you-go Stars, pricing TBD before 2026 Q3 launch.',
+          'Group Classes: A$480 per 8-week term (AI Creative Lab) or A$600 per 10-week term (AI Coding Studio). 1-on-1: from A$70/hour, with discounts on 10-pack and 20-pack. Platform: pay-as-you-go Stars, pricing TBD before 2026 Q3 launch.',
       },
       {
         question: 'How do I pay?',

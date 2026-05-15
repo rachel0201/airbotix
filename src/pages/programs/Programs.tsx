@@ -15,7 +15,7 @@ const tracks = [
     tone: 'bubblegum',
     tag: '1-ON-1',
     title: 'Private AI tutoring',
-    desc: 'One-on-one online sessions with senior instructors. Subjects from AI image creation to real project building. From A$80/hour.',
+    desc: 'One-on-one online sessions with senior instructors. Subjects from AI image creation to real project building. From A$70/hour.',
     cta: 'Book a session →',
     href: '/programs/one-on-one',
     sticker: { label: 'NEW', color: 'mint' },

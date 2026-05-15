@@ -38,31 +38,37 @@ const pricing = [
   {
     tone: 'sky',
     label: 'Single Session',
-    price: 'A$80',
-    unit: '/ hour',
+    perHour: 'A$70',
+    detail: 'Pay as you go',
+    total: '',
+    savings: '',
     note: 'Try before committing. Same instructor for follow-ups.',
-    cta: 'Book single session',
-    href: '/book',
+    cta: 'Book a session',
+    href: '/book?type=1on1',
     highlight: false,
   },
   {
     tone: 'coral',
     label: '10-Session Pack',
-    price: 'A$750',
-    unit: 'A$75 / hour',
-    note: 'Best for steady weekly progress. Save A$50.',
+    perHour: 'A$65',
+    detail: '10 sessions',
+    total: 'A$650 total',
+    savings: 'Save A$50',
+    note: 'Best for steady weekly progress.',
     cta: 'Buy 10-pack',
-    href: '/book',
+    href: '/book?type=1on1',
     highlight: true,
   },
   {
     tone: 'bubblegum',
     label: '20-Session Pack',
-    price: 'A$1,400',
-    unit: 'A$70 / hour',
-    note: 'Best for a full term + deep project work. Save A$200.',
+    perHour: 'A$60',
+    detail: '20 sessions',
+    total: 'A$1,200 total',
+    savings: 'Save A$200',
+    note: 'Best for a full term + deep project work.',
     cta: 'Buy 20-pack',
-    href: '/book',
+    href: '/book?type=1on1',
     highlight: false,
   },
 ] as const
@@ -77,7 +83,7 @@ const howItWorks = [
 const OneOnOne = () => {
   usePageMeta({
     title: '1-on-1 Tutoring',
-    description: 'Private AI coding sessions with senior instructors. From A$80/hour. Personalised to your kid&rsquo;s level and goals — AI image creation, coding, school projects, hackathon prep.',
+    description: 'Private AI coding sessions with senior instructors. From A$70/hour. Personalised to your kid&rsquo;s level and goals — AI image creation, coding, school projects, hackathon prep.',
   })
 
   return (
@@ -132,14 +138,35 @@ const OneOnOne = () => {
                     BEST VALUE
                   </span>
                 )}
-                <div className={`text-[12px] font-bold uppercase tracking-[0.10em] text-brand-${p.tone}`}>
+                <div className={`text-[12px] font-bold uppercase tracking-[0.10em] text-brand-${p.tone} mb-1`}>
                   {p.label}
                 </div>
+
+                {/* Per-hour rate is the HERO number (low number anchored bigger) */}
                 <div className="mt-3 flex items-baseline gap-2">
-                  <span className="text-[44px] font-bold text-ink leading-none">{p.price}</span>
-                  <span className="text-[14px] text-slate2">{p.unit}</span>
+                  <span className="text-[56px] font-bold text-ink leading-none">{p.perHour}</span>
+                  <span className="text-[15px] font-semibold text-ink-soft">/ hour</span>
                 </div>
-                <p className="text-[14px] text-ink-soft mt-4 leading-relaxed">{p.note}</p>
+
+                {/* Pack detail (small) */}
+                <div className="mt-3 flex items-center gap-2 text-[13px]">
+                  <span className="text-slate2">{p.detail}</span>
+                  {p.total && (
+                    <>
+                      <span className="text-slate2">·</span>
+                      <span className="text-slate2">{p.total}</span>
+                    </>
+                  )}
+                </div>
+
+                {/* Savings callout */}
+                {p.savings && (
+                  <div className={`mt-3 inline-block px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-[0.08em] bg-brand-${p.tone}/10 text-brand-${p.tone}`}>
+                    {p.savings}
+                  </div>
+                )}
+
+                <p className="text-[14px] text-ink-soft mt-5 leading-relaxed">{p.note}</p>
                 <Link
                   to={p.href}
                   className={`mt-7 inline-flex items-center justify-center w-full font-semibold py-[12px] px-6 rounded-full transition-colors no-underline ${p.highlight ? 'btn-pill-primary' : 'bg-canvas text-ink border-2 border-ink/15 hover:border-ink/30'}`}
