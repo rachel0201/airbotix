@@ -65,10 +65,50 @@ src/pages/
 **One-liner**（替代当前 hero）：
 > "Teach kids to code with AI — workshops, weekly classes, 1-on-1, and an AI coding platform built for K-12. Based in Australia, designed for the next generation of builders."
 
-**3 个支柱叙事**（每个 surface 都强调）：
-1. **Real curriculum, not vibes** — 100+ pilot 学生 / 2 partner schools / Digital Technologies F-10 对齐
-2. **Built by AI-native founders** — Lightman + Joe (ex-Google) 团队信号
-3. **Kid-safe by design** — agent 沙盒 + 家长可见 + 内容审核（这是和 ChatGPT 直接区别）
+**3 个差异化支柱（vs 市面任何其他选择）**：
+
+| 维度 | ChatGPT / Cursor / Claude Code | Khanmigo / Cluey 等 tutoring chatbot | Scratch / Tynker / Code.org | **Airbotix** |
+|---|---|---|---|---|
+| AI-native | ✅ | ⚪ | ❌ | ✅ |
+| 给孩子用的 | ❌（成人工具） | ✅（但通用，非 coding 专精） | ✅ | ✅ |
+| **专门为 K-12 设计的 AI coding 工具** | ❌ | ❌ | ❌（pre-AI） | ✅ **Kids OpenCode** |
+| 家长可见 / audit replay | ❌ | ⚪ 部分 | ❌（不需要） | ✅ **完整** |
+| Curriculum-driven（项目结构）| ❌（开放聊天） | ⚪ | ✅ | ✅ |
+
+**真正的支柱叙事**（按重要性排序）：
+
+#### 支柱 1：**我们做了自己的 Kids OpenCode** ⭐⭐⭐
+这是**唯一一个专门为 K-12 设计的 AI Coding agent 工具**。市面所有 AI coding 工具（Cursor / Claude Code / Cline）都是为成人工程师设计的，**孩子用 = 不合适**：
+- 默认输出过于复杂、术语过多
+- 没有家长可见层
+- 没有 prompt injection 防御 / 内容边界
+- 可以执行任意命令、写任意文件
+
+Kids OpenCode 把这些**重构成 kid-safe 版本**：
+- Kid-safe system prompt（输出"鼓励式" 而非"批评式"）
+- 工具白名单（read / write / edit，无 shell）
+- 沙盒（kid 代码只在自己浏览器/电脑里跑，不影响平台）
+- **每一次 agent 行动都被家长可见**
+
+**这是 Airbotix 真正的 moat**。
+
+#### 支柱 2：**家长可以放心内容**（trust mechanism — 最高频家长决策因素）
+
+家长付费决策的 #1 顾虑：**"我让孩子用 AI，他会接触到什么我控制不了的内容？"** Airbotix 的回答：
+
+| 顾虑 | Airbotix 的机制 |
+|---|---|
+| 孩子和 AI 说了什么我不知道 | **Agent action replay** — 家长 dashboard 完整回看孩子和 AI 的每一句对话 + AI 做的每一个动作 |
+| AI 会不会说不合适的话 | **双层过滤**：DeepRouter 服务端 kid-safe system prompt + 平台兜底 classifier |
+| 孩子用 AI 偷懒 / 不学习 | **课程驱动**：AI 在 Mission / 课程包结构里，不是开放聊天框 |
+| 孩子分享自己作品给陌生人 | **默认私有**：班级墙 + 公开分享都需老师审核 + 家长二次同意 |
+| 我不想让孩子接触某些话题 | **话题边界配置**：家长可调级别（保守 / 标准 / 进阶） |
+| 充值会不会失控 | **Stars 钱包 + 触顶软停 + 加额需家长批准**（详见 platform PRD §8）|
+
+#### 支柱 3：**Real curriculum + Real builders, not vibes**
+- 100+ pilot 学生 / 2 partner schools / Digital Technologies F-10 对齐
+- Built by Lightman + Joe (ex-Google) — AI-native 团队
+- 孩子结业能带走**真实可分享的作品 URL / PDF / 视频**（不是"我和 AI 聊过天"，是"我做了这个东西"）
 
 **Audience priority**（按 funnel 大小排序）：
 1. **AU 家长**（主要 B2C）— 给孩子找 AI/coding 课的家庭
@@ -284,95 +324,146 @@ src/pages/
 
 ---
 
-## 4.6 Technology Stack & Partners（Trust Signal — 必须 logo 上首页）
+## 4.6 Our Proprietary Tools + AI Engines We Use（Trust Signal — 必须上首页）
 
-**核心叙事**："我们建的是 **AI 学习平台**，不是 AI 模型。世界上最好的 AI 模型由 Anthropic / OpenAI / ElevenLabs 等头部公司构建，我们的工作是把这些**安全、有结构地**送到孩子手里。"
+**核心叙事**（两层结构 — 顺序重要）：
 
-为什么这是 trust signal：
-- 家长看到 Claude / OpenAI / ElevenLabs 这些 logo → 心理稳：用的是世界级 AI，不是杂牌
-- 家长看到平台 = "我们建的 + 头部 AI 服务" → 比"完全黑盒"或"完全 ChatGPT 包装"都更有说服力
-- 投资人看到 → 我们没在重新造轮子，专注在 K-12 这层应用 + 课程
+> **我们的 Kids OpenCode 是世界上第一个专门为孩子设计的 AI Coding agent 工具。**
+> 它的"大脑"用世界级 AI 引擎 — Anthropic Claude, OpenAI, ElevenLabs 等。我们的工作不是重新造 AI 模型，而是为 K-12 孩子建造**他们能安全使用、家长能完全监管**的工具层。
 
-### 4.6.1 完整 Partner 列表
+为什么这两层都要 visible：
+1. **Kids OpenCode 是 Airbotix 的真正 moat**（不是杂牌 ChatGPT 包装，是我们自有 IP）
+2. **AI 引擎透明披露**（家长 / 投资人都看得到我们用的是世界级基础设施，不是黑盒）
+3. **这两层加起来**：才能完整回答家长的核心问题 "为什么我应该让你来教 AI，而不是直接给 ChatGPT 用？"
 
-按类别 + 用途：
+### 4.6.1 Airbotix 自有产品（the moat）⭐
+
+这一层是 Airbotix 真正的差异化。展示时**logo 用我们自己的品牌色，比第三方 logo 大一档**。
+
+| 产品 | 角色 | 状态 |
+|---|---|---|
+| 🛡️ **Kids OpenCode** | 专门为 K-12 设计的 AI Coding agent 工具（本地桌面 + 浏览器都有）— 我们自有 IP，fork 自 opencode 内核并深度改造为 kid-safe 版本 | V0 在建（kidsinai/kids-opencode）|
+| 🌐 **airbotix-app** | 统一云端学习平台（家长 portal + 孩子学习区）— 我们自有 | V0 在建（Airbotix-AI/airbotix-app）|
+| ⚙️ **DeepRouter** | 我们自家 LLM gateway — 所有 AI 调用必经此路，保证 kid-safe + 计费 + 多模型 routing | V0 在建（deeprouter-ai/deeprouter）|
+| 📚 **Airbotix Curriculum** | 100+ 学生验证过的课程包 + AU Digital Technologies F-10 对齐 | 自营，2 partner schools 验证中 |
+
+**marketing 文案**：
+> "We don't build AI models. We build **the kid-safe layer on top** — Kids OpenCode for coding, airbotix-app for learning, DeepRouter for routing, and a curriculum that's been classroom-tested in real Australian schools."
+
+### 4.6.2 AI 引擎我们使用（under the hood）
+
+这一层是"诚实披露 + 信任信号"。展示时 logo 比 4.6.1 小一档，灰阶或柔和色。
 
 **LLM / Agent 推理**
-| Logo | Vendor | 在 Airbotix 用于 |
-|---|---|---|
-| 🟧 | **Anthropic Claude** | AI Tutor / Agent 推理（主力模型，通过 DeepRouter）|
-| ⚫ | **OpenAI** | 备选 LLM / 部分图像（DALL-E）|
+| Vendor | 在 Airbotix 用于 |
+|---|---|
+| **Anthropic Claude** | AI Tutor / Agent 推理（主力，通过 DeepRouter）|
+| **OpenAI** | 备选 LLM + DALL-E（视情况）|
 
-**AI 创作工具**
-| Logo | Vendor | 用途 |
-|---|---|---|
-| 🔵 | **ElevenLabs** | TTS / 多角色配音 / 多语言 |
-| 🎵 | **Suno** | AI 音乐 / 主题曲生成 |
-| 🎬 | **Runway** | AI 短视频 / 动画 |
-| 🖼️ | **Black Forest Labs (Flux)** | 高质量图像生成 |
-| 🎨 | **Stability AI (SDXL)** | 备选图像 |
-
-**AI Coding 工具**（孩子直接接触）
-| Logo | Vendor | 用途 |
-|---|---|---|
-| 💻 | **Cursor** | AI 原生 IDE（12+ AI Coding Studio 学生用）|
-| 🤖 | **Anthropic Claude Code** | CLI agent 工具（高阶学生用）|
-| 🚀 | **opencode** (upstream, MIT) | 我们 fork 用作 kids-opencode 的内核 |
-
-**Dev / 部署**（学生项目部署用）
-| Logo | Vendor | 用途 |
-|---|---|---|
-| ▲ | **Vercel** | 学生作品部署 / 域名分配 |
-| 🐙 | **GitHub** | 代码托管 / 协作 |
-
-**平台基础设施**（家长一般不关心，但 schema for completeness）
+**AI 创作引擎**
 | Vendor | 用途 |
 |---|---|
-| AWS Sydney | EC2 / S3 / Secrets Manager (`platform-backend` 运行) |
+| **ElevenLabs** | TTS / 多角色配音 / 多语言 |
+| **Suno** | AI 音乐 / 主题曲生成 |
+| **Runway** | AI 短视频 / 动画 |
+| **Black Forest Labs (Flux)** | 高质量图像生成 |
+| **Stability AI (SDXL)** | 备选图像 |
+
+**成人 / 进阶级别 AI Coding 工具**（**仅 15+ 高阶学生在 1-on-1 教学中接触，绝大多数孩子用 Kids OpenCode 不接触这些**）
+| Vendor | 用途 |
+|---|---|
+| **Cursor** | 介绍给 15+ 学生作为"成人世界用的 AI IDE" |
+| **Anthropic Claude Code** | 同上，CLI agent 工具 |
+| **opencode** (upstream, MIT) | 我们 fork 用作 Kids OpenCode 的内核，致敬开源社区 |
+
+**Dev / 部署**（学生项目部署用）
+| Vendor | 用途 |
+|---|---|
+| **Vercel** | 学生作品部署 / 域名分配 |
+| **GitHub** | 代码托管 / 协作 |
+
+**平台基础设施**（家长不直接关心，但完整披露）
+| Vendor | 用途 |
+|---|---|
+| AWS Sydney | EC2 / S3 / Secrets Manager |
 | Neon | Postgres |
 | Cloudflare | DNS + ACM |
 | Airwallex | 支付（AUD + 跨境 FX）|
 | SendGrid | OTP / 通知邮件 |
-| DeepRouter | 自家 LLM gateway（所有 LLM 出口） |
 
-### 4.6.2 在网站上的呈现
+### 4.6.3 Why Parents Can Trust This（trust mechanism 详解）
 
-**Home `/`** — 紧贴 hero 下方加一个 **"Powered by"** logo strip（灰底 + 6-8 个 logo 横排灰阶）：
-```
-─────────────────────────────────────────────────────────────
-  Powered by best-in-class AI infrastructure
-  
-  [Anthropic]  [OpenAI]  [ElevenLabs]  [Cursor]  [Vercel]  [GitHub]
-─────────────────────────────────────────────────────────────
-```
+**这个 section 必须独立呈现** — 不能只是 logo 堆。给家长 5 个具体的可验证机制：
 
-**About `/about`** — 加一个 **"Our Technology Stack"** section（彩色 logo + 简短描述每个的用途）：
-- 完整 4.6.1 表格视觉化
-- 强调"建平台 + 用最好的 AI" 哲学
+| # | 机制 | 家长能在哪看到 / 验证 |
+|---|---|---|
+| 1 | **Agent Action Replay** | airbotix-app `/portal/audit` — 完整回看孩子和 AI 的每一次对话 + AI 调用的每一个工具 + 文件改动 diff |
+| 2 | **Kid-safe System Prompt（服务端强制）** | DeepRouter 在所有调用注入 kid-safe prefix，**孩子 / fork 改不掉**（详见 deeprouter-coupling-plan.md）|
+| 3 | **工具白名单 + 沙盒** | Kids OpenCode 只能 read/write/edit 虚拟 FS，无 shell / 无任意命令 / 无外部网络 |
+| 4 | **课程驱动 vs 开放聊天** | 孩子不是面对一个"AI 聊天框"，是面对"Mission 1: 做你的个人故事书" — AI 是工具，目标是项目 |
+| 5 | **默认私有 + 分享审核** | 孩子作品默认私有，分享班级墙需老师审核，公开需家长 + 老师双签 |
 
-**Platform `/programs/platform`** — 在 platform 预告页详细列出 "What's under the hood"，让 waitlist 注册前的家长能看到。
+**marketing 文案**（直接可上 site）：
+> "Every conversation. Every line of code AI writes. Every tool the AI uses. **You can replay it all.** Parents always see what their kid is doing with AI — not just a vague summary."
 
-**1-on-1 / Classes 页** — 提及"我们用的是 ..."但更轻量，不抢主推内容焦点。
+### 4.6.4 在网站上的呈现（两层结构）
 
-### 4.6.3 Logo 资产 logistics
+**Home `/`** — 三个 section 联动：
+
+1. **Hero 下方第一个 section ⭐**：突出 Kids OpenCode（自有 IP，logo + 一句话）
+   ```
+   ─────────────────────────────────────────────────────────────
+   [Kids OpenCode logo]   The first AI coding tool built for kids,
+                          not adults using kids.
+                          [Learn more →]
+   ─────────────────────────────────────────────────────────────
+   ```
+2. **接下来 section**："Powered by world-class AI" 灰阶 logo 横条
+   ```
+   Built on best-in-class AI infrastructure
+   [Anthropic] [OpenAI] [ElevenLabs] [Suno] [Vercel] [GitHub]
+   ```
+3. **再接下来 section**："Parents always know what's happening" — trust 机制 5 条（4.6.3）的视觉化展示，含 audit replay 截图占位
+
+**顺序极重要**：
+- 先看到 OUR product（Kids OpenCode）→ 建立"这是 Airbotix 真东西"
+- 再看到 partner logos → "用的是世界级 AI"
+- 再看到 trust 机制 → "我可以放心让孩子用"
+
+**About `/about`** — 完整 4.6 section：
+- 4.6.1 我们的自有产品（大 logo + 描述）
+- 4.6.2 我们用的 AI 引擎（partner logos + 表格）
+- 4.6.3 5 个 trust 机制（最长 section，含截图/示意图）
+
+**Platform `/programs/platform`** — Kids OpenCode 是这页的主角。完整产品介绍 + 视频 demo 占位 + waitlist。
+
+**1-on-1 / Classes 页** — 每页底部加"Tools your kid will use"（轻量提及具体工具，不抢焦点）。
+
+### 4.6.5 Logo 资产 logistics
 
 | 项 | 任务 |
 |---|---|
-| 下载 SVG/PNG | 每个 vendor 官网 brand 资源页（[TBD: Lightman 或我列清单后批量下载]）|
-| 存放 | `public/media/partners/<vendor>.svg` |
-| Attribution | 大部分公司允许"我们使用此服务"的展示。但 trademark 敏感的（Anthropic / OpenAI logo）需检查是否有"do not modify / 不暗示背书"等条款。**任务**：建一份 `docs/legal/partner-logos-usage.md` 记录每家的 brand guideline 链接 |
-| 灰阶版 | Home 上的 strip 用灰阶（避免视觉竞争），About 用彩色 |
-| Fallback | 不支持/没拿到 logo 时用 text-only "Anthropic Claude" 等 |
+| **Kids OpenCode / airbotix-app / DeepRouter 自有 logo** | [TBD: 需要设计师做品牌 logo — 这是 Airbotix 自有产品识别系统，比 partner logo 优先] |
+| Partner SVG/PNG 下载 | 每个 vendor 官网 brand 资源页 |
+| 存放 | `public/media/brand/` (自有) + `public/media/partners/` (第三方) |
+| Attribution | 大部分公司允许"我们使用此服务"的展示。trademark 敏感的（Anthropic / OpenAI）需检查 brand guideline。**任务**：建 `docs/legal/partner-logos-usage.md` 记录每家的链接 + 检查结果 |
+| 视觉层级 | 自有 logo > partner logo (大小 + 色彩) — 视觉上必须传达"自有产品是主，partner 是辅" |
+| Fallback | 不支持/没拿到 logo 时用 text-only |
 
-### 4.6.4 写成网站文案的关键句
+### 4.6.6 关键 marketing 文案（直接可上 site）
 
-可以直接用在 Home / About：
+**顶层定位**（首页 hero 下方第一段）：
+> "Airbotix builds **Kids OpenCode** — the first AI coding tool designed for kids, not adults using kids. Curriculum-aligned. Parent-visible. Safe by design."
 
-> "We don't build AI models — Anthropic, OpenAI, and others do that better. We build the curriculum, the safety layer, and the kid-friendly experience on top, so your child gets world-class AI in a structure that's actually designed for learning."
+**Partner 透明（灰阶 logo 横条 caption）**：
+> "Built on best-in-class AI — Claude, OpenAI, ElevenLabs, Suno. We don't build the AI models. We build the **kid-safe layer** on top."
 
-> "Every tool we use is named on this site. You can see exactly what's under the hood. No black boxes. No mystery models."
+**家长信任（trust 机制 section 的标题 + 副标题）**：
+> **Every conversation. Every line of code AI writes. Every tool the AI uses.**
+> You can replay it all. Parents always see what their kid is doing with AI — not just a vague summary.
 
-> "When your kid uses our platform, they're talking to Claude. They're generating music with Suno. They're deploying to Vercel. These are the same tools real engineers and creators use — packaged for K-12."
+**为什么我们存在（差异化对比）**：
+> "ChatGPT was built for adults. Cursor and Claude Code are built for engineers. Scratch and Tynker are pre-AI. **Kids OpenCode is the only AI coding tool built specifically for K-12 students** — with the safety, scaffolding, and parent visibility that everything else is missing."
 
 ---
 
@@ -419,12 +510,14 @@ airbotix.ai
 
 | 当前 | 改为 |
 |---|---|
-| AI CODING / Coming 2026 → | **WEEKLY CLASSES** / `Small group AI coding classes, ages 8-17, online & in-person` / `Enroll now →` |
+| AI CODING / Coming 2026 → | **KIDS OPENCODE** ⭐ / `The first AI coding tool built for kids, not adults. Parent-visible. Safe by design.` / `See how it works →` |
 | ROBOTICS / Enrolling now → | **WORKSHOPS** / `1-3 day intensive AI & robotics workshops for schools and holiday camps` / `View workshops →` |
-| HACKATHONS / Coming 2026 → | **1-ON-1 TUTORING** / `Private AI coding sessions with senior instructors. Online, flexible scheduling.` / `Book a session →` |
-| SCHOOLS / For educators → | **PLATFORM** / `Kids-safe AI coding platform with parent visibility. Coming 2026 Q3.` / `Join waitlist →` |
+| HACKATHONS / Coming 2026 → | **1-ON-1 TUTORING** / `Private AI coding sessions with senior instructors. From A$80/hr.` / `Book a session →` |
+| SCHOOLS / For educators → | **WEEKLY CLASSES** / `Small group AI Creative & Coding classes. Ages 8-17.` / `View cohorts →` |
 
 加第 5 张（次要位置）：`SCHOOLS / Year-long partnerships for AU schools / Talk to us →`
+
+**注**：把 Kids OpenCode 提到 #1 卡片（之前是 AI CODING 抽象"Coming 2026"），让访客第一眼看到我们最重要的差异化产品。Platform 整体 waitlist 移到 Kids OpenCode 卡片的 "See how it works" 路径里（Kids OpenCode + airbotix-app 都在那一页 / 那一组介绍）。
 
 **"Powered by" 横条**（紧贴 hero 下方，必加 — see §4.6.2）：
 - 灰阶 logo 横排：Anthropic / OpenAI / ElevenLabs / Cursor / Vercel / GitHub（6-8 个）
