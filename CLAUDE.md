@@ -2,165 +2,131 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Repository Status (as of 2026-05-14)
+
+This repo is in a **transitional state**:
+1. **Marketing site** (`/src/`) — live, deployed to GitHub Pages at airbotix.ai
+2. **Kids AI Platform** — in planning (see `docs/product/prd/`); scaffolds being created
+3. **Removed 2026-05-14**: `super-admin/` (Supabase-based, replaced by future `platform-backend` on NestJS) and `auth-backend/` (in-memory PoC, never connected to real DB). The repo no longer uses Supabase anywhere.
+
+## Tech Stack (locked 2026-05-14)
+
+| Layer | Choice |
+|---|---|
+| Marketing site | React 18 + Vite + TypeScript + TailwindCSS, GitHub Pages |
+| Kids platform frontend | React 18 + Vite + TS + Tailwind, Cloudflare Pages |
+| Backend API | **NestJS** + TypeScript |
+| Backend hosting | **AWS EC2 t3.small Sydney (ap-southeast-2)** + Docker Compose + nginx + Let's Encrypt |
+| ORM | **Prisma** |
+| Postgres | **Neon Serverless** (aws-ap-southeast-2) |
+| Object storage | **AWS S3** (ap-southeast-2 Sydney) |
+| Realtime | **WebSocket** (NestJS Gateway + nginx upgrade) |
+| Auth | JWT + Refresh Token + OTP (SendGrid email) — self-built, no Supabase Auth |
+| Agent runtime | AWS EC2 Sydney (same host as backend in V0; split later) |
+| LLM gateway | DeepRouter `/v1` (independent product, sibling repo) |
+| Payments | **Airwallex** (AUD local + cross-border FX) — NOT Stripe |
+
+**Hard rules**:
+- ❌ Do NOT introduce Supabase (auth, DB, storage, realtime, or RLS) — fully removed
+- ❌ Do NOT introduce Stripe — payments go through Airwallex
+- ❌ Do NOT introduce Fly.io / Vercel for backend — backend lives on AWS EC2 Sydney
+- ✅ All AU user data must stay in ap-southeast-2 (Sydney) region for compliance
+
 ## Development Commands
 
-### Main Website (root directory)
+### Marketing site (root directory)
 ```bash
-npm run dev      # Start development server (http://localhost:3000)
-npm run build    # Build for production (TypeScript + Vite)
-npm run lint     # Run ESLint checks with TypeScript support
-npm run preview  # Preview production build locally
-npm run deploy   # Build and deploy to GitHub Pages
+npm run dev      # http://localhost:3000
+npm run build    # TypeScript + Vite build
+npm run lint     # ESLint, no warnings allowed
+npm run preview  # Preview production build
+npm run deploy   # Build + deploy to GitHub Pages
 ```
 
-### Super Admin Application (`/super-admin/`)
-```bash
-cd super-admin
-npm run dev      # Start admin server (http://localhost:3001)
-npm run build    # Build admin for production
-npm run lint     # Run ESLint checks
-npm run preview  # Preview admin production build
-npm run deploy   # Deploy admin to GitHub Pages
-```
-
-### Database Management (Super Admin)
-```bash
-cd super-admin
-npx supabase migration new <name>  # Create new migration
-npx supabase db reset              # Reset database with all migrations
-```
+### `platform-backend/` (scaffold, NestJS)
+TBD — scaffold pending.
 
 ## Project Architecture
 
-This is a **monorepo** containing two separate React applications:
+```
+airbotix/
+├── src/                      # Marketing site (live)
+│   ├── components/
+│   ├── pages/
+│   ├── data/                 # Static workshop/blog/media content
+│   └── services/
+├── docs/
+│   ├── product/prd/          # Active PRDs (kids-ai-platform-prd.md, kids-opencode-spec.md)
+│   ├── product/prd/_archived/  # Archived 2026-05-14 super-admin/teacher PRDs
+│   └── product/compliance/   # Minors compliance checklist
+└── rules/                    # Coding standards (mandatory)
+```
 
-### 1. Main Website (`/`)
-Public-facing educational website for Airbotix (AI & Robotics education for K-12)
-- **Tech Stack**: React 18, TypeScript, Vite, TailwindCSS, React Router
-- **Deployment**: GitHub Pages via automated CI/CD
-- **Content**: Static data files in `src/data/` (workshops, blog posts, media)
-- **Routes**: Home, Workshops, About, Contact, Media, Blog
-
-### 2. Super Admin (`/super-admin/`)
-Administrative management system with role-based access control
-- **Tech Stack**: React 18, TypeScript, Vite, Supabase (PostgreSQL), TanStack Query
-- **Authentication**: Supabase Auth with email/password
-- **Database**: PostgreSQL with Row Level Security (RLS) policies
-- **Key Features**: Student management, course management, audit logging
-
-### Shared Configuration
-- **TypeScript**: Strict mode with path aliases (`@/*` → `./src/*`)
-- **ESLint**: Enforced code quality with no warnings allowed
-- **Styling**: TailwindCSS with custom color palette
-- **Node Version**: 20 (specified in CI/CD)
-
-## Database Schema (Super Admin)
-
-### Key Tables
-- `profiles` - User profiles with roles (super_admin, admin, teacher)
-- `students` - Student records with parent information
-- `students_audit` - Audit log for all student changes
-- `courses` - Workshop/course definitions
-- `enrollments` - Student course enrollments
-
-### Important Database Patterns
-- All tables use UUID primary keys
-- Row Level Security (RLS) enabled on all tables
-- Audit logging for sensitive operations
-- Role-based access control through `user_role` enum
-- Soft deletes with `deleted_at` timestamps
+Sibling product repos (under `kidsinai` org, separate working dirs):
+```
+~/Documents/sites/
+├── kidsinai/kids-opencode/       # Line B product (private, MIT) — 12+ agentic AI coding
+├── kidsinai/opencode-kernel/     # Upstream tracking fork of anomalyco/opencode (public, MIT)
+├── kidsinai/creative-web/        # Line A creative web (6-11) — public
+├── kidsinai/platform-backend/    # Shared NestJS API (Family / Wallet / Course Pack / Audit) — private
+├── kidsinai/planning/            # Master cross-product plan (private)
+└── deeprouter-ai/deeprouter/     # LLM gateway (independent product)
+```
 
 ## Development Standards
 
-### 🚨 MANDATORY CODING RULES
-**ALL AI coding tools (Claude Code, Cursor, Copilot) MUST follow the rules in `/rules/` directory**
+### MANDATORY CODING RULES
+**ALL AI coding tools must follow the rules in `/rules/` directory.**
 
-The `/rules/` directory contains comprehensive coding standards organized by category:
+Categories: General (SOLID/DRY/KISS), Frontend (React/TS), Backend (API/DB/Security), Deployment.
 
-#### Rule Categories:
-1. **[General Principles](./rules/general/)** - SOLID, DRY, KISS, Readability, Error Handling
-2. **[Frontend Rules](./rules/frontend/)** - React components, State management, TypeScript, Performance
-3. **[Backend Rules](./rules/backend/)** - API design, Database patterns, Security, Services
-4. **[Deployment Rules](./rules/deployment/)** - CI/CD, Build process, Environment management
-
-#### Core Mandatory Rules (Non-negotiable):
-- **SOLID Principles** - Applied to all code architecture
-- **DRY** - Zero code duplication allowed
-- **KISS** - Simplest solution that works
-- **File Size** - Maximum 1000 lines per file
-- **TypeScript** - Interfaces required for all data structures
-- **Constants** - No magic strings/numbers allowed
-- **Error Handling** - Explicit error handling required
-
-#### Quick Reference Example:
-```typescript
-// ✅ REQUIRED - Named constants
-const API_ENDPOINTS = {
-  WORKSHOPS: '/api/workshops',
-  BOOKINGS: '/api/bookings',
-} as const
-
-// ✅ REQUIRED - TypeScript interfaces
-interface WorkshopCardProps {
-  workshop: Workshop
-  onBookClick: (id: string) => void
-}
-
-// ❌ FORBIDDEN - Magic strings, any type, inline types
-const url = '/api/workshops'  // Use constant!
-const data: any = {}          // Define interface!
-```
-
-**IMPORTANT**: Before writing ANY code, AI tools must read relevant rules from `/rules/` directory.
+Non-negotiable:
+- SOLID, DRY, KISS
+- Max 1000 lines per file
+- TypeScript interfaces for all data structures
+- No magic strings/numbers — use named constants
+- Explicit error handling at boundaries
 
 ### Git Workflow
-- Branch naming: `feature/description`, `fix/issue-name`
-- Conventional Commits format
-- CI/CD runs on push to main branch
-
-## API Services (Super Admin)
-
-### Supabase Integration
-The Super Admin uses Supabase services organized by domain:
-- `studentService.ts` - Student CRUD operations with audit logging
-- `authService.ts` - Authentication and role management
-- `courseService.ts` - Course/workshop management
-- `enrollmentService.ts` - Student enrollment handling
-
-All services use TypeScript interfaces and proper error handling.
+- Branch naming: `feature/<desc>`, `fix/<issue>`
+- Conventional Commits
+- CI/CD on push to main
 
 ## Environment Variables
 
-### Main Website
-- `VITE_FORMSPREE_ID` - Contact form integration
-- `VITE_CONTACT_EMAIL` - Fallback contact email
+### Marketing site
+- `VITE_FORMSPREE_ID`
+- `VITE_CONTACT_EMAIL`
 
-### Super Admin
-- `VITE_SUPABASE_URL` - Supabase project URL
-- `VITE_SUPABASE_ANON_KEY` - Supabase anonymous key
+### platform-backend (planned)
+- `DATABASE_URL` — Neon Postgres connection string
+- `AWS_REGION=ap-southeast-2`
+- `AWS_S3_BUCKET`
+- `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` (or IAM role on EC2)
+- `JWT_SECRET` / `JWT_REFRESH_SECRET`
+- `SENDGRID_API_KEY`
+- `AIRWALLEX_CLIENT_ID` / `AIRWALLEX_API_KEY` / `AIRWALLEX_WEBHOOK_SECRET`
+- `DEEPROUTER_BASE_URL` / `DEEPROUTER_API_KEY`
 
 ## Testing
 
-**Note**: No testing framework is currently configured. When implementing tests, consider:
-- Vitest for unit testing (compatible with Vite)
-- React Testing Library for component testing
-- Playwright or Cypress for E2E testing
+No framework configured yet. Plan: Vitest (frontend unit) + Jest (NestJS backend) + Playwright (E2E).
 
 ## Important Context
 
-### Main Website
-- Workshop data is the primary content type with rich metadata
-- Mobile-first responsive design approach
-- Static data management through TypeScript files
-- No backend API - all content is static
+### Marketing site
+- Workshop is the primary content type
+- All content is static (TypeScript files in `src/data/`)
+- Mobile-first responsive design
+- No backend dependency
 
-### Super Admin
-- Protected routes require authentication
-- Role-based permissions enforced at database level
-- Audit trail for all student data modifications
-- Real-time data synchronization via Supabase
+### Kids AI Platform (planned)
+- Two product lines: Line A creative web (6-11) + Line B Kids OpenCode (12+)
+- Shared `platform-backend` (Family / Wallet / Course Pack / Class / Audit)
+- All LLM traffic must route through DeepRouter `/v1` (OpenAI-compatible)
+- Minors compliance: see `docs/product/compliance/minors-compliance.md` (C1-C15 required items)
 
 ### Performance Targets
 - Bundle size: < 1MB gzipped
 - Code splitting with React.lazy() for routes
-- Memoization for expensive calculations
+- Memoization for expensive computations

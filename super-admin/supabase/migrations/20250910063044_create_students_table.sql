@@ -1,3 +1,0 @@
--- This migration was accidentally created empty
--- The actual students table creation is in 20250910071320_fix_create_students_table.sql
--- This file is kept for migration history consistency
