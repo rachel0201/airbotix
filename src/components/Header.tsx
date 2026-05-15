@@ -1,24 +1,25 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { ALT_TEXTS, LOGO_SIZES, RESPONSIVE_LOGOS } from '../constants/assets';
-import { useAuthStore } from '@/store/authStore';
-import LanguageToggle from '@/auth/components/LanguageToggle';
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { ALT_TEXTS, LOGO_SIZES, RESPONSIVE_LOGOS } from '../constants/assets'
+
+const NAV_LINKS = [
+  { to: '/', label: 'Home' },
+  { to: '/programs', label: 'Programs' },
+  { to: '/about', label: 'About' },
+  { to: '/media', label: 'Media' },
+  { to: '/blog', label: 'Blog' },
+  { to: '/faq', label: 'FAQ' },
+  { to: '/contact', label: 'Contact' },
+] as const
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { t } = useTranslation()
-  const { user, isAuthenticated, logout } = useAuthStore()
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+  const closeMenu = () => setIsMenuOpen(false)
 
-  const handleLogout = async () => {
-    await logout()
-    setIsMenuOpen(false)
-  }
-
-  const navLink = "text-ink-soft hover:text-ink px-3 py-2 rounded-md text-[15px] font-medium transition-colors"
-  const navLinkMobile = "block text-ink-soft hover:text-ink px-3 py-2 rounded-md text-base font-medium"
+  const navLink = 'text-ink-soft hover:text-ink px-3 py-2 rounded-md text-[15px] font-medium transition-colors'
+  const navLinkMobile = 'block text-ink-soft hover:text-ink px-3 py-2 rounded-md text-base font-medium'
 
   return (
     <header className="bg-canvas/95 backdrop-blur-sm border-b border-hairline-soft sticky top-0 z-50">
@@ -42,46 +43,26 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-2">
-            <Link to="/" className={navLink}>{t('nav.home', 'Home')}</Link>
-            <Link to="/programs" className={navLink}>{t('nav.programs', 'Programs')}</Link>
-            <Link to="/about" className={navLink}>{t('nav.about', 'About')}</Link>
-            <Link to="/media" className={navLink}>{t('nav.media', 'Media')}</Link>
-            <Link to="/blog" className={navLink}>{t('nav.blog', 'Blog')}</Link>
-            <Link to="/faq" className={navLink}>{t('nav.faq', 'FAQ')}</Link>
-            <Link to="/contact" className={navLink}>{t('nav.contact', 'Contact')}</Link>
+            {NAV_LINKS.map((l) => (
+              <Link key={l.to} to={l.to} className={navLink}>
+                {l.label}
+              </Link>
+            ))}
           </nav>
 
-          {/* Right Section */}
-          <div className="hidden md:flex items-center space-x-4">
-            <LanguageToggle />
-            {isAuthenticated ? (
-              <div className="flex items-center space-x-3">
-                <span className="text-sm text-ink-soft">{user?.email}</span>
-                <Link to="/dashboard" className={navLink}>
-                  {t('nav.dashboard', 'Dashboard')}
-                </Link>
-                <button onClick={handleLogout} className={navLink}>
-                  {t('nav.logout', 'Logout')}
-                </button>
-              </div>
-            ) : (
-              <>
-                <Link to="/login" className={navLink}>{t('nav.login', 'Login')}</Link>
-                <Link to="/book" className="btn-pill-primary">
-                  {t('nav.bookWorkshop', 'Book a Workshop')}
-                </Link>
-              </>
-            )}
+          {/* Right Section — single primary CTA */}
+          <div className="hidden md:flex items-center">
+            <Link to="/book" className="btn-pill-primary">
+              Book a Consult
+            </Link>
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center space-x-2">
-            <LanguageToggle />
+          <div className="md:hidden">
             <button
               onClick={toggleMenu}
               className="text-ink-soft hover:text-ink focus:outline-none"
-              aria-label={isMenuOpen ? t('nav.closeMenu', 'Close menu') : t('nav.openMenu', 'Open menu')}
-              title={isMenuOpen ? t('nav.closeMenu', 'Close menu') : t('nav.openMenu', 'Open menu')}
+              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
             >
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {isMenuOpen ? (
@@ -98,32 +79,16 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-hairline-soft">
-              <Link to="/" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.home', 'Home')}</Link>
-              <Link to="/programs" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.programs', 'Programs')}</Link>
-              <Link to="/about" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.about', 'About')}</Link>
-              <Link to="/media" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.media', 'Media')}</Link>
-              <Link to="/blog" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.blog', 'Blog')}</Link>
-              <Link to="/faq" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.faq', 'FAQ')}</Link>
-              <Link to="/contact" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.contact', 'Contact')}</Link>
-
-              {isAuthenticated ? (
-                <div className="pt-4 border-t border-hairline-soft mt-4">
-                  <div className="px-3 py-2 text-sm text-ink-soft">{user?.email}</div>
-                  <Link to="/dashboard" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>
-                    {t('nav.dashboard', 'Dashboard')}
-                  </Link>
-                  <button onClick={handleLogout} className={`${navLinkMobile} w-full text-left`}>
-                    {t('nav.logout', 'Logout')}
-                  </button>
-                </div>
-              ) : (
-                <div className="pt-4 border-t border-hairline-soft mt-4 space-y-2">
-                  <Link to="/login" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.login', 'Login')}</Link>
-                  <Link to="/book" className="btn-pill-primary w-full" onClick={() => setIsMenuOpen(false)}>
-                    {t('nav.bookWorkshop', 'Book a Workshop')}
-                  </Link>
-                </div>
-              )}
+              {NAV_LINKS.map((l) => (
+                <Link key={l.to} to={l.to} className={navLinkMobile} onClick={closeMenu}>
+                  {l.label}
+                </Link>
+              ))}
+              <div className="pt-4 border-t border-hairline-soft mt-4">
+                <Link to="/book" className="btn-pill-primary w-full text-center block" onClick={closeMenu}>
+                  Book a Consult
+                </Link>
+              </div>
             </div>
           </div>
         )}
