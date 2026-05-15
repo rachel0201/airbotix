@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { usePageMeta } from '../../hooks/usePageMeta'
 
 const tracks = [
   {
@@ -31,6 +32,11 @@ const tracks = [
 ] as const
 
 const Programs = () => {
+  usePageMeta({
+    title: 'Programs',
+    description: 'Three ways kids learn AI with Airbotix: small-group classes, 1-on-1 tutoring, and Kids OpenCode (our own AI coding platform).',
+  })
+
   return (
     <div className="bg-canvas">
       {/* Hero */}

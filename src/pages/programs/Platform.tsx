@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useState, type FormEvent } from 'react'
+import { usePageMeta } from '../../hooks/usePageMeta'
 
 const trustMechanisms = [
   {
@@ -59,6 +60,11 @@ const ageTracks = [
 ] as const
 
 const Platform = () => {
+  usePageMeta({
+    title: 'Kids OpenCode — Platform Waitlist',
+    description: 'The first AI coding tool built for kids, not adults using kids. Launching 2026 Q3. Join the waitlist for early access + 50% off first 3 months.',
+  })
+
   const [submitted, setSubmitted] = useState(false)
   const formspreeId = import.meta.env.VITE_FORMSPREE_ID || ''
 

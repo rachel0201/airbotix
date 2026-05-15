@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { usePageMeta } from '../hooks/usePageMeta'
 
 const programs = [
   {
@@ -106,6 +107,11 @@ const CompareIcon = ({ kind, highlight = false }: { kind: CompareCell; highlight
 }
 
 const Home = () => {
+  usePageMeta({
+    title: '',
+    description: 'AI coding for K-12 students. Group classes, 1-on-1 tutoring, and Kids OpenCode — our own kids-safe AI coding tool. Australian-built, parent-visible.',
+  })
+
   return (
     <div className="bg-canvas">
       {/* ============================================================

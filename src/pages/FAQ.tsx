@@ -1,9 +1,15 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { faqCategories } from '../data/faq'
+import { usePageMeta } from '../hooks/usePageMeta'
 
 const FAQ = () => {
-  const [activeCategory, setActiveCategory] = useState(faqCategories[0]?.id || '')
+  usePageMeta({
+    title: 'FAQ',
+    description: 'Common questions about Airbotix AI coding programs — group classes, 1-on-1 tutoring, Kids OpenCode platform, pricing, and trust & safety.',
+  })
+
+  const [activeCategory, setActiveCategory] = useState<string>(faqCategories[0]?.id || '')
   const [openItems, setOpenItems] = useState<Set<string>>(new Set())
 
   const toggleItem = (questionId: string) => {
@@ -30,7 +36,7 @@ const FAQ = () => {
               Quick answers for <span className="squiggle-word text-brand-coral">curious parents.</span>
             </h1>
             <p className="lead-text mt-7">
-              Common questions about our AI and robotics programs. Can't find yours? Drop us a message — we read every one.
+              Common questions about our AI coding programs. Can&rsquo;t find yours? Drop us a message — we read every one.
             </p>
           </div>
         </div>

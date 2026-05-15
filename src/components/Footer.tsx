@@ -23,8 +23,8 @@ const Footer = () => {
               />
             </div>
             <p className="text-white/70 max-w-md leading-relaxed text-[15px]">
-              Teaching the next generation of K-12 students to code with AI. Hands-on workshops and
-              AI-native curriculum, built with educators across Australia.
+              Teaching the next generation of K-12 students to code with AI. Group classes,
+              1-on-1 tutoring, and our own kids-safe AI coding tool — built in Australia.
             </p>
             <div className="flex gap-3 mt-6">
               <a
@@ -42,15 +42,15 @@ const Footer = () => {
           </div>
 
           {/* Programs */}
-          <div className="md:col-span-3">
+          <div className="md:col-span-2">
             <div className="text-[11px] font-semibold uppercase text-white/50 mb-4 tracking-[0.12em]">
               Programs
             </div>
             <ul className="space-y-3">
-              <li><Link to="/workshops" className="text-white/80 hover:text-white text-[15px] transition-colors">Workshops</Link></li>
-              <li><Link to="/workshops" className="text-white/80 hover:text-white text-[15px] transition-colors">AI Coding</Link></li>
-              <li><Link to="/workshops" className="text-white/80 hover:text-white text-[15px] transition-colors">Robotics</Link></li>
-              <li><Link to="/book" className="text-white/80 hover:text-white text-[15px] transition-colors">Book a Workshop</Link></li>
+              <li><Link to="/programs/classes" className="text-white/80 hover:text-white text-[15px] transition-colors">Group Classes</Link></li>
+              <li><Link to="/programs/one-on-one" className="text-white/80 hover:text-white text-[15px] transition-colors">1-on-1 Tutoring</Link></li>
+              <li><Link to="/programs/platform" className="text-white/80 hover:text-white text-[15px] transition-colors">Kids OpenCode</Link></li>
+              <li><Link to="/book" className="text-white/80 hover:text-white text-[15px] transition-colors">Book a Consult</Link></li>
             </ul>
           </div>
 
@@ -64,6 +64,19 @@ const Footer = () => {
               <li><Link to="/blog" className="text-white/80 hover:text-white text-[15px] transition-colors">Blog</Link></li>
               <li><Link to="/media" className="text-white/80 hover:text-white text-[15px] transition-colors">Media</Link></li>
               <li><Link to="/contact" className="text-white/80 hover:text-white text-[15px] transition-colors">Contact</Link></li>
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div className="md:col-span-1">
+            <div className="text-[11px] font-semibold uppercase text-white/50 mb-4 tracking-[0.12em]">
+              Legal
+            </div>
+            <ul className="space-y-3">
+              <li><Link to="/privacy" className="text-white/80 hover:text-white text-[15px] transition-colors">Privacy</Link></li>
+              <li><Link to="/terms" className="text-white/80 hover:text-white text-[15px] transition-colors">Terms</Link></li>
+              <li><Link to="/compliance" className="text-white/80 hover:text-white text-[15px] transition-colors">Compliance</Link></li>
+              <li><Link to="/parental-consent" className="text-white/80 hover:text-white text-[15px] transition-colors">Parental Consent</Link></li>
             </ul>
           </div>
 
@@ -88,16 +101,11 @@ const Footer = () => {
 
         <div className="border-t border-white/10 mt-14 pt-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <p className="text-white/50 text-sm">
-            © {year} Airbotix. All rights reserved.
+            © {year} Airbotix Pty Ltd. All rights reserved.
           </p>
-          <div className="flex gap-6">
-            <Link to="/privacy" className="text-white/50 hover:text-white text-sm transition-colors">
-              Privacy
-            </Link>
-            <Link to="/terms" className="text-white/50 hover:text-white text-sm transition-colors">
-              Terms
-            </Link>
-          </div>
+          <p className="text-white/50 text-sm">
+            Made in Australia for the next generation.
+          </p>
         </div>
       </div>
     </footer>

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { usePageMeta } from '../../hooks/usePageMeta'
 
 const cohorts = [
   {
@@ -65,6 +66,11 @@ const faqs = [
 ] as const
 
 const Classes = () => {
+  usePageMeta({
+    title: 'Group Classes',
+    description: 'Small-group AI classes — AI Creative Lab (ages 8-11) and AI Coding Studio (ages 12-17). Weekly terms, holiday intensives, or school partnerships. 3-6 kids per class.',
+  })
+
   return (
     <div className="bg-canvas">
       {/* Hero */}

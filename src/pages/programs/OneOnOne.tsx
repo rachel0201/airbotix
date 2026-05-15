@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { usePageMeta } from '../../hooks/usePageMeta'
 
 const subjects = [
   {
@@ -74,6 +75,11 @@ const howItWorks = [
 ] as const
 
 const OneOnOne = () => {
+  usePageMeta({
+    title: '1-on-1 Tutoring',
+    description: 'Private AI coding sessions with senior instructors. From A$80/hour. Personalised to your kid&rsquo;s level and goals — AI image creation, coding, school projects, hackathon prep.',
+  })
+
   return (
     <div className="bg-canvas">
       {/* Hero */}

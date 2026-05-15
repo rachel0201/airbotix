@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { usePageMeta } from '../hooks/usePageMeta'
 
 const values = [
   {
@@ -79,6 +80,11 @@ const layers = [
 ] as const
 
 const About = () => {
+  usePageMeta({
+    title: 'About',
+    description: 'Airbotix is an Australian K-12 AI coding company. We build curriculum, group classes, 1-on-1 tutoring, and our own kids-safe AI coding tool (Kids OpenCode).',
+  })
+
   return (
     <div className="bg-canvas">
       {/* ============================================================

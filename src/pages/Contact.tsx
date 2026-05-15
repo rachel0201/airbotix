@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 type FormState = {
   fullName: string
@@ -107,12 +108,50 @@ const Contact = () => {
           <div className="max-w-3xl">
             <span className="eyebrow eyebrow-mint">CONTACT</span>
             <h1 className="hero-display">
-              Let's talk about <span className="squiggle-word text-brand-coral">your kids.</span>
+              Let&rsquo;s talk about <span className="squiggle-word text-brand-coral">your kids.</span>
             </h1>
             <p className="lead-text mt-7">
-              Have a question, or want to bring a workshop to your school? Drop us a message — we
-              read every one and reply within 1–2 business days.
+              Got a general question, media inquiry, partnership idea, or just want to say hi?
+              Drop us a note — we read every one and reply within 1-2 business days.
             </p>
+            <div className="mt-7 p-5 rounded-2xl bg-wash-coral/50 border border-brand-coral/20">
+              <p className="text-[14px] text-ink-soft leading-relaxed">
+                <strong className="text-ink">Looking to enrol or book a class?</strong>{' '}
+                Use <Link to="/book" className="text-brand-coral font-semibold no-underline hover:underline">our booking page</Link> instead — it routes faster.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================
+          Direct channels
+          ============================================================ */}
+      <section className="py-12 bg-canvas">
+        <div className="max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="card-base">
+              <div className="text-[12px] font-bold uppercase tracking-[0.10em] text-brand-coral mb-2">Email</div>
+              <a href="mailto:hello@airbotix.ai" className="text-[18px] font-bold text-ink no-underline hover:text-brand-coral transition-colors">
+                hello@airbotix.ai
+              </a>
+              <p className="text-[14px] text-ink-soft mt-2">Replies within 1-2 business days.</p>
+            </div>
+            <div className="card-base">
+              <div className="text-[12px] font-bold uppercase tracking-[0.10em] text-brand-bubblegum mb-2">Office</div>
+              <p className="text-[16px] font-semibold text-ink leading-snug">
+                L10b 144 Edward St<br />
+                Brisbane City, QLD 4000
+              </p>
+              <p className="text-[14px] text-ink-soft mt-2">Australia.</p>
+            </div>
+            <div className="card-base">
+              <div className="text-[12px] font-bold uppercase tracking-[0.10em] text-brand-sky mb-2">Privacy / Data</div>
+              <a href="mailto:privacy@airbotix.ai" className="text-[18px] font-bold text-ink no-underline hover:text-brand-sky transition-colors">
+                privacy@airbotix.ai
+              </a>
+              <p className="text-[14px] text-ink-soft mt-2">For data access, deletion, or compliance questions.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -183,7 +222,7 @@ const Contact = () => {
                   value={form.message}
                   onChange={handleChange}
                   className={inputClass}
-                  placeholder="Tell us about your school, students' ages, preferred dates, etc."
+                  placeholder="What would you like to ask or share?"
                   required
                 />
               </div>

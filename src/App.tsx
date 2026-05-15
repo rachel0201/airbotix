@@ -14,6 +14,10 @@ import Programs from './pages/programs/Programs';
 import OneOnOne from './pages/programs/OneOnOne';
 import Classes from './pages/programs/Classes';
 import Platform from './pages/programs/Platform';
+import Privacy from './pages/legal/Privacy';
+import Terms from './pages/legal/Terms';
+import ParentalConsent from './pages/legal/ParentalConsent';
+import Compliance from './pages/legal/Compliance';
 
 // Auth pages
 import Login from './auth/pages/Login';
@@ -77,6 +81,10 @@ function App() {
               <Route path="/faq" element={<FAQ />} />
               <Route path="/blog" element={<BlogList />} />
               <Route path="/blog/:slug" element={<BlogDetail />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/parental-consent" element={<ParentalConsent />} />
+              <Route path="/compliance" element={<Compliance />} />
             </Routes>
           </Layout>
         }
