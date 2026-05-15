@@ -16,7 +16,7 @@ cd ~/Documents/sites/kidsinai/platform-backend/
 
 - **Airbotix-AI** = for-profit 商业实体，所有付费产品代码、营销站、planning docs 都在这里
 - **kidsinai** = 社区 / 比赛 / 开源品牌，只保留对外开放的 opencode-kernel fork
-- 学习体验产品（platform-backend / kids-opencode / creative-web）= Airbotix-AI 资产
+- 学习体验产品（platform-backend / airbotix-app / teacher-console）= Airbotix-AI 资产
 - 学校签合同、家长付费 = 与 Airbotix-AI 公司发生关系，repo 归属与商业关系对齐
 
 ## Tech Stack (locked 2026-05-14)

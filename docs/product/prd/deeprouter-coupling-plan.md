@@ -117,7 +117,7 @@ kids-opencode 启动时往 `https://telemetry.airbotix.ai/heartbeat` POST 一次
 - [ ] fork 的"友好提示"措辞 — 太硬会被骂，太软没威慑（建议跟法务咨询）
 - [ ] 是否提供 "Kids Safety Certification Program" — 让其他 LLM provider 也能通过认证拿这个标签（扩大生态 vs 削弱护城河）
 - [ ] Audit event emit 失败时（platform-backend down）的降级策略 — 阻止 LLM 调用 还是 fail-open？
-- [ ] `/v1/kids-completions` 是否服务非 kids-opencode 客户（比如 Airbotix 的 creative-web）？建议**是**（统一 kid-safety gateway 给所有 Line A/B 用），但接口契约要早定
+- [ ] `/v1/kids-completions` 是否服务非 kids-opencode 客户（比如 Airbotix 的 airbotix-app `/learn/*`）？建议**是**（统一 kid-safety gateway 给所有 Line A/B 用），但接口契约要早定
 
 ---
 

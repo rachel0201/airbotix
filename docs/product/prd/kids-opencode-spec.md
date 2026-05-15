@@ -306,7 +306,7 @@ UI 形态：
 ### 5.1 用户流程
 
 ```
-[孩子在 kids-web 登录 Kid Profile]
+[孩子在 airbotix-app `/learn` 登录 Kid Profile（或本地 kids-opencode 桌面端直接登录 — 由 kids-opencode 那边决定）]
     ↓
 [点击 "打开 Kids OpenCode" 或从 Class Mission 启动]
     ↓

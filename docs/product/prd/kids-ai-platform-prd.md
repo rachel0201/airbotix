@@ -779,7 +779,7 @@ V0 防御层（已大幅简化，因为没有命令执行）：
 - Privacy + Terms + Parental Consent
 
 **支付与额度**：
-- Stripe 接入（AUD）
+- Airwallex 接入（AUD 本地 + 跨境 FX，2026-05-14 替代 Stripe）
 - **Stars Pack 充值（4 档：Starter $10 / Family $30 / Mega $50 / School $100）**
 - 钱包余额（永不过期）+ 消费明细
 - 每日/周/月上限 + 单次上限
@@ -828,7 +828,7 @@ V0 防御层（已大幅简化，因为没有命令执行）：
 - Kids OpenCode 服务端 agent runtime：**共享服务端进程**（无 per-session 容器），按 `family_id × project_id` 隔离 session；项目文件存储在**服务端虚拟 FS**（AWS S3 Sydney，bucket key 前缀 `family_id/project_id/`）
 - Kid 代码隔离：**孩子浏览器侧 `<iframe sandbox>`** 渲染 HTML/CSS/JS，无服务端代码执行
 - 平台后端：自研 `platform-backend`（NestJS + TypeScript），部署在 AWS EC2 t3.small (Sydney) + Docker Compose + nginx + Let's Encrypt；Postgres 走 Neon Serverless (aws-ap-southeast-2)；对象存储走 AWS S3 (ap-southeast-2)。Auth 自建 JWT + OTP（SendGrid email），权限在 NestJS guard 层强制，不依赖任何托管 BaaS
-- 平台前端 hosting：Cloudflare Pages（静态前端） + Fly.io Machines（agent runtime / 后端服务）。不使用 Cloudflare Workers（Workers 是无状态边缘函数，无法承载 stateful agent session）
+- 平台前端 hosting：`airbotix-app` + `teacher-console` 走 **AWS S3 + CloudFront** (Sydney ap-southeast-2)；marketing 站保留 GitHub Pages；DNS 走 Cloudflare（不用 Cloudflare Pages 也不用 Cloudflare Workers）
 
 ### 13.2 V0 Out of Scope
 
@@ -1018,19 +1018,14 @@ V1+: Local Desktop (Tauri / Electron) — D15
   ├─ Tool whitelist enforcer（read/write/edit/list 仅作用于 S3 Virtual FS）+ 虚拟 FS 边界
   └─ Audit emitter → platform-backend audit endpoint → Postgres
 
-新增 kids-web（V0，Team C）
-  ├─ Line A 低龄创作 web 应用
-  ├─ 图像 / TTS / 故事创作向导
-  └─ 调 platform-backend，由其代理到 DeepRouter
-
-新增 kids-web 共享层
-  └─ Family Account / Project list / 作品集 / Class Wall（跨两条产品线）
-
-新增 parent-web
-  └─ Dashboard / Wallet / Settings / Approvals / Agent audit replay
+新增 airbotix-app（V0，统一云端 SPA，原计划 kids-web + parent-web 合并）
+  ├─ /portal/* — 家长：登录、Family Account、多孩子管理、Stars 钱包、审批、agent audit replay
+  ├─ /learn/* — 孩子（Line A 6-11）：AI 图像 / 音乐 / 视频 / 配音故事 / coding-101 / 班级墙 / 作品集
+  ├─ /download/kids-opencode — 12+ 下载本地工具入口
+  └─ 调 platform-backend，由其代理到 DeepRouter；Family Account 跨产品线唯一
 
 新增 teacher-console（替代删除的 super-admin）
-  └─ Class / Curriculum / Live Mode / Summary
+  └─ Class / Curriculum / Live Mode / Summary，独立部署 teacher.airbotix.ai
 
 新增 robotics-bridge（V1）
   └─ 作为 Kids OpenCode 的一个 agent tool 暴露
@@ -1043,7 +1038,7 @@ Airwallex（V0，AUD 本地 + 跨境 FX），不用 Stripe
 - [x] AI Tutor / Agent 模型：**Claude 3.5 Sonnet**（V0，可通过 DeepRouter 热切换）
 - [x] 图像模型：**由 DeepRouter 决定并维护**（Platform 不锁定，DeepRouter 负责单 Star 毛利目标 ≥ 40%；详见 `DeepRouter-PRD.md（sibling repo `~/Documents/sites/deeprouter-ai/deeprouter/`）` §7.2.1）
 - [x] Coding 沙盒方案（V0）：**浏览器 `<iframe sandbox>` + 服务端虚拟 FS**（无 per-session 服务端容器；2026-05-11 锁定，D11 RESOLVED）
-- [x] **D14**：平台前端 hosting = Cloudflare Pages（静态前端） + **AWS EC2 t3.small Sydney**（NestJS API + agent runtime）。2026-05-14 用户改选 EC2 替代 Fly.io / Fargate。**不用 Cloudflare Workers**（无状态边缘函数无法承载 stateful agent session）
+- [x] **D14**：平台 hosting 最终方案（2026-05-15 二次锁定）= **AWS S3 + CloudFront Sydney**（`airbotix-app` + `teacher-console` 两个 SPA）+ **AWS EC2 t3.small Sydney**（platform-backend NestJS API）+ Cloudflare DNS + ACM `*.airbotix.ai` (us-east-1)。Marketing 站保留 GitHub Pages。**不用 Cloudflare Pages / Cloudflare Workers / Fly.io / Vercel**
 - [x] **数据库 hosting**：Neon Serverless Postgres (aws-ap-southeast-2)，2026-05-14 锁定
 - [x] **对象存储**：AWS S3 (ap-southeast-2 Sydney)，2026-05-14 锁定
 - [x] **支付**：Airwallex（AUD 本地 + 跨境 FX），2026-05-14 用户改选，替代 Stripe
@@ -1118,7 +1113,7 @@ Airwallex（V0，AUD 本地 + 跨境 FX），不用 Stripe
 | ~~D11~~ | ~~Kids OpenCode sandbox 隔离层（container / Firecracker / gVisor）~~ | — | ✅ **已决策（2026-05-11）：V0 = 浏览器 `<iframe sandbox>` + 服务端虚拟 FS，无服务端容器**。V0 仅支持 HTML/CSS/JS，孩子代码不在服务端跑，因此 container-based hardening 推迟到 V1+ (Pyodide 引入时重新评估) / V2+ (语言扩展到 Python/Node 时再考虑 gVisor/Firecracker)。详见 `kids-opencode-spec.md` v0.2 |
 | D12 | DeepRouter 与平台的租户隔离边界（计费 / quota / policy） | 高 | 由 `DeepRouter-PRD.md（sibling repo `~/Documents/sites/deeprouter-ai/deeprouter/`）` 主导，本 PRD 跟随 |
 | D13 | Kids OpenCode 与 opencode upstream 的 fork 策略（rebase 频率 / patch 维护） | 中 | Team B Week 1-2 fork 探索阶段决定 |
-| ~~D14~~ | ~~平台前端 hosting 目标~~ | — | ✅ **已决策（2026-05-11）**：Cloudflare Pages（静态前端） + Fly.io Machines（agent runtime/后端）。**不用 Cloudflare Workers**。Marketing site 保留 GH Pages |
+| ~~D14~~ | ~~平台前端 hosting 目标~~ | — | ✅ **已决策（2026-05-15 二次锁定）**：AWS S3 + CloudFront Sydney（`airbotix-app` + `teacher-console`）+ AWS EC2 t3.small Sydney（platform-backend）+ Cloudflare DNS。Marketing site 保留 GH Pages。2026-05-11 旧决策 Cloudflare Pages + Fly.io 已被替代 |
 | **D15** | **V1 Local Desktop 框架（Tauri vs Electron）** | 中 | V1 启动前决定；倾向 Tauri（包体积 + Rust 安全 + 与 opencode 上游一致） |
 
 ---

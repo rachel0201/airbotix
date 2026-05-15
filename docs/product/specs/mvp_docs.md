@@ -2,6 +2,8 @@
 
 # Airbotix Website – MVP PRD
 
+> **⚠️ Historical doc (2025).** Scope is the **marketing site only**. The broader Kids AI Platform (`airbotix-app` + `teacher-console` + `platform-backend` + `kids-opencode`) is governed by `docs/product/prd/kids-ai-platform-prd.md` (v0.4+). Items in "§3 Out of Scope" below have been re-scoped into separate sibling repos — read the current PRD for authoritative direction.
+
 ## 1. Objective
 Build an **international static website (EN + 中文)** to showcase Airbotix’s brand, programs, and contact channel.  
 Target: **Launch fast, professional, SEO-friendly**, ready for GitHub Pages hosting.
@@ -70,12 +72,12 @@ Target: **Launch fast, professional, SEO-friendly**, ready for GitHub Pages host
 
 ---
 
-## 3. Out of Scope (Future Phases)
-- Online payment/Stripe integration  
-- Parent/student portals  
-- Super-admin management system  
-- E-commerce checkout  
-- Consent/legal document signing  
+## 3. Out of Scope for marketing site (resolved by sibling repos as of 2026-05)
+- ~~Online payment / Stripe integration~~ → **Airwallex** in `platform-backend`
+- ~~Parent / student portals~~ → `airbotix-app` (`/portal/*` + `/learn/*`)
+- ~~Super-admin management system~~ → `teacher-console` (super-admin deleted 2026-05-14)
+- ~~E-commerce checkout~~ → Airwallex hosted checkout via `platform-backend`
+- ~~Consent / legal document signing~~ → `airbotix-app` `/portal/register` + Parental Consent flow  
 
 ---
 
