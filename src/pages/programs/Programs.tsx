@@ -2,22 +2,13 @@ import { Link } from 'react-router-dom'
 
 const tracks = [
   {
-    tone: 'coral',
-    tag: 'PLATFORM',
-    title: 'Kids OpenCode',
-    desc: 'Our flagship AI coding tool, designed specifically for K-12. Parent-visible, sandboxed, curriculum-driven. Currently in waitlist — launching 2026 Q3.',
-    cta: 'Join waitlist →',
-    href: '/programs/platform',
-    sticker: { label: 'FLAGSHIP', color: 'sunshine' },
-  },
-  {
-    tone: 'sunshine',
-    tag: 'WORKSHOPS',
-    title: 'School & holiday camps',
-    desc: '1–3 day intensive AI & robotics workshops. mBots, sensors, generative AI. Run in real Australian schools today.',
-    cta: 'View workshops →',
-    href: '/programs/workshops',
-    sticker: { label: 'POPULAR', color: 'coral', alt: true },
+    tone: 'sky',
+    tag: 'CLASSES',
+    title: 'Group classes & camps',
+    desc: 'Small-group AI classes — weekly term cohorts, holiday intensives, and school partnerships. AI Creative Lab (ages 8-11) + AI Coding Studio (ages 12-17).',
+    cta: 'View options →',
+    href: '/programs/classes',
+    sticker: null,
   },
   {
     tone: 'bubblegum',
@@ -29,13 +20,13 @@ const tracks = [
     sticker: { label: 'NEW', color: 'mint' },
   },
   {
-    tone: 'sky',
-    tag: 'CLASSES',
-    title: 'Small-group weekly classes',
-    desc: 'Term-based small-group classes (3–6 kids). AI Creative Lab for ages 8–11. AI Coding Studio for ages 12–17.',
-    cta: 'View cohorts →',
-    href: '/programs/classes',
-    sticker: null,
+    tone: 'coral',
+    tag: 'PLATFORM',
+    title: 'Kids OpenCode',
+    desc: 'Our flagship AI coding tool, designed specifically for K-12. Parent-visible, sandboxed, curriculum-driven. Currently in waitlist — launching 2026 Q3.',
+    cta: 'Join waitlist →',
+    href: '/programs/platform',
+    sticker: { label: 'FLAGSHIP', color: 'sunshine' },
   },
 ] as const
 
@@ -51,12 +42,12 @@ const Programs = () => {
           <div className="max-w-3xl">
             <span className="eyebrow">OUR PROGRAMS</span>
             <h1 className="hero-display">
-              Four ways kids learn <span className="squiggle-word text-brand-coral">AI</span> with us.
+              Three ways kids learn <span className="squiggle-word text-brand-coral">AI</span> with us.
             </h1>
             <p className="lead-text mt-7">
-              Workshops, weekly classes, 1-on-1 tutoring, and our own kids-safe AI coding platform.
-              Pick what fits your kid&rsquo;s age, schedule, and goals — they all share the same
-              curriculum, design philosophy, and safety standards.
+              Group classes (weekly, holiday camps, school partnerships), 1-on-1 tutoring,
+              and our own kids-safe AI coding platform. Pick what fits your kid&rsquo;s age,
+              schedule, and goals — they all share the same curriculum and safety standards.
             </p>
           </div>
         </div>
@@ -68,7 +59,7 @@ const Programs = () => {
         <div className="blob-bg bg-brand-mint" style={{ width: 360, height: 360, bottom: -120, left: -180, opacity: 0.25 }} aria-hidden="true" />
 
         <div className="relative max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {tracks.map((t) => (
               <Link key={t.tag} to={t.href} className={`program-card-${t.tone} no-underline`}>
                 {t.sticker && (

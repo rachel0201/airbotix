@@ -58,23 +58,23 @@ const layers = [
   {
     layer: 'Layer 1',
     tone: 'sunshine',
-    title: 'Curriculum & Workshops',
-    body: 'Hands-on AI + Robotics programs delivered in real Australian schools. 100+ students, 2 partner schools today. This layer validates content, parent willingness, and school adoption mechanics.',
-    badge: 'Today',
+    title: 'Curriculum & Group Programs',
+    body: 'Hands-on AI curriculum delivered through weekly classes, holiday intensives, and school partnerships. The substrate every other layer is built on — content first, software second.',
+    badge: 'Launching',
   },
   {
     layer: 'Layer 2',
     tone: 'coral',
     title: 'Kids-Safe AI Coding Platform',
-    body: 'Kids OpenCode + airbotix-app + DeepRouter. Purpose-built for K-12. Agent-based, parent-visible, curriculum-anchored. Coming 2026.',
-    badge: 'Next 12 months',
+    body: 'Kids OpenCode + airbotix-app + DeepRouter. Purpose-built for K-12. Agent-based, parent-visible, curriculum-anchored. Waitlist open now.',
+    badge: '2026 Q3-Q4',
   },
   {
     layer: 'Layer 3',
     tone: 'bubblegum',
     title: 'Hackathons & University Pipeline',
     body: 'Quarterly student hackathons. Top portfolios connect to university admissions partners. Particularly compelling for families optimising for college outcomes.',
-    badge: '12-24 months',
+    badge: '2027+',
   },
 ] as const
 
@@ -162,32 +162,19 @@ const About = () => {
       </section>
 
       {/* ============================================================
-          Pilot Snapshot
+          Where We Are Today — honest "just getting started" framing
           ============================================================ */}
       <section className="py-24 md:py-28 bg-wash-sky">
         <div className="max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="mb-12 max-w-3xl">
+          <div className="max-w-3xl">
             <span className="eyebrow eyebrow-sky">WHERE WE ARE TODAY</span>
-            <h2 className="section-heading">An early pilot, focused on getting it right.</h2>
+            <h2 className="section-heading">Just getting started — and saying so honestly.</h2>
             <p className="lead-text mt-5">
-              We&rsquo;re not pretending to be everywhere. Two schools. ~100 kids. Real curriculum.
-              Learning what works before we scale.
+              Airbotix is in build mode. We&rsquo;re finalising our first classes, opening the
+              Kids OpenCode waitlist, and looking for the first families who want to be part of a
+              new K-12 AI brand from day one. No inflated pilot numbers. No fake testimonials.
+              Just the work — done in the open.
             </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div className="stat-tile coral">
-              <span className="sticker-coral" style={{ position: 'absolute', top: -12, right: 20 }}>PILOT</span>
-              <div className="stat-num text-brand-coral">100+</div>
-              <div className="stat-label">Students Taught</div>
-            </div>
-            <div className="stat-tile bubblegum">
-              <div className="stat-num text-brand-bubblegum">2</div>
-              <div className="stat-label">Partner Schools</div>
-            </div>
-            <div className="stat-tile sky">
-              <div className="stat-num-text text-brand-sky">Australia</div>
-              <div className="stat-label">Pilot Market</div>
-            </div>
           </div>
         </div>
       </section>

@@ -44,7 +44,6 @@ const Header = () => {
           <nav className="hidden md:flex items-center space-x-2">
             <Link to="/" className={navLink}>{t('nav.home', 'Home')}</Link>
             <Link to="/programs" className={navLink}>{t('nav.programs', 'Programs')}</Link>
-            <Link to="/workshops" className={navLink}>{t('nav.workshops', 'Workshops')}</Link>
             <Link to="/about" className={navLink}>{t('nav.about', 'About')}</Link>
             <Link to="/media" className={navLink}>{t('nav.media', 'Media')}</Link>
             <Link to="/blog" className={navLink}>{t('nav.blog', 'Blog')}</Link>
@@ -101,7 +100,6 @@ const Header = () => {
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-hairline-soft">
               <Link to="/" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.home', 'Home')}</Link>
               <Link to="/programs" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.programs', 'Programs')}</Link>
-              <Link to="/workshops" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.workshops', 'Workshops')}</Link>
               <Link to="/about" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.about', 'About')}</Link>
               <Link to="/media" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.media', 'Media')}</Link>
               <Link to="/blog" className={navLinkMobile} onClick={() => setIsMenuOpen(false)}>{t('nav.blog', 'Blog')}</Link>

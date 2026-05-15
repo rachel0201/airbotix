@@ -7,17 +7,17 @@ const programs = [
     title: 'AI coding, built for kids.',
     desc: 'The first AI coding agent designed for K-12 — not adults using kids. Parent-visible, sandboxed, and curriculum-driven. Our flagship product.',
     cta: 'See how it works →',
-    href: '/about',
+    href: '/programs/platform',
     sticker: { label: 'FLAGSHIP', color: 'sunshine' },
   },
   {
-    tone: 'sunshine',
-    tag: 'WORKSHOPS',
-    title: 'In-school & holiday camps.',
-    desc: '1–3 day intensive AI & robotics workshops. mBots, sensors, generative AI. Run in real Australian schools.',
-    cta: 'View workshops →',
-    href: '/workshops',
-    sticker: { label: 'POPULAR', color: 'coral', alt: true },
+    tone: 'sky',
+    tag: 'GROUP CLASSES',
+    title: 'Small-group AI classes.',
+    desc: 'Weekly term cohorts, holiday intensives, and school partnerships. AI Creative Lab (8-11) + AI Coding Studio (12-17). 3-6 kids per class.',
+    cta: 'View options →',
+    href: '/programs/classes',
+    sticker: null,
   },
   {
     tone: 'bubblegum',
@@ -25,17 +25,8 @@ const programs = [
     title: 'Private AI coding sessions.',
     desc: 'Personalised online tutoring with senior instructors. Bring an idea, leave with a real project. From A$80/hour.',
     cta: 'Book a session →',
-    href: '/book',
+    href: '/programs/one-on-one',
     sticker: { label: 'NEW', color: 'mint' },
-  },
-  {
-    tone: 'sky',
-    tag: 'WEEKLY CLASSES',
-    title: 'Small-group AI classes.',
-    desc: 'Termly small-group classes (3–6 students). AI Creative Lab for ages 8–11, AI Coding Studio for ages 12–17. Online & in-person.',
-    cta: 'View cohorts →',
-    href: '/book',
-    sticker: null,
   },
 ] as const
 
@@ -90,35 +81,6 @@ const compareRows: Array<{ feature: string; chatgpt: CompareCell; khanmigo: Comp
   { feature: 'Purpose-built AI coding tool',      chatgpt: 'no',      khanmigo: 'no',      scratch: 'no',      airbotix: 'yes' },
   { feature: 'Parent visibility / audit replay',  chatgpt: 'no',      khanmigo: 'partial', scratch: 'no',      airbotix: 'yes' },
   { feature: 'Curriculum-driven (not open chat)', chatgpt: 'no',      khanmigo: 'partial', scratch: 'yes',     airbotix: 'yes' },
-]
-
-const galleryImages = [
-  { src: '/media/pacific-camp/photos/activities-03.jpg', alt: 'Hands-on robotics activity' },
-  { src: '/media/pacific-camp/photos/activities-04.jpg', alt: 'Team coding challenge' },
-  { src: '/media/pacific-camp/photos/activities-05.jpg', alt: 'Students testing robot' },
-  { src: '/media/pacific-camp/photos/activities-06.jpg', alt: 'AI workshop session' },
-  { src: '/media/pacific-camp/photos/activities-07.jpg', alt: 'Group robotics build' },
-  { src: '/media/pacific-camp/photos/activities-08.jpg', alt: 'Class demo and presentation' },
-  { src: '/media/pacific-camp/photos/classroom-01.jpg', alt: 'Classroom collaboration' },
-  { src: '/media/pacific-camp/photos/outcomes-01.jpg', alt: 'Learning outcomes showcase' },
-]
-
-const testimonials = [
-  {
-    quote: 'Our students were absolutely engaged. The hands-on activities made complex AI concepts accessible and exciting.',
-    name: 'Sarah Williams',
-    role: 'STEM Coordinator, Riverdale Primary',
-  },
-  {
-    quote: 'The workshop aligned perfectly with our curriculum and inspired several new lunchtime robotics clubs.',
-    name: 'James O’Connor',
-    role: 'Deputy Principal, Northview College',
-  },
-  {
-    quote: 'Professional, well-structured, and fun. Students developed real confidence with coding and robotics.',
-    name: 'Emily Zhang',
-    role: 'Digital Technologies Lead, Eastside High',
-  },
 ]
 
 const CompareIcon = ({ kind, highlight = false }: { kind: CompareCell; highlight?: boolean }) => {
@@ -178,14 +140,14 @@ const Home = () => {
             </h1>
 
             <p className="text-[18px] md:text-[22px] text-white/85 mt-8 max-w-2xl leading-relaxed font-medium">
-              Workshops, weekly classes, 1-on-1 tutoring, and our own kids-safe AI coding tool —
-              all designed in Australia for the next generation of builders.
+              Group AI classes, 1-on-1 tutoring, and our own kids-safe AI coding tool — all
+              designed in Australia for the next generation of builders.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 mt-10">
               <Link to="/book" className="btn-pill-primary">Book a Free Consult</Link>
               <Link
-                to="/workshops"
+                to="/programs"
                 className="inline-flex items-center justify-center bg-transparent text-white text-[15px] font-semibold py-[12px] px-7 rounded-full border-2 border-white/70 hover:bg-white hover:text-ink transition-colors duration-200 no-underline"
               >
                 View Programs
@@ -319,10 +281,10 @@ const Home = () => {
         <div className="relative max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12">
           <div className="mb-14 max-w-3xl">
             <span className="eyebrow">OUR PROGRAMS</span>
-            <h2 className="section-heading">Four ways kids learn AI with us.</h2>
+            <h2 className="section-heading">Three ways kids learn AI with us.</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {programs.map((p) => (
               <Link key={p.tag} to={p.href} className={`program-card-${p.tone} no-underline`}>
                 {p.sticker && (
@@ -342,38 +304,6 @@ const Home = () => {
                 <div className="pc-cta relative z-10">{p.cta}</div>
               </Link>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================
-          Where We Are Today — honest pilot snapshot
-          ============================================================ */}
-      <section className="py-24 md:py-32 bg-wash-sky">
-        <div className="max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="mb-12 max-w-3xl">
-            <span className="eyebrow eyebrow-sky">WHERE WE ARE TODAY</span>
-            <h2 className="section-heading">An early pilot, focused on doing it right.</h2>
-            <p className="lead-text mt-6">
-              We&rsquo;re not pretending to be everywhere yet. Two schools. ~100 kids. Real curriculum.
-              We&rsquo;re learning what works before we scale.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div className="stat-tile coral">
-              <span className="sticker-coral" style={{ position: 'absolute', top: -12, right: 20 }}>PILOT</span>
-              <div className="stat-num text-brand-coral">100+</div>
-              <div className="stat-label">Students Taught</div>
-            </div>
-            <div className="stat-tile bubblegum">
-              <div className="stat-num text-brand-bubblegum">2</div>
-              <div className="stat-label">Partner Schools</div>
-            </div>
-            <div className="stat-tile sky">
-              <div className="stat-num-text text-brand-sky">Australia</div>
-              <div className="stat-label">Pilot Market</div>
-            </div>
           </div>
         </div>
       </section>
@@ -471,62 +401,6 @@ const Home = () => {
               <span className="ml-4 inline-block w-3 h-3 rounded-full bg-slate2/30" /> No
             </span>
           </p>
-        </div>
-      </section>
-
-      {/* ============================================================
-          Workshop Gallery
-          ============================================================ */}
-      <section className="py-24 md:py-32 bg-canvas">
-        <div className="max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="mb-14 max-w-3xl">
-            <span className="eyebrow eyebrow-bubblegum">WORKSHOP GALLERY</span>
-            <h2 className="section-heading">Real students. Real builds.</h2>
-            <p className="lead-text mt-6">
-              Moments from our AI and robotics workshops — hands-on learning, teamwork, and a lot of
-              focused mess.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {galleryImages.map((img) => (
-              <div
-                key={img.src}
-                className="relative overflow-hidden rounded-2xl aspect-[4/3] bg-surface shadow-card-soft"
-              >
-                <img
-                  src={img.src}
-                  alt={img.alt}
-                  loading="lazy"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================
-          Testimonials — on mint wash for warmth
-          ============================================================ */}
-      <section className="py-24 md:py-32 bg-wash-mint">
-        <div className="max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="mb-14 max-w-3xl">
-            <span className="eyebrow eyebrow-mint">FROM EDUCATORS</span>
-            <h2 className="section-heading">What teachers say.</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {testimonials.map((t) => (
-              <div key={t.name} className="card-base">
-                <p className="text-ink-soft leading-relaxed mb-6 text-[16px]">&ldquo;{t.quote}&rdquo;</p>
-                <div className="pt-5 border-t border-hairline">
-                  <div className="font-semibold text-ink">{t.name}</div>
-                  <div className="text-[13px] text-slate2 mt-1">{t.role}</div>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 

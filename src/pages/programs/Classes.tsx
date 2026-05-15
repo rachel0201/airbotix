@@ -74,14 +74,15 @@ const Classes = () => {
 
         <div className="relative max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12">
           <div className="max-w-3xl">
-            <span className="eyebrow eyebrow-coral">WEEKLY CLASSES</span>
+            <span className="eyebrow eyebrow-coral">GROUP CLASSES</span>
             <h1 className="hero-display">
               Small-group AI classes. <span className="squiggle-word text-brand-coral">Real projects.</span>
             </h1>
             <p className="lead-text mt-7">
-              Two age-tiered cohorts. 3–6 kids per class, weekly online sessions, term-based.
-              Every class ends with something the kid can actually show their family — an
-              illustrated story, a deployed website, a working AI tool.
+              Same curriculum, three delivery formats — pick what fits your family&rsquo;s rhythm:
+              weekly term cohorts, holiday intensives, or year-long school partnerships.
+              Every class ends with something the kid can actually show — an illustrated story,
+              a deployed website, a working AI tool.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 mt-9">
               <Link to="/book" className="btn-pill-primary">Book a Free Consult</Link>
@@ -92,6 +93,72 @@ const Classes = () => {
                 See cohorts
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Delivery formats */}
+      <section className="py-20 md:py-24 bg-canvas">
+        <div className="max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="mb-12 max-w-3xl">
+            <span className="eyebrow eyebrow-sky">DELIVERY FORMATS</span>
+            <h2 className="section-heading">Three ways to take a class.</h2>
+            <p className="lead-text mt-5">
+              Same curriculum DNA — different schedule + setting. Most families pick one, some
+              mix two (e.g., weekly term + holiday intensive for a deep summer push).
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="card-base relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-grad-coral" />
+              <div className="text-[12px] font-bold uppercase tracking-[0.10em] text-brand-coral mt-3">
+                01 · Weekly Term
+              </div>
+              <h3 className="text-[20px] font-bold text-ink mt-2 mb-3 leading-tight">
+                Steady weekly cohorts
+              </h3>
+              <p className="text-[14px] text-ink-soft leading-relaxed">
+                3-6 kids per class. Weekly online Zoom sessions. 8-10 weeks per term. The
+                default rhythm for kids who want consistent AI exposure during the school year.
+              </p>
+            </div>
+
+            <div className="card-base relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-grad-sunshine" />
+              <div className="text-[12px] font-bold uppercase tracking-[0.10em] text-brand-sunshine mt-3">
+                02 · Holiday Intensive
+              </div>
+              <h3 className="text-[20px] font-bold text-ink mt-2 mb-3 leading-tight">
+                3-5 day camp format
+              </h3>
+              <p className="text-[14px] text-ink-soft leading-relaxed">
+                Compressed schedule during AU school holidays. 6-12 kids, online or in-person.
+                Each camp produces a complete project (storybook, deployed website, AI tool).
+                Great for families who want a short, deep dive.
+              </p>
+            </div>
+
+            <div className="card-base relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-grad-sky" />
+              <div className="text-[12px] font-bold uppercase tracking-[0.10em] text-brand-sky mt-3">
+                03 · School Partnership
+              </div>
+              <h3 className="text-[20px] font-bold text-ink mt-2 mb-3 leading-tight">
+                Year-long classroom programs
+              </h3>
+              <p className="text-[14px] text-ink-soft leading-relaxed">
+                We bring Airbotix curriculum into your school as a Term 1-4 program — co-taught
+                with your teachers, aligned with Digital Technologies F-10. For Curriculum
+                Leads and Deputy Principals exploring AI implementation.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-7 text-[14px] text-slate2 max-w-3xl">
+            The two cohorts below are <strong className="text-ink">Weekly Term</strong> format. For
+            Holiday Intensive or School Partnership — <Link to="/book" className="text-brand-coral font-semibold no-underline hover:underline">book a free consult</Link> and we&rsquo;ll
+            tailor a plan.
           </div>
         </div>
       </section>
