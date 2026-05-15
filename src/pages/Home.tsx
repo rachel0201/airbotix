@@ -205,6 +205,12 @@ const Home = () => {
         <div className="relative max-w-[1240px] mx-auto px-6 sm:px-8 lg:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             <div className="lg:col-span-7">
+              <img
+                src="/media/brand/kids-opencode-logo.png"
+                alt="Kids OpenCode"
+                className="w-auto h-20 md:h-24 mb-7"
+                loading="eager"
+              />
               <span className="inline-block text-[13px] font-bold uppercase tracking-[0.10em] text-brand-coral mb-5">
                 OUR FLAGSHIP — KIDS OPENCODE
               </span>
