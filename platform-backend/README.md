@@ -1,7 +1,8 @@
-# platform-backend → kidsinai/platform-backend
+# platform-backend → Airbotix-AI/platform-backend
 
 > **此目录是 pointer，不是实际代码位置。**
-> 真实代码在 sibling repo：`~/Documents/sites/kidsinai/platform-backend/`
+> - GitHub: `Airbotix-AI/platform-backend` (PRIVATE) — 2026-05-15 由 kidsinai 迁入
+> - 本地 clone: `~/Documents/sites/kidsinai/platform-backend/` (clone 目录历史命名未改)
 
 Airbotix Kids AI Platform 的共享后端 API。承接 Family / Kid / Wallet / Course Pack / Class / Audit 全部跨产品线数据。
 
@@ -11,11 +12,12 @@ Airbotix Kids AI Platform 的共享后端 API。承接 Family / Kid / Wallet / C
 cd ~/Documents/sites/kidsinai/platform-backend/
 ```
 
-## 为什么不在 airbotix repo
+## 为什么在 Airbotix-AI org（2026-05-15 更新）
 
-按 [[airbotix-kids-ai-platform-direction]] memory 的三品牌结构（2026-05-12 决策）：
-- **`kidsinai/platform-backend`**（PRIVATE）= 共享后端，服务 kidsinai 旗下所有 kid-facing 产品
-- **`Airbotix-AI/airbotix`**（本 repo）= for-profit 教育业务 — 营销站 + planning docs，不放产品代码
+- **Airbotix-AI** = for-profit 商业实体，所有付费产品代码、营销站、planning docs 都在这里
+- **kidsinai** = 社区 / 比赛 / 开源品牌，只保留对外开放的 opencode-kernel fork
+- 学习体验产品（platform-backend / kids-opencode / creative-web）= Airbotix-AI 资产
+- 学校签合同、家长付费 = 与 Airbotix-AI 公司发生关系，repo 归属与商业关系对齐
 
 ## Tech Stack (locked 2026-05-14)
 

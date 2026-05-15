@@ -1,9 +1,10 @@
-# kids-web → kidsinai/creative-web
+# kids-web → Airbotix-AI/creative-web
 
 > **此目录是 pointer，不是实际代码位置。**
-> 真实代码在 sibling repo：`~/Documents/sites/kidsinai/creative-web/`
+> - GitHub: `Airbotix-AI/creative-web` (PUBLIC) — 2026-05-15 由 kidsinai 迁入
+> - 本地 clone: `~/Documents/sites/kidsinai/creative-web/` (clone 目录历史命名未改)
 >
-> **注意命名差异**：airbotix repo 里仍叫 `kids-web/`（历史命名），实际 kidsinai repo 叫 `creative-web/`。以 sibling repo 名为准。
+> **注意命名差异**：airbotix repo 里仍叫 `kids-web/`（历史命名），实际 GitHub repo 叫 `creative-web/`。以 GitHub repo 名为准。
 
 Airbotix Kids AI Platform — **Line A 低龄创作 web (6-11 岁)**。
 

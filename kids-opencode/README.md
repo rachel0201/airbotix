@@ -1,19 +1,21 @@
-# kids-opencode → kidsinai/kids-opencode
+# kids-opencode → Airbotix-AI/kids-opencode + kidsinai/opencode-kernel
 
 > **此目录是 pointer，不是实际代码位置。**
-> 真实代码在 sibling repos（两 repo 结构，2026-05-14 锁定）：
-> - 产品代码：`~/Documents/sites/kidsinai/kids-opencode/`（PRIVATE，MIT）
-> - 内核 fork：`~/Documents/sites/kidsinai/opencode-kernel/`（PUBLIC，MIT，近镜像 upstream `anomalyco/opencode`）
+> 真实代码在两个 repo（2026-05-14 拆分 + 2026-05-15 brand 重组）：
+> - **产品代码**：`Airbotix-AI/kids-opencode` (PRIVATE, MIT) — 本地 `~/Documents/sites/kidsinai/kids-opencode/`
+> - **内核 fork**：`kidsinai/opencode-kernel` (PUBLIC, MIT) — 本地 `~/Documents/sites/kidsinai/opencode-kernel/`
+>
+> **为什么分两个 org**：闭源产品代码 = Airbotix-AI（商业资产）；开源 fork = kidsinai（社区贡献品牌）。
 
 Airbotix Kids AI Platform — **Line B Kids OpenCode (12+ 旗舰)**。
 
 ## 实际位置
 
 ```bash
-# 产品代码（私有，本文档对应）
+# 产品代码（私有，本文档对应；GitHub: Airbotix-AI/kids-opencode）
 cd ~/Documents/sites/kidsinai/kids-opencode/
 
-# 内核 fork（公开，跟踪 upstream）
+# 内核 fork（公开，跟踪 upstream；GitHub: kidsinai/opencode-kernel）
 cd ~/Documents/sites/kidsinai/opencode-kernel/
 ```
 

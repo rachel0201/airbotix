@@ -62,15 +62,43 @@ airbotix/
 └── rules/                    # Coding standards (mandatory)
 ```
 
-Sibling product repos (under `kidsinai` org, separate working dirs):
+Sibling product repos (2026-05-15 brand restructure):
+
+**Airbotix-AI org** — for-profit company. Holds all paid product code, planning docs, and the marketing site. This is where customer-facing products live.
+
+```
+github.com/Airbotix-AI/
+├── airbotix              # Marketing site + planning docs (this repo)
+├── platform-backend      # Shared NestJS API (private, NestJS + Prisma + Neon + S3 Sydney)
+├── kids-opencode         # Line B product, 12+ (private, MIT)
+├── creative-web          # Line A product, 6-11 (public)
+└── planning              # Master cross-product plan (private)
+```
+
+**kidsinai org** — community / events / open-source brand. Used for hackathons, competitions, advocacy, and open-source contributions. Not a legal entity distinction; just a brand boundary.
+
+```
+github.com/kidsinai/
+└── opencode-kernel       # Upstream-tracking fork of anomalyco/opencode (public, MIT)
+```
+
+**deeprouter-ai org** — separate company (LLM gateway, independent product).
+
+```
+github.com/deeprouter-ai/
+└── deeprouter            # LLM gateway (Go fork of QuantumNous/new-api)
+```
+
+**Local clone paths** (historical, do NOT need to match GitHub org):
 ```
 ~/Documents/sites/
-├── kidsinai/kids-opencode/       # Line B product (private, MIT) — 12+ agentic AI coding
-├── kidsinai/opencode-kernel/     # Upstream tracking fork of anomalyco/opencode (public, MIT)
-├── kidsinai/creative-web/        # Line A creative web (6-11) — public
-├── kidsinai/platform-backend/    # Shared NestJS API (Family / Wallet / Course Pack / Audit) — private
-├── kidsinai/planning/            # Master cross-product plan (private)
-└── deeprouter-ai/deeprouter/     # LLM gateway (independent product)
+├── airbotix/                       # → Airbotix-AI/airbotix
+├── kidsinai/creative-web/          # → Airbotix-AI/creative-web (clone dir not yet renamed)
+├── kidsinai/kids-opencode/         # → Airbotix-AI/kids-opencode
+├── kidsinai/opencode-kernel/       # → kidsinai/opencode-kernel
+├── kidsinai/platform-backend/      # → Airbotix-AI/platform-backend
+├── kidsinai/planning/              # → Airbotix-AI/planning
+└── deeprouter-ai/deeprouter/       # → deeprouter-ai/deeprouter
 ```
 
 ## Development Standards
