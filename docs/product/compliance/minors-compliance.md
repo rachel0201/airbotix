@@ -171,12 +171,37 @@
 | C7 | 数据最小化（不收学校 / 地址 / 真实姓名） | AU + COPPA | ✅ |
 | C8 | 默认隐私设置最严（班级分享私密，公开需双重审批） | AU + Safety by Design | ✅ |
 | C9 | 数据导出 + 一键销户 | COPPA / GDPR / AU | ⏸️ V0 必须实现 |
-| C10 | 公开合规声明页（airbotix.ai/compliance 或类似 URL） | Anthropic 明文要求 | 🔴 必须 V0 前上线 |
-| C11 | 隐私政策 + 服务条款 + 家长授权书 | 全部法规 | 🔴 律师起草 V0 前 |
-| C12 | 不将孩子数据用于训练任何 AI 模型 + 在隐私政策明示 | COPPA 2026 更新 | ⏸️ 写入 privacy policy |
-| C13 | 异常事件人工 review + 家长告警 | Anthropic + OpenAI 监控要求 | ⏸️ V0 必须做 |
-| C14 | 不投放第三方广告 | AU + 行业最佳实践 | ✅ 商业模式已锁定 |
-| C15 | 留存可审计证据（system prompt 版本 / 过滤命中 / consent 记录） | Anthropic 审计 | ⏸️ V0 工程实现 |
+| C10 | 公开合规声明页（airbotix.ai/compliance 或类似 URL） | Anthropic 明文要求 | 🟡 **草稿完成** [`../legal/compliance-statement.md`](../../legal/compliance-statement.md) — 待律师确认 + 上线 |
+| C11 | 隐私政策 + 服务条款 + 家长授权书 | 全部法规 | 🟡 **三份全部起草完成** — [`../legal/privacy-policy.md`](../../legal/privacy-policy.md) · [`../legal/terms-of-service.md`](../../legal/terms-of-service.md) · [`../legal/parental-consent.md`](../../legal/parental-consent.md) — 待律师确认 + 上线 |
+| C12 | 不将孩子数据用于训练任何 AI 模型 + 在隐私政策明示 | COPPA 2026 更新 | 🟡 已写入 [`../legal/privacy-policy.md`](../../legal/privacy-policy.md) §3 + [`../legal/compliance-statement.md`](../../legal/compliance-statement.md) §4 |
+| C13 | 异常事件人工 review + 家长告警 | Anthropic + OpenAI 监控要求 | 🟡 NDB runbook 完成 [kids-opencode/docs/runbook/ndb-incident.md](https://github.com/kidsinai/kids-opencode/blob/main/docs/runbook/ndb-incident.md) — V0 实现 pending |
+| C14 | 不投放第三方广告 | AU + 行业最佳实践 | ✅ 商业模式已锁定；在 [`../legal/privacy-policy.md`](../../legal/privacy-policy.md) §3 公开承诺 |
+| C15 | 留存可审计证据（system prompt 版本 / 过滤命中 / consent 记录） | Anthropic 审计 | 🟡 [kids-opencode/docs/safety-assessment.md](https://github.com/kidsinai/kids-opencode/blob/main/docs/safety-assessment.md) §3 guardrail-9 — V0 实现 pending |
+
+---
+
+### 4.1.1 新增的 V0 合规交付物索引（2026-05-15）
+
+工程团队完成了以下 V0 launch-blocker 文档的全部起草工作。律师 review 节省到约 11-16 小时（详见各文档 "Notes for Lightman" 段）。
+
+**法律文档**（in `airbotix/docs/legal/`）：
+- 🟡 [`privacy-policy.md`](../../legal/privacy-policy.md) — 完整 kid-aware Privacy Policy；待律师签字
+- 🟡 [`terms-of-service.md`](../../legal/terms-of-service.md) — 完整 ToS（含 ACL 兼容的限责措辞）；待律师签字
+- 🟡 [`parental-consent.md`](../../legal/parental-consent.md) — 14 条 itemised consent + immutable 记录设计；待律师签字
+- 🟡 [`compliance-statement.md`](../../legal/compliance-statement.md) — airbotix.ai/compliance 公开页内容；待律师签字
+
+**Kids OpenCode 产品 repo（`kidsinai/kids-opencode`）合规文档**：
+- 🟡 [`docs/compliance/au.md`](https://github.com/kidsinai/kids-opencode/blob/main/docs/compliance/au.md) — AU 合规审计
+- 🟡 [`docs/compliance/au-lawyer-pass.md`](https://github.com/kidsinai/kids-opencode/blob/main/docs/compliance/au-lawyer-pass.md) — 8 个 AU-* 待决项 substantive 答案
+- 🟡 [`docs/compliance/au-sole-or-primary-purpose-statement.md`](https://github.com/kidsinai/kids-opencode/blob/main/docs/compliance/au-sole-or-primary-purpose-statement.md) — 教育豁免立场声明
+- 🟡 [`docs/compliance/au-oaic-copc-explainer.md`](https://github.com/kidsinai/kids-opencode/blob/main/docs/compliance/au-oaic-copc-explainer.md) — OAIC 咨询说明
+- 🟡 [`docs/compliance/au-oaic-copc-submission-draft.md`](https://github.com/kidsinai/kids-opencode/blob/main/docs/compliance/au-oaic-copc-submission-draft.md) — OAIC 咨询提交草稿（2026-06-05 截止）
+- 🟡 [`docs/safety-assessment.md`](https://github.com/kidsinai/kids-opencode/blob/main/docs/safety-assessment.md) — AI Safety Assessment v0.1
+- 🟡 [`docs/red-team.md`](https://github.com/kidsinai/kids-opencode/blob/main/docs/red-team.md) — 50-prompt 红队测试集
+- 🟡 [`docs/runbook/ndb-incident.md`](https://github.com/kidsinai/kids-opencode/blob/main/docs/runbook/ndb-incident.md) — Notifiable Data Breach 应急流程
+
+**部署设计**：
+- 🟡 [`airbotix/docs/ai/install-kids-hosting.md`](../../ai/install-kids-hosting.md) — `airbotix.ai/install/kids` 部署设计
 
 ### 4.2 V0 之后（V1+ / V2+）
 
@@ -235,16 +260,21 @@
 
 ## 7. 待解决项（V0 阻塞）
 
-| ID | 事项 | 责任人 | 截止 |
-|---|---|---|---|
-| L1 | 与 AU 合资格律师签订 retainer，做正式 review | Lightman | V0 启动后 2 周内 |
-| L2 | 起草 / 律师审 / 上线公开合规声明页（airbotix.ai/compliance） | 律师 + 产品 | V0 上线前 |
-| L3 | 起草 / 律师审 / 上线隐私政策、服务条款、家长授权书 | 律师 + 产品 | V0 上线前 |
-| L4 | DeepRouter 实现 OpenAI ZDR 强制注入 | Team A | Week 7 |
-| L5 | C9 数据导出 + 一键销户 UI + 后端 | Team B/C | Week 10 |
-| L6 | C13 异常事件 review 队列 + 家长告警 pipeline | Team B/C | Week 10 |
-| L7 | C15 审计证据留存 schema | Team A + B | Week 8 |
-| L8 | 申请 Anthropic"organizations serving minors"的 review/批准（如 Anthropic 提供此通道） | Lightman | V0 前 |
+> 🟢 **更新 2026-05-15**：L2 + L3 草稿全部完成（见 §4.1.1）。L1 律师 retainer 仍待启动，但律师工作量降到 11-16 小时（见 [kids-opencode/docs/compliance/au-lawyer-pass.md](https://github.com/kidsinai/kids-opencode/blob/main/docs/compliance/au-lawyer-pass.md)）。
+
+| ID | 事项 | 责任人 | 状态 | 截止 |
+|---|---|---|---|---|
+| L1 | 与 AU 合资格律师签订 retainer，做正式 review | Lightman | 🔴 未启动 | V0 启动后 2 周内 |
+| L2 | 起草 / 律师审 / 上线公开合规声明页（airbotix.ai/compliance） | 律师 + 产品 | 🟡 草稿完成（[`compliance-statement.md`](../../legal/compliance-statement.md)），待律师 + 上线 | V0 上线前 |
+| L3 | 起草 / 律师审 / 上线隐私政策、服务条款、家长授权书 | 律师 + 产品 | 🟡 三份草稿完成（见 §4.1.1），待律师 + 上线 | V0 上线前 |
+| L4 | DeepRouter 实现 OpenAI ZDR 强制注入 | Team A | ✅ 已 ship（DeepRouter commits `2620e4d7` + `54fc4cf0`） | — |
+| L5 | C9 数据导出 + 一键销户 UI + 后端 | platform-backend | 🔴 未启动 | Week 10 |
+| L6 | C13 异常事件 review 队列 + 家长告警 pipeline | platform-backend + Team B | 🟡 NDB runbook 完成；pipeline 工程 pending | Week 10 |
+| L7 | C15 审计证据留存 schema | Team A + B | 🟡 plugin 端 stderr 发出已实现；platform-backend 端持久化 pending | Week 8 |
+| L8 | 申请 Anthropic / OpenAI / Doubao "organizations serving minors" outreach | Lightman | 🟡 措辞模板在 [au-lawyer-pass.md](https://github.com/kidsinai/kids-opencode/blob/main/docs/compliance/au-lawyer-pass.md#au-8-anthropic-organizations-serving-minors-approval) AU-8；待 Lightman 发邮件 | V0 前 |
+| **L9** | **OAIC Children's Online Privacy Code 咨询提交** | Lightman | 🟡 草稿完成（[au-oaic-copc-submission-draft.md](https://github.com/kidsinai/kids-opencode/blob/main/docs/compliance/au-oaic-copc-submission-draft.md)），待 Lightman 润色 + 发邮件 | **2026-06-05 COB（硬截止）** |
+| **L10** | **`airbotix.ai/install/kids` 部署** | Airbotix-AI/airbotix 工程 | 🟡 设计完成（[install-kids-hosting.md](../../ai/install-kids-hosting.md)），CloudFront + S3 + GitHub Actions OIDC pipeline pending | V0 上线前 |
+| **L11** | **`@kidsinai/kids-opencode-plugin` npm 发布** | Lightman | 🔴 需要 npm `@kidsinai` scope auth | V0 上线前 |
 
 ---
 
@@ -269,4 +299,5 @@
 
 | 版本 | 日期 | 改动 |
 |---|---|---|
+| v0.2 | 2026-05-15 | 重大更新：C10-C15 状态全部从 🔴/⏸️ 升级为 🟡（草稿全部完成）。新增 §4.1.1 V0 合规交付物索引指向 11 份 kids-opencode + airbotix 仓的新文档。L1-L8 状态全部刷新；新增 L9（OAIC 咨询 2026-06-05 硬截止）/ L10（install endpoint 部署）/ L11（npm publish）。L4 标记为已完成。 |
 | v0.1 | 2026-05-11 | 初版。整合 Anthropic AUP + Help Center 9307344、OpenAI Under-18 API Guidance + ToS、AU Online Safety Act/BOSE/Social Media Min Age Act exemption、COPPA 2026 更新、AU Children's Online Privacy Code 草案。引出 C1-C15 平台合规清单 + L1-L8 待办。 |
