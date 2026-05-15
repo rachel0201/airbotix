@@ -64,21 +64,21 @@ airbotix/
 
 Sibling product repos (2026-05-15 brand restructure):
 
-**Airbotix-AI org** — for-profit company. Holds all paid product code, planning docs, and the marketing site. This is where customer-facing products live.
+**Airbotix-AI org** — for-profit company. Holds commercial backend, paid customer-facing products, marketing site, and cross-product planning.
 
 ```
 github.com/Airbotix-AI/
 ├── airbotix              # Marketing site + planning docs (this repo)
-├── platform-backend      # Shared NestJS API (private, NestJS + Prisma + Neon + S3 Sydney)
-├── kids-opencode         # Line B product, 12+ (private, MIT)
+├── platform-backend      # Shared NestJS API (private; NestJS + Prisma + Neon + S3 Sydney)
 ├── creative-web          # Line A product, 6-11 (public)
 └── planning              # Master cross-product plan (private)
 ```
 
-**kidsinai org** — community / events / open-source brand. Used for hackathons, competitions, advocacy, and open-source contributions. Not a legal entity distinction; just a brand boundary.
+**kidsinai org** — community / events / open-distribution brand. Holds the kid-coding tool stack that anyone can use, plus the open-source kernel fork. **Monetization moat lives in DeepRouter (LLM gateway), not in code access.**
 
 ```
 github.com/kidsinai/
+├── kids-opencode         # Line B product, 12+ (currently PRIVATE, MIT — open distribution candidate)
 └── opencode-kernel       # Upstream-tracking fork of anomalyco/opencode (public, MIT)
 ```
 
@@ -93,11 +93,11 @@ github.com/deeprouter-ai/
 ```
 ~/Documents/sites/
 ├── airbotix/                       # → Airbotix-AI/airbotix
-├── kidsinai/creative-web/          # → Airbotix-AI/creative-web (clone dir not yet renamed)
-├── kidsinai/kids-opencode/         # → Airbotix-AI/kids-opencode
+├── kidsinai/creative-web/          # → Airbotix-AI/creative-web (clone dir kept under kidsinai/)
+├── kidsinai/kids-opencode/         # → kidsinai/kids-opencode
 ├── kidsinai/opencode-kernel/       # → kidsinai/opencode-kernel
-├── kidsinai/platform-backend/      # → Airbotix-AI/platform-backend
-├── kidsinai/planning/              # → Airbotix-AI/planning
+├── kidsinai/platform-backend/      # → Airbotix-AI/platform-backend (clone dir kept under kidsinai/)
+├── kidsinai/planning/              # → Airbotix-AI/planning (clone dir kept under kidsinai/)
 └── deeprouter-ai/deeprouter/       # → deeprouter-ai/deeprouter
 ```
 

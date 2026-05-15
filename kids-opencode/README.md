@@ -1,11 +1,11 @@
-# kids-opencode → Airbotix-AI/kids-opencode + kidsinai/opencode-kernel
+# kids-opencode → kidsinai/kids-opencode + kidsinai/opencode-kernel
 
 > **此目录是 pointer，不是实际代码位置。**
-> 真实代码在两个 repo（2026-05-14 拆分 + 2026-05-15 brand 重组）：
-> - **产品代码**：`Airbotix-AI/kids-opencode` (PRIVATE, MIT) — 本地 `~/Documents/sites/kidsinai/kids-opencode/`
+> 真实代码（2026-05-14 拆分 + 2026-05-15 brand 重组，**两 repo 都在 kidsinai**）：
+> - **产品代码**：`kidsinai/kids-opencode` (PRIVATE, MIT) — 本地 `~/Documents/sites/kidsinai/kids-opencode/`
 > - **内核 fork**：`kidsinai/opencode-kernel` (PUBLIC, MIT) — 本地 `~/Documents/sites/kidsinai/opencode-kernel/`
 >
-> **为什么分两个 org**：闭源产品代码 = Airbotix-AI（商业资产）；开源 fork = kidsinai（社区贡献品牌）。
+> **为什么都在 kidsinai**：kids-opencode 设计为**开放可用**（其他人 / 学校 / 社区也能用），监管和分销定位在 kidsinai 品牌下；商业护城河 = **DeepRouter 强关联**（所有 LLM 调用强制走 DeepRouter，使用者通过 Airbotix 的 DeepRouter 实例付费）。这是"产品开放 + 基础设施变现"模式。
 
 Airbotix Kids AI Platform — **Line B Kids OpenCode (12+ 旗舰)**。
 
