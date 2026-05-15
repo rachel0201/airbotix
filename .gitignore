@@ -113,3 +113,6 @@ vite.config.ts.timestamp-*
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Playwright MCP cache (browser snapshots, console logs)
+.playwright-mcp/
