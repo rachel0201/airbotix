@@ -2,34 +2,42 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Repository Status (as of 2026-05-14)
+## Repository Status (as of 2026-05-15)
 
 This repo is in a **transitional state**:
 1. **Marketing site** (`/src/`) — live, deployed to GitHub Pages at airbotix.ai
-2. **Kids AI Platform** — in planning (see `docs/product/prd/`); scaffolds being created
-3. **Removed 2026-05-14**: `super-admin/` (Supabase-based, replaced by future `platform-backend` on NestJS) and `auth-backend/` (in-memory PoC, never connected to real DB). The repo no longer uses Supabase anywhere.
+2. **Kids AI Platform** — in planning (see `docs/product/prd/`); pointer dirs reflect the platform topology
+3. **Removed 2026-05-14**: `super-admin/` (Supabase-based) and `auth-backend/` (in-memory PoC). The repo no longer uses Supabase anywhere.
 
-## Tech Stack (locked 2026-05-14)
+## Tech Stack (locked 2026-05-14, refined 2026-05-15)
+
+### Deploy matrix per repo
+
+| Repo | Stack | Domain | Hosting |
+|---|---|---|---|
+| `airbotix` (marketing) | React 18 + Vite + TS + Tailwind | airbotix.ai | GitHub Pages |
+| `airbotix-app` | React 18 + Vite + TS + Tailwind (SPA) | app.airbotix.ai | **AWS S3 + CloudFront** (Sydney) |
+| `teacher-console` | React 18 + Vite + TS + Tailwind (SPA) | teacher.airbotix.ai | **AWS S3 + CloudFront** (Sydney) |
+| `platform-backend` | NestJS + Prisma + TS | api.airbotix.ai | **AWS EC2 t3.small** (Sydney) + Docker Compose + nginx + Let's Encrypt |
+
+### Cross-cutting infra
 
 | Layer | Choice |
 |---|---|
-| Marketing site | React 18 + Vite + TypeScript + TailwindCSS, GitHub Pages |
-| Kids platform frontend | React 18 + Vite + TS + Tailwind, Cloudflare Pages |
-| Backend API | **NestJS** + TypeScript |
-| Backend hosting | **AWS EC2 t3.small Sydney (ap-southeast-2)** + Docker Compose + nginx + Let's Encrypt |
 | ORM | **Prisma** |
 | Postgres | **Neon Serverless** (aws-ap-southeast-2) |
 | Object storage | **AWS S3** (ap-southeast-2 Sydney) |
 | Realtime | **WebSocket** (NestJS Gateway + nginx upgrade) |
 | Auth | JWT + Refresh Token + OTP (SendGrid email) — self-built, no Supabase Auth |
-| Agent runtime | AWS EC2 Sydney (same host as backend in V0; split later) |
 | LLM gateway | DeepRouter `/v1` (independent product, sibling repo) |
 | Payments | **Airwallex** (AUD local + cross-border FX) — NOT Stripe |
+| DNS | **Cloudflare DNS** for airbotix.ai (free, DDoS, supports ACM validation) |
+| TLS | ACM cert for `*.airbotix.ai` in us-east-1 (CloudFront requirement) |
 
 **Hard rules**:
 - ❌ Do NOT introduce Supabase (auth, DB, storage, realtime, or RLS) — fully removed
 - ❌ Do NOT introduce Stripe — payments go through Airwallex
-- ❌ Do NOT introduce Fly.io / Vercel for backend — backend lives on AWS EC2 Sydney
+- ❌ Do NOT introduce Fly.io / Vercel / Cloudflare Pages for any app — frontends on S3 + CloudFront, backend on AWS EC2
 - ✅ All AU user data must stay in ap-southeast-2 (Sydney) region for compliance
 
 ## Development Commands
@@ -43,42 +51,48 @@ npm run preview  # Preview production build
 npm run deploy   # Build + deploy to GitHub Pages
 ```
 
-### `platform-backend/` (scaffold, NestJS)
-TBD — scaffold pending.
+### `airbotix-app/`, `teacher-console/`, `platform-backend/` (sibling repos, pointer dirs only)
+See each pointer README for actual location and scaffold status.
 
 ## Project Architecture
 
 ```
-airbotix/
-├── src/                      # Marketing site (live)
+airbotix/                       (this repo)
+├── src/                        # Marketing site (live)
 │   ├── components/
 │   ├── pages/
-│   ├── data/                 # Static workshop/blog/media content
+│   ├── data/                   # Static workshop/blog/media content
 │   └── services/
 ├── docs/
-│   ├── product/prd/          # Active PRDs (kids-ai-platform-prd.md, kids-opencode-spec.md)
-│   ├── product/prd/_archived/  # Archived 2026-05-14 super-admin/teacher PRDs
-│   └── product/compliance/   # Minors compliance checklist
-└── rules/                    # Coding standards (mandatory)
+│   ├── product/prd/            # Active PRDs (kids-ai-platform-prd.md, etc.)
+│   ├── product/prd/_archived/  # Archived super-admin/teacher PRDs (2026-05-14)
+│   └── product/compliance/     # Minors compliance checklist
+├── airbotix-app/               # → Airbotix-AI/airbotix-app (pointer only)
+├── teacher-console/            # → Airbotix-AI/teacher-console (pointer only)
+├── platform-backend/           # → Airbotix-AI/platform-backend (pointer only)
+├── kids-opencode/              # → kidsinai/kids-opencode (pointer; out of scope)
+├── infra/                      # AWS Sydney + Cloudflare DNS deployment config
+└── rules/                      # Coding standards (mandatory)
 ```
 
-Sibling product repos (2026-05-15 brand restructure):
+Sibling product repos (2026-05-15 brand + structure restructure):
 
-**Airbotix-AI org** — for-profit company. Holds commercial backend, paid customer-facing products, marketing site, and cross-product planning.
+**Airbotix-AI org** — for-profit company. All cloud-side products, backend, marketing, planning.
 
 ```
 github.com/Airbotix-AI/
-├── airbotix              # Marketing site + planning docs (this repo)
-├── platform-backend      # Shared NestJS API (private; NestJS + Prisma + Neon + S3 Sydney)
-├── creative-web          # Line A product, 6-11 (public)
+├── airbotix              # Marketing site + planning docs (this repo, airbotix.ai)
+├── airbotix-app          # Unified cloud SPA: /portal/* (parents) + /learn/* (kids) — app.airbotix.ai
+├── teacher-console       # Teacher / admin console — teacher.airbotix.ai
+├── platform-backend      # Shared NestJS API (private; api.airbotix.ai)
 └── planning              # Master cross-product plan (private)
 ```
 
-**kidsinai org** — community / events / open-distribution brand. Holds the kid-coding tool stack that anyone can use, plus the open-source kernel fork. **Monetization moat lives in DeepRouter (LLM gateway), not in code access.**
+**kidsinai org** — community / events / open-distribution brand. **Managed by a different AI agent — do NOT make architectural decisions for these repos from the airbotix repo session.** Monetization moat lives in DeepRouter (LLM gateway), not in code access.
 
 ```
 github.com/kidsinai/
-├── kids-opencode         # Line B product, 12+ (currently PRIVATE, MIT — open distribution candidate)
+├── kids-opencode         # Line B product, 12+ — local desktop tool, distributed via airbotix.ai/download
 └── opencode-kernel       # Upstream-tracking fork of anomalyco/opencode (public, MIT)
 ```
 
@@ -89,16 +103,17 @@ github.com/deeprouter-ai/
 └── deeprouter            # LLM gateway (Go fork of QuantumNous/new-api)
 ```
 
-**Local clone paths** (historical, do NOT need to match GitHub org):
+**Local clone paths** (historical naming under `kidsinai/`, do NOT need to match GitHub org):
 ```
 ~/Documents/sites/
 ├── airbotix/                       # → Airbotix-AI/airbotix
-├── kidsinai/creative-web/          # → Airbotix-AI/creative-web (clone dir kept under kidsinai/)
-├── kidsinai/kids-opencode/         # → kidsinai/kids-opencode
-├── kidsinai/opencode-kernel/       # → kidsinai/opencode-kernel
-├── kidsinai/platform-backend/      # → Airbotix-AI/platform-backend (clone dir kept under kidsinai/)
-├── kidsinai/planning/              # → Airbotix-AI/planning (clone dir kept under kidsinai/)
-└── deeprouter-ai/deeprouter/       # → deeprouter-ai/deeprouter
+├── kidsinai/airbotix-app/          # → Airbotix-AI/airbotix-app
+├── kidsinai/teacher-console/       # → Airbotix-AI/teacher-console
+├── kidsinai/platform-backend/      # → Airbotix-AI/platform-backend
+├── kidsinai/planning/              # → Airbotix-AI/planning
+├── kidsinai/kids-opencode/         # → kidsinai/kids-opencode (out of scope)
+├── kidsinai/opencode-kernel/       # → kidsinai/opencode-kernel (out of scope)
+└── deeprouter-ai/deeprouter/       # → deeprouter-ai/deeprouter (out of scope)
 ```
 
 ## Development Standards
@@ -149,7 +164,8 @@ No framework configured yet. Plan: Vitest (frontend unit) + Jest (NestJS backend
 - No backend dependency
 
 ### Kids AI Platform (planned)
-- Two product lines: Line A creative web (6-11) + Line B Kids OpenCode (12+)
+- **Cloud side** (this AI's scope): `airbotix-app` (unified Portal + Learn SPA) + `teacher-console` + `platform-backend`
+- **Local side** (other AI's scope): `kids-opencode` desktop tool, downloaded from airbotix.ai
 - Shared `platform-backend` (Family / Wallet / Course Pack / Class / Audit)
 - All LLM traffic must route through DeepRouter `/v1` (OpenAI-compatible)
 - Minors compliance: see `docs/product/compliance/minors-compliance.md` (C1-C15 required items)

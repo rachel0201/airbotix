@@ -911,49 +911,61 @@ V0 防御层（已大幅简化，因为没有命令执行）：
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                      Marketing Site (GH Pages)                  │
-│                          airbotix.ai                            │
+│              Marketing Site (GH Pages)                          │
+│              airbotix.ai                                        │
+│              React + Vite (static, public)                      │
 └─────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────┐
-│   Airbotix Platform Frontend (Cloudflare Pages, 静态前端)        │
+│   Airbotix Cloud Platform (AWS S3 + CloudFront, Sydney)         │
 │                                                                 │
-│  ┌────────────────────────┐    ┌─────────────────────────────┐  │
-│  │ Line A: 低龄创作 Web   │    │ Line B: Kids OpenCode (Web) │  │
-│  │ React + Vite           │    │ Fork of opencode            │  │
-│  │ (Team C)               │    │ Kid UI wrapper (Team B)     │  │
-│  └─────────────┬──────────┘    └──────────────┬──────────────┘  │
-│                │                              │                 │
-│  ┌─────────────┴──────────────────────────────┴──────────────┐  │
-│  │  Parent Dashboard / Teacher Console / Class Wall          │  │
-│  │  Shared frontend modules                                  │  │
-│  └─────────────┬─────────────────────────────────────────────┘  │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │  airbotix-app  (unified SPA, app.airbotix.ai)              │ │
+│  │  React + Vite, single codebase                             │ │
+│  │                                                            │ │
+│  │   /portal/*          /learn/*                              │ │
+│  │   - login            - image / music / video / story       │ │
+│  │   - family           - coding-101 (6-11 web)               │ │
+│  │   - wallet           - classroom (班级墙)                  │ │
+│  │   - approvals        - studio                              │ │
+│  │   - audit replay     - 我的作品集                          │ │
+│  │   - settings                                               │ │
+│  │                                                            │ │
+│  │   /download/kids-opencode  → 12+ 下载本地工具入口          │ │
+│  └────────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │  teacher-console (teacher.airbotix.ai)                     │ │
+│  │  React + Vite (独立 SPA)                                   │ │
+│  │  Class / Live Classroom / Curriculum / Internal Admin      │ │
+│  └─────────────┬──────────────────────────────────────────────┘ │
 │                │                                                │
 │  ┌─────────────┴─────────────────────────────────────────────┐  │
-│  │  Platform Backend (NestJS on AWS EC2 Sydney)              │  │
-│  │  - Family / Kid Profile / Parent auth (JWT + OTP)         │  │
-│  │  - Wallet (Stars) / Airwallex webhook                     │  │
-│  │  - Course Pack / Mission / Class                          │  │
-│  │  - Audit log (含 agent action replay)                     │  │
-│  │  - NestJS Guards (family/kid/project 边界)                │  │
-│  │  - Postgres: Neon Serverless (aws-ap-southeast-2)         │  │
-│  └─────────────┬─────────────────────────────────────────────┘  │
-│                │                                                │
-│  ┌─────────────┴─────────────────────────────────────────────┐  │
-│  │  Kids OpenCode Agent Runtime (server-side, V0 hosted)     │  │
-│  │  - Shared agent runtime (no per-session container)        │  │
-│  │  - Per-project Virtual FS (AWS S3 Sydney)                 │  │
-│  │  - Tool whitelist enforcer (read/write/edit/list only)    │  │
-│  │  - Virtual-FS boundary enforcer                           │  │
-│  │  - Audit emitter                                          │  │
-│  └─────────────┬─────────────────────────────────────────────┘  │
-│                                                                 │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │  Kid Browser — <iframe sandbox> Preview                  │   │
-│  │  Renders HTML/CSS/JS from Virtual FS                     │   │
-│  │  (kid code never executes server-side at V0)             │   │
-│  └──────────────────────────────────────────────────────────┘   │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │  platform-backend (NestJS, AWS EC2 t3.small Sydney)        │ │
+│  │  api.airbotix.ai                                           │ │
+│  │  - Family / Kid Profile / Parent auth (JWT + OTP)          │ │
+│  │  - Wallet (Stars) / Airwallex webhook                      │ │
+│  │  - Course Pack / Mission / Class                           │ │
+│  │  - Audit log (含 agent action replay from kids-opencode)   │ │
+│  │  - NestJS Guards (family/kid/project 边界)                 │ │
+│  │  - Postgres: Neon Serverless (aws-ap-southeast-2)          │ │
+│  │  - Object storage: AWS S3 Sydney                           │ │
+│  │  - WebSocket Gateway (实时课堂 + agent stream)             │ │
+│  └─────────────┬──────────────────────────────────────────────┘ │
 └────────────────┼─────────────────────────────────────────────────┘
+                 │                  ▲
+                 │                  │ token-exchange / audit emit / wallet charge
+                 │                  │
+                 │       ┌──────────┴────────────────────────────────┐
+                 │       │  kids-opencode (Local Desktop Tool)       │
+                 │       │  本地桌面应用，由另一个 AI agent 维护      │
+                 │       │  - 12+ 孩子下载到自己电脑                  │
+                 │       │  - 用 Airbotix Family Account 登录         │
+                 │       │  - 本地 OS FS，无云端沙盒                  │
+                 │       │  - LLM 调用强制走 DeepRouter（变现护城河）  │
+                 │       └────────────────────────────────────────────┘
+                 │
                  │ OpenAI-compatible /v1 API
                  ▼
 ┌─────────────────────────────────────────────────────────────────┐

@@ -1,57 +1,37 @@
-# kids-opencode → kidsinai/kids-opencode + kidsinai/opencode-kernel
+# kids-opencode → kidsinai/kids-opencode
 
-> **此目录是 pointer，不是实际代码位置。**
-> 真实代码（2026-05-14 拆分 + 2026-05-15 brand 重组，**两 repo 都在 kidsinai**）：
-> - **产品代码**：`kidsinai/kids-opencode` (PRIVATE, MIT) — 本地 `~/Documents/sites/kidsinai/kids-opencode/`
-> - **内核 fork**：`kidsinai/opencode-kernel` (PUBLIC, MIT) — 本地 `~/Documents/sites/kidsinai/opencode-kernel/`
+> **⚠️ 此 repo 由另一个 AI agent 维护，不在 airbotix repo 工作范围内。**
+> 所有架构 / 技术选型 / V0-V1 范围决策都在那个会话中进行。在 airbotix repo 工作时**不要**做 kids-opencode 的实施建议或修改 `docs/product/prd/kids-opencode-spec.md`。
 >
-> **为什么都在 kidsinai**：kids-opencode 设计为**开放可用**（其他人 / 学校 / 社区也能用），监管和分销定位在 kidsinai 品牌下；商业护城河 = **DeepRouter 强关联**（所有 LLM 调用强制走 DeepRouter，使用者通过 Airbotix 的 DeepRouter 实例付费）。这是"产品开放 + 基础设施变现"模式。
+> 此目录仅保留作为 platform 拓扑锚点。
 
-Airbotix Kids AI Platform — **Line B Kids OpenCode (12+ 旗舰)**。
+## 位置
 
-## 实际位置
+- GitHub: `kidsinai/kids-opencode` (PRIVATE, MIT)
+- 本地 clone: `~/Documents/sites/kidsinai/kids-opencode/`
+- 内核 fork: `kidsinai/opencode-kernel` (PUBLIC, MIT) — `~/Documents/sites/kidsinai/opencode-kernel/`
 
-```bash
-# 产品代码（私有，本文档对应；GitHub: Airbotix-AI/kids-opencode）
-cd ~/Documents/sites/kidsinai/kids-opencode/
+## 在 Airbotix Platform 中的角色（高层）
 
-# 内核 fork（公开，跟踪 upstream；GitHub: kidsinai/opencode-kernel）
-cd ~/Documents/sites/kidsinai/opencode-kernel/
-```
+- Line B 12+ 旗舰产品（agentic AI coding tool for kids）
+- 通过 airbotix-app `/download/kids-opencode` 入口分发
+- 用 Airbotix Family Account 登录
+- LLM 调用走 DeepRouter（**这是商业护城河**，详见 `docs/product/prd/deeprouter-coupling-plan.md`）
+- Stars 在 DeepRouter 端计费，audit 通过 platform-backend 接收
 
-## 两 repo 拆分原因
+## airbotix-app / platform-backend 与 kids-opencode 的接口契约
 
-产品代码不 import 内核源码，只通过 `@opencode-ai/sdk` + `@opencode-ai/plugin`（npm）消费。这让：
-- 内核 fork 保持近镜像 upstream，rebase 摩擦最小
-- 产品 repo 私有保护商业敏感逻辑（kid-safe prompts、Stars 计量、家长 audit 集成）
-- 通用价值改进（path guard / iframe preview / DeepRouter adapter）可贡献回 upstream
+需要 cross-team 对齐的点（在 airbotix repo 工作时**可以讨论**这些接口，但**不要**单方面决定 kids-opencode 那边的实现）：
 
-## Scope (V0)
+- `auth/oauth` 流程：kids-opencode 如何 token-exchange 用 Family Account
+- `wallet/charge` 端点：DeepRouter 计费回写到 platform-backend wallet
+- `audit/emit` 端点：kids-opencode 上报 agent action 给家长 audit 流
+- 跨产品作品集：kids-opencode 完成的项目如何回写到 airbotix-app `/learn/classroom`
 
-- 孩子端 web 工作区（多文件树 + 编辑器 + iframe 预览）
-- Agent 对话面板（plan / tool call 可见 / approve）
-- **V0 沙盒**：服务端 virtual FS (AWS S3 Sydney) + 浏览器 `<iframe sandbox>`，**仅支持 HTML/CSS/JS**
-- 工具白名单：`read_file` / `write_file` / `edit_file` / `list_dir` — 全部作用于 S3 virtual FS，**禁用 shell / 任意命令**
-
-## Tech Stack
-
-| Layer | Choice |
-|---|---|
-| Frontend | React 18 + TS + Tailwind + Monaco (复用 opencode 部分) |
-| Frontend hosting | Cloudflare Pages |
-| Agent runtime | Node + TS，AWS EC2 Sydney (V0 与 platform-backend 同机) |
-| Virtual FS | AWS S3 SDK，bucket key 前缀 `<kid_profile_id>/<project_id>/` |
-| Audit | platform-backend `/audit` endpoint → Neon Postgres |
-| LLM | DeepRouter `/v1` (Claude 3.5 Sonnet via DeepRouter) |
-
-## Hard rules
-
-- ❌ 不允许在 fork 内引入 shell / Bash / 任意命令执行
-- ❌ 不允许直连 OpenAI/Anthropic — 必须走 DeepRouter
-- ❌ 不允许把 kid 代码跑在服务端（仅浏览器 iframe 渲染）
+接口变更必须 cross-AI 沟通后落地，不要在任一边单方面定义。
 
 ## Related docs (in airbotix repo)
 
-- `../docs/product/prd/kids-opencode-spec.md` — 完整 spec (v0.1 → 已对齐两 repo 结构)
-- `../docs/product/prd/kids-ai-platform-prd.md` §13.1 Line B 范围 + §11.6 安全护栏
-- `../docs/product/compliance/minors-compliance.md`
+- `../docs/product/prd/kids-ai-platform-prd.md` — Line B 在主 PRD 的角色（高层）
+- `../docs/product/prd/deeprouter-coupling-plan.md` — DeepRouter 商业护城河实施 plan（airbotix-app + kids-opencode 共同涉及）
+- `../docs/product/prd/kids-opencode-spec.md` — **由另一个 agent 维护，本 repo 不主动改**

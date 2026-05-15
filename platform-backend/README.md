@@ -31,6 +31,7 @@ cd ~/Documents/sites/kidsinai/platform-backend/
 | Auth | JWT + Refresh Token + OTP (SendGrid email) |
 | Payments | **Airwallex** webhook → wallet credit |
 | Hosting | **AWS EC2 t3.small Sydney** + Docker Compose + nginx + Let's Encrypt |
+| Domain | `api.airbotix.ai` |
 | LLM gateway | DeepRouter `/v1` (HTTP client only) |
 
 ## Hard rules
