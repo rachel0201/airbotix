@@ -38,14 +38,14 @@
 ## 后端技术栈
 
 ### 核心框架
-- **Node.js 18+**: JavaScript 运行时
-- **Express.js**: Web 应用框架
+- **Node.js 20**: JavaScript 运行时
+- **NestJS**: Web 应用框架（不用 Express 裸用）
 - **TypeScript**: 类型安全的开发
 
 ### 数据库
-- **MongoDB**: NoSQL 文档数据库
-- **Mongoose**: MongoDB 对象建模工具
-- **MongoDB Atlas**: 云数据库服务
+- **Neon Serverless Postgres (aws-ap-southeast-2)**: 主数据库
+- **Prisma**: ORM + migration 工具
+- **注**：旧版本文档曾写 MongoDB / Supabase — 已于 2026-05-14 改为 Neon + Prisma，不要被旧引用误导
 
 ### 认证和安全
 - **JWT**: JSON Web Token 认证
@@ -58,8 +58,7 @@
 - **SendGrid**: 邮件服务提供商
 
 ### 文件存储
-- **AWS S3**: 对象存储服务
-- **Supabase Storage**: 替代存储方案
+- **AWS S3 (ap-southeast-2 Sydney)**: 唯一对象存储方案。Virtual FS、孩子作品集、导出文件等全部走 S3 Sydney 桶
 
 ### 缓存
 - **Redis**: 内存数据库
