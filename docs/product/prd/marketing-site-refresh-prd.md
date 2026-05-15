@@ -89,7 +89,7 @@ src/pages/
 | # | 领域 | 8-11 | **12-15（初中，平台主战场）** | 15-17 |
 |---|---|---|---|---|
 | **A** | **AI 创作**（图像 / 故事 / 音乐 / 视频 / 配音 / 漫画） | ✅ 主力 | ✅ 进阶（多媒体合成） | ⚪ 工具熟练用户 |
-| **B** | **AI Coding 基础**（Python / Web 三件套 / Git） | ⚪ 入门可触 | ✅ **主力** | ✅ 主力 |
+| **B** | **AI Coding 基础**（看懂 AI 写的代码 / 调 / 改 / 部署 — 不锁定语言）| ⚪ 入门可触 | ✅ **主力** | ✅ 主力 |
 | **C** | **AI Agent 编程**（Cursor / Claude Code / Kids OpenCode + LLM API） | ❌ | ✅ **主力 — 平台核心场景** | ✅ 进阶 |
 | **D** | **AI Robotics**（mBot + 传感器 + Scratch + AI 决策） | ✅ 入门 | ✅ 进阶 | ⚪ 选修 |
 | **E** | **AI 素养 / Critical Thinking**（提示工程 / 输出判断 / 伦理 / 安全） | ✅ 必修嵌入 | ✅ 必修嵌入 | ✅ 必修嵌入 |
@@ -108,12 +108,16 @@ src/pages/
 - 把以上 5 件事合成一本"个人故事书 / 短片"
 - Stack：DeepRouter 后端代理 → Flux/SDXL/Claude/ElevenLabs/Suno/Runway
 
-**B — AI Coding 基础**：
-- Python 语法 + 数据结构
-- HTML / CSS / JS（让代码"看得见摸得着"）
-- 用 AI（Cursor / Claude）协助写代码 + debug
-- Git / GitHub 协作
-- 部署到 Vercel / Netlify（学生第一个能分享 URL 的作品）
+**B — AI Coding 基础**（重要：我们**不教传统编程语法班**）：
+- 理解"AI 帮我写代码"到底是什么意思 — 孩子不是敲键盘，孩子是**指挥者** + **审核者** + **架构师**
+- 看懂 AI 输出的代码：这段做什么？哪里可能出错？怎么改？
+- 用 AI 协助修 bug / 加功能 / 重构 — 这才是真实工程师工作流
+- Git / GitHub 协作（让 AI 也学会版本管理）
+- 把项目部署到线上（第一次拿到可分享的 URL，孩子那个 wow 时刻）
+- **关于编程语言**：按项目自然出现，不当作"主修课"
+  - V0 起步语言 = HTML/CSS/JS（浏览器看得见摸得着，反馈最直观）
+  - Python / 其他语言在 12+ 真实项目里需要才学 — 学语法不是目的，做出东西是目的
+  - 区别于市面 "Scratch / Python 入门班" 的传统 coding 学校 — 我们走的是 AI-native 路径
 
 **C — AI Agent 编程（平台 + 初中主战场）**：
 - 理解 LLM / agent / tool use 概念
@@ -203,8 +207,9 @@ src/pages/
 覆盖 **§4.0 领域 B（Coding 基础）+ C（AI Agent 编程，重点）+ E（AI 素养） + F 起步（真实项目）**。
 
 **这门班教什么**：
-- Python + Web 基础（让代码"看得见摸得着"）
-- 用 AI（Cursor / Claude / Kids OpenCode）协助写代码
+- AI Coding 基础概念（**不是传统编程语法班** — 指挥 / 看懂 / 调试 AI 输出）
+- 起步语言 HTML/CSS/JS（看得见摸得着），其他语言按项目需要再学
+- 用 AI 工具（Cursor / Claude / Kids OpenCode）做项目
 - AI Agent 编程入门（LLM API / tool use / 简单 agent 项目）
 - Git / 部署到 Vercel
 - 至少 1-2 个真实项目，URL 可分享
@@ -279,6 +284,98 @@ src/pages/
 
 ---
 
+## 4.6 Technology Stack & Partners（Trust Signal — 必须 logo 上首页）
+
+**核心叙事**："我们建的是 **AI 学习平台**，不是 AI 模型。世界上最好的 AI 模型由 Anthropic / OpenAI / ElevenLabs 等头部公司构建，我们的工作是把这些**安全、有结构地**送到孩子手里。"
+
+为什么这是 trust signal：
+- 家长看到 Claude / OpenAI / ElevenLabs 这些 logo → 心理稳：用的是世界级 AI，不是杂牌
+- 家长看到平台 = "我们建的 + 头部 AI 服务" → 比"完全黑盒"或"完全 ChatGPT 包装"都更有说服力
+- 投资人看到 → 我们没在重新造轮子，专注在 K-12 这层应用 + 课程
+
+### 4.6.1 完整 Partner 列表
+
+按类别 + 用途：
+
+**LLM / Agent 推理**
+| Logo | Vendor | 在 Airbotix 用于 |
+|---|---|---|
+| 🟧 | **Anthropic Claude** | AI Tutor / Agent 推理（主力模型，通过 DeepRouter）|
+| ⚫ | **OpenAI** | 备选 LLM / 部分图像（DALL-E）|
+
+**AI 创作工具**
+| Logo | Vendor | 用途 |
+|---|---|---|
+| 🔵 | **ElevenLabs** | TTS / 多角色配音 / 多语言 |
+| 🎵 | **Suno** | AI 音乐 / 主题曲生成 |
+| 🎬 | **Runway** | AI 短视频 / 动画 |
+| 🖼️ | **Black Forest Labs (Flux)** | 高质量图像生成 |
+| 🎨 | **Stability AI (SDXL)** | 备选图像 |
+
+**AI Coding 工具**（孩子直接接触）
+| Logo | Vendor | 用途 |
+|---|---|---|
+| 💻 | **Cursor** | AI 原生 IDE（12+ AI Coding Studio 学生用）|
+| 🤖 | **Anthropic Claude Code** | CLI agent 工具（高阶学生用）|
+| 🚀 | **opencode** (upstream, MIT) | 我们 fork 用作 kids-opencode 的内核 |
+
+**Dev / 部署**（学生项目部署用）
+| Logo | Vendor | 用途 |
+|---|---|---|
+| ▲ | **Vercel** | 学生作品部署 / 域名分配 |
+| 🐙 | **GitHub** | 代码托管 / 协作 |
+
+**平台基础设施**（家长一般不关心，但 schema for completeness）
+| Vendor | 用途 |
+|---|---|
+| AWS Sydney | EC2 / S3 / Secrets Manager (`platform-backend` 运行) |
+| Neon | Postgres |
+| Cloudflare | DNS + ACM |
+| Airwallex | 支付（AUD + 跨境 FX）|
+| SendGrid | OTP / 通知邮件 |
+| DeepRouter | 自家 LLM gateway（所有 LLM 出口） |
+
+### 4.6.2 在网站上的呈现
+
+**Home `/`** — 紧贴 hero 下方加一个 **"Powered by"** logo strip（灰底 + 6-8 个 logo 横排灰阶）：
+```
+─────────────────────────────────────────────────────────────
+  Powered by best-in-class AI infrastructure
+  
+  [Anthropic]  [OpenAI]  [ElevenLabs]  [Cursor]  [Vercel]  [GitHub]
+─────────────────────────────────────────────────────────────
+```
+
+**About `/about`** — 加一个 **"Our Technology Stack"** section（彩色 logo + 简短描述每个的用途）：
+- 完整 4.6.1 表格视觉化
+- 强调"建平台 + 用最好的 AI" 哲学
+
+**Platform `/programs/platform`** — 在 platform 预告页详细列出 "What's under the hood"，让 waitlist 注册前的家长能看到。
+
+**1-on-1 / Classes 页** — 提及"我们用的是 ..."但更轻量，不抢主推内容焦点。
+
+### 4.6.3 Logo 资产 logistics
+
+| 项 | 任务 |
+|---|---|
+| 下载 SVG/PNG | 每个 vendor 官网 brand 资源页（[TBD: Lightman 或我列清单后批量下载]）|
+| 存放 | `public/media/partners/<vendor>.svg` |
+| Attribution | 大部分公司允许"我们使用此服务"的展示。但 trademark 敏感的（Anthropic / OpenAI logo）需检查是否有"do not modify / 不暗示背书"等条款。**任务**：建一份 `docs/legal/partner-logos-usage.md` 记录每家的 brand guideline 链接 |
+| 灰阶版 | Home 上的 strip 用灰阶（避免视觉竞争），About 用彩色 |
+| Fallback | 不支持/没拿到 logo 时用 text-only "Anthropic Claude" 等 |
+
+### 4.6.4 写成网站文案的关键句
+
+可以直接用在 Home / About：
+
+> "We don't build AI models — Anthropic, OpenAI, and others do that better. We build the curriculum, the safety layer, and the kid-friendly experience on top, so your child gets world-class AI in a structure that's actually designed for learning."
+
+> "Every tool we use is named on this site. You can see exactly what's under the hood. No black boxes. No mystery models."
+
+> "When your kid uses our platform, they're talking to Claude. They're generating music with Suno. They're deploying to Vercel. These are the same tools real engineers and creators use — packaged for K-12."
+
+---
+
 ## 5. Site IA — Pages & Routes（refresh）
 
 ```
@@ -328,6 +425,10 @@ airbotix.ai
 | SCHOOLS / For educators → | **PLATFORM** / `Kids-safe AI coding platform with parent visibility. Coming 2026 Q3.` / `Join waitlist →` |
 
 加第 5 张（次要位置）：`SCHOOLS / Year-long partnerships for AU schools / Talk to us →`
+
+**"Powered by" 横条**（紧贴 hero 下方，必加 — see §4.6.2）：
+- 灰阶 logo 横排：Anthropic / OpenAI / ElevenLabs / Cursor / Vercel / GitHub（6-8 个）
+- 上方 1 行 caption：`Powered by best-in-class AI infrastructure`
 
 **Trust signals section**（新增）：
 - 100+ students taught
@@ -397,6 +498,7 @@ airbotix.ai
 
 - 保留 Hero / Mission / Vision / Values / Pilot snapshot
 - **新增**：
+  - **"Our Technology Stack" 章节** ⭐ — see §4.6.2（彩色 logo + 简短描述每家用途，"建平台 + 用最好的 AI" 哲学的视觉化呈现）
   - 3-layer stack diagram（视觉化 BP §5）
   - Founders section（Lightman + Joe，头像 + 1 段 bio + LinkedIn）
   - Press / Awards（[TBD: 如果有]）
