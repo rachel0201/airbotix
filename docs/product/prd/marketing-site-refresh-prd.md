@@ -78,7 +78,93 @@ src/pages/
 
 ---
 
-## 4. Service Taxonomy（4 条线）
+## 4. What We Can Teach + How We Package It
+
+### 4.0 Teaching Capability Catalog（先把"能教什么"摆清楚）
+
+> **核心原则**：我们先盘点能力（subject × age），再决定每种能力**用什么方式交付**（workshop / 小班 / 1对1 / 平台）。同一个能力可以多种方式卖。
+
+#### 6 大教学领域
+
+| # | 领域 | 8-11 | **12-15（初中，平台主战场）** | 15-17 |
+|---|---|---|---|---|
+| **A** | **AI 创作**（图像 / 故事 / 音乐 / 视频 / 配音 / 漫画） | ✅ 主力 | ✅ 进阶（多媒体合成） | ⚪ 工具熟练用户 |
+| **B** | **AI Coding 基础**（Python / Web 三件套 / Git） | ⚪ 入门可触 | ✅ **主力** | ✅ 主力 |
+| **C** | **AI Agent 编程**（Cursor / Claude Code / Kids OpenCode + LLM API） | ❌ | ✅ **主力 — 平台核心场景** | ✅ 进阶 |
+| **D** | **AI Robotics**（mBot + 传感器 + Scratch + AI 决策） | ✅ 入门 | ✅ 进阶 | ⚪ 选修 |
+| **E** | **AI 素养 / Critical Thinking**（提示工程 / 输出判断 / 伦理 / 安全） | ✅ 必修嵌入 | ✅ 必修嵌入 | ✅ 必修嵌入 |
+| **F** | **真实项目 / Portfolio / 升学准备**（部署上线项目 / Hackathon / 大学申请） | ❌ | ⚪ 起步 | ✅ **主力** |
+
+图例：✅ 主力 / ⚪ 可教但不主推 / ❌ 不适合年龄
+
+#### 每个领域**能交付什么具体技能**
+
+**A — AI 创作**：
+- 用 prompt 生成图像（角色 / 场景 / 风格）
+- 用 AI 写故事（情节 / 对话 / 转折）
+- 用 AI 做配音（TTS 多语言多角色）
+- 用 AI 生成音乐（主题曲 / 背景乐）
+- 用 AI 做短视频 / 动画 GIF
+- 把以上 5 件事合成一本"个人故事书 / 短片"
+- Stack：DeepRouter 后端代理 → Flux/SDXL/Claude/ElevenLabs/Suno/Runway
+
+**B — AI Coding 基础**：
+- Python 语法 + 数据结构
+- HTML / CSS / JS（让代码"看得见摸得着"）
+- 用 AI（Cursor / Claude）协助写代码 + debug
+- Git / GitHub 协作
+- 部署到 Vercel / Netlify（学生第一个能分享 URL 的作品）
+
+**C — AI Agent 编程（平台 + 初中主战场）**：
+- 理解 LLM / agent / tool use 概念
+- 调用 OpenAI / Anthropic API（在 platform 上是 DeepRouter）
+- 用 agent 构建"能自己思考一步、调工具一步"的小项目
+- 工具白名单 / 沙盒 / 家长可见的"agent action replay"
+- 直接对应 `kids-opencode` 本地工具 + airbotix-app 云端 IDE
+- **这是初中阶段最有上限、最容易产生 wow 时刻的领域**
+
+**D — AI Robotics**：
+- mBot 基础控制（移动 / 转向 / 速度）
+- 传感器（光 / 距离 / 颜色）单/双传感器
+- 状态机 / 决策表 / 条件循环
+- 进阶：让 AI 决定机器人下一步动作（用 LLM 做"思考层"）
+- 已有的 2-day workshop spec 在 `src/data/workshops.ts`
+
+**E — AI 素养**（嵌入所有课程，不单独卖）：
+- Prompt literacy：怎么把想法翻译成 AI 听得懂的话
+- Iteration habit：第一版不好不要紧，怎么调
+- Critical eye：AI 输出哪里好 / 哪里假 / 怎么判断
+- Safe AI hygiene：不分享个人信息 / 不轻信输出 / 遇到不适内容怎么办
+- AI 伦理初步：偏见 / 版权 / 隐私 / fairness
+
+**F — 真实项目 / 升学**（15-17 主力，12-15 起步）：
+- 部署上线项目（Vercel / GitHub Pages）
+- 项目 README + demo 视频 + portfolio 站
+- 参加 Airbotix 季度 Hackathon（V1+）
+- 大学申请材料（针对海外华人家庭 — BP §3 提到的核心 segment）
+
+#### Capability × Delivery Matrix（同一能力，多种卖法）
+
+| 领域 | Workshop | 小班课 | 1-on-1 | Platform |
+|---|---|---|---|---|
+| A 创作 | ⚪ 单次体验 | ✅ 8 周深度 | ✅ 按需 | ⚪ 自助创作 |
+| B Coding 基础 | ⚪ 1-day intro | ✅ 10 周 term | ✅ 按需 | ⚪ 练习 |
+| C **AI Agent** | ❌（深度需要 series） | ⚪ 进阶班 | ✅ 个性化 | **✅ 平台核心** |
+| D Robotics | ✅ **主力（已有）** | ⚪ 进阶 cohort | ⚪ 少见 | ❌（硬件依赖） |
+| E AI 素养 | 嵌入 | 嵌入 | 嵌入 | 嵌入 |
+| F 真实项目 / 升学 | ❌（一次性不够） | ⚪ Capstone | ✅ **主力** | ✅ 长期养成 |
+
+**关键洞察**：
+1. **Platform 的差异化能力 = C（AI Agent 编程），目标年龄 12-15 初中**
+   - workshop / 小班 / 1-on-1 都难以承载 agent 编程的"长期养成"特性（每周 1 次 90 分钟根本不够）
+   - 必须有平台让孩子在两次课之间持续在 agent 工具里"住"，才能真养成
+   - 这也是为什么 `kids-opencode` 是本地桌面工具（孩子电脑常驻）
+2. **Robotics 不需要平台** — 硬件依赖 + workshop 形态最合适，保持 in-school workshop 主力
+3. **AI 创作（A） + 升学（F）** 是两端"非平台依赖"的现金牛 — 立即可卖
+
+---
+
+### 4.1-4.4 Service Taxonomy（4 条交付线 — 上面 capability 的"卖法"）
 
 ### 4.1 Workshops（in-school / holiday camp）— 已有，扩展
 
@@ -100,66 +186,32 @@ src/pages/
 - Ages 8-11：**AI Creative Lab**（无 coding 门槛，视觉 / 听觉 / 故事输出）
 - Ages 12-17：**AI Coding Studio**（Python + AI agent + 项目制）
 
-#### AI Creative Lab（Ages 8-11）— 内容详解
+#### AI Creative Lab（Ages 8-11）— 范围
 
-**核心承诺**：每个孩子结业带走一本**自己创作的、AI 协作完成的"个人故事书 + 配套媒体"**（PDF + 音视频，家长可打印 / 分享）。
+覆盖 **§4.0 领域 A（AI 创作）+ E（AI 素养，嵌入）**。
 
-**8 周 cohort 大纲**：
+**这门班教什么**（具体大纲推迟到老师备课时定）：
+- AI 图像创作 + AI 故事写作 + AI 配音 + AI 音乐 + AI 短视频，孩子可输出多媒体作品集
+- 嵌入 AI 素养：prompt literacy / iteration / critical eye / safe AI hygiene
 
-| 周 | 主题 | 学生产出 |
-|---|---|---|
-| 1 | **AI 是什么 + 怎么和 AI 对话**（kid-safe 介绍 + prompt 基础） | 第一个 AI 生成图（self portrait） |
-| 2 | **AI 图像创作**（角色 / 场景 / 道具设计） | 自己故事的主角设计稿 + 风格定调 |
-| 3 | **AI 图像 进阶**（背景 / 色调 / 多张连贯性） | 5 张以上故事插图，风格统一 |
-| 4 | **AI 故事写作**（情节结构 + 对话 + 转折） | 1500 字短篇故事大纲 + 完整文本 |
-| 5 | **AI 配音 & 角色声音**（TTS / 多角色声线） | 故事全文 AI 配音 mp3 |
-| 6 | **AI 音乐 & 主题曲**（用 Suno-like 工具生成） | 故事专属主题曲 + 1-2 段背景音乐 |
-| 7 | **AI 短视频 & 动画 GIF**（让插图动起来） | 1-2 段故事关键场景动画 |
-| 8 | **Showcase Day**：合成 + 家长开放课 | 完整作品 PDF 故事书 + 音视频包 + 家长展示 |
+**这门班不教什么**：编程、机器人、Agent 概念（这些是 AI Coding Studio / Platform 的事）
 
-**贯穿能力培养**：
-- **Prompt literacy** — 怎么把脑子里的想法翻译成 AI 听得懂的话
-- **Iteration habit** — 第一版不好不要紧，怎么调整 prompt 改进
-- **Critical eye** — AI 生成的东西哪里好 / 哪里假 / 怎么判断
-- **Safe AI hygiene** — 不分享个人信息 / 不相信所有输出 / 遇到不舒服的内容怎么办
-- **Storytelling** — 故事结构（开头 / 冲突 / 高潮 / 结局），AI 是工具，故事是孩子自己的
+**结业承诺**：孩子能用 AI 工具产出**自己创作的视觉 + 文本 + 音频作品**，并初步形成"我怎么和 AI 对话"的能力。
 
-**用到的 AI 工具**（V0 课堂内，老师托管，孩子不直接管 API key）：
-- **图像**：DeepRouter 后端代理到 Flux / SDXL / DALL-E
-- **故事文本**：Claude 3.5 Sonnet（kid-safe system prompt）
-- **TTS**：ElevenLabs（多角色多语言）
-- **音乐**：Suno / Udio API（或类似）
-- **视频**：Runway / Pika（5-10 秒短片）
+#### AI Coding Studio（Ages 12-17）— 范围
 
-**家长可见**：每周课后家长收到孩子作品 + 老师一段评语（视频 60-90s）。
+覆盖 **§4.0 领域 B（Coding 基础）+ C（AI Agent 编程，重点）+ E（AI 素养） + F 起步（真实项目）**。
 
-**Class Wall**：可选 — 同 cohort 同学之间互看作品（家长授权后）。
+**这门班教什么**：
+- Python + Web 基础（让代码"看得见摸得着"）
+- 用 AI（Cursor / Claude / Kids OpenCode）协助写代码
+- AI Agent 编程入门（LLM API / tool use / 简单 agent 项目）
+- Git / 部署到 Vercel
+- 至少 1-2 个真实项目，URL 可分享
 
-**为什么这套有杠杆**：
-- **可炫耀**：8-11 岁孩子拿到"一本自己的故事书"，家长朋友圈传播力极强 → 自然获客
-- **可重复**：每个 cohort 同样大纲不同孩子作品，老师边际成本低
-- **可衍生**：孩子结业作品集 → 后续家长续费 1-on-1 / 进阶 cohort 自然路径
+**这门班的特殊价值**：**和 Platform 直接对接**。完成本 cohort 的孩子 = airbotix-app + kids-opencode 早期 power user，自然过渡到平台长期学习。
 
-#### AI Coding Studio（Ages 12-17）— 内容详解
-
-**核心承诺**：每个孩子结业带走 **3 个能 demo 的真实项目**（部署在线，URL 可分享），并初步掌握用 AI agent（Cursor / Claude Code 入门）做软件。
-
-**10 周 cohort 大纲**：
-
-| 周 | 主题 | 学生产出 |
-|---|---|---|
-| 1 | Python 基础 + 怎么和 AI 编程对话 | 第一个能跑的 Python 脚本 |
-| 2 | Web 基础（HTML/CSS/JS）+ AI 协助写代码 | 个人 portfolio 静态网页 |
-| 3 | AI API 调用（用 Python 调 Claude / OpenAI） | "AI 笑话生成器"小项目 |
-| 4 | Project 1：**AI 工具网页**（用 AI 写代码 + 部署） | URL 可分享的 AI 小工具 |
-| 5-6 | Git / GitHub / 协作 + 用 Cursor 做项目 | Project 1 部署到 Vercel / Netlify |
-| 7-8 | Project 2：**AI Agent 应用**（让 LLM 调工具） | 简单 agentic 项目（如自动整理笔记） |
-| 9 | Project 3：**Capstone**（孩子自定义） | 真实需求驱动的项目（朋友的小生意、班级活动等） |
-| 10 | Showcase Day：演示 + 家长 + 同伴互评 | 完整 portfolio + 现场 demo |
-
-**Tech stack 教授**：Python · HTML/CSS/JS · Git · Cursor / Claude Code · Vercel deploy · Claude/OpenAI API
-
-**对接平台**：完成本 cohort 的孩子 = airbotix-app + kids-opencode 桌面工具早期 power user。
+**结业承诺**：孩子能用 AI 工具独立做出**能部署上线的项目**，并理解 agent 工作机制。
 
 ---
 
@@ -198,13 +250,32 @@ src/pages/
 
 **为什么这是高 ARPU 产品**：单学生 LTV 高（高频家长 6 个月 = A$3000+），现金流即时，且产生大量 case study / 内容（每节课 1-on-1 笔记是博客素材源头）。
 
-### 4.4 Kids AI Platform — V0 上线 2026 Q3-Q4
+### 4.4 Kids AI Platform — V0 上线 2026 Q3-Q4 ⭐ **初中主战场**
 
-**形式**：airbotix-app（云端 SPA）+ kids-opencode（12+ 本地工具）
-**定位**：补充上面 3 条线，而非替代
-- 小班课 / 1-on-1 学生 = 平台早期用户，老师直接在平台上布置作业
-- 家长付费订阅 = 自主练习
-**当前**：营销站只暴露 **waitlist 注册**，详细等 PRD 完成后再 marketing
+**核心定位（2026-05-15 锁定）**：Platform 的 primary persona = **初中孩子（12-15 岁）+ 他们的家长**。原因：
+- 8-11 创作类 → live class 老师陪练就够，不需要平台常驻
+- 15-17 升学 → 1-on-1 + Hackathon 更直接
+- **12-15 初中** → 需要"在两次课之间持续在 AI 工具里住下来"的能力培养，**只有平台能承载**
+
+**形式**：
+- `airbotix-app`（云端 SPA）= 家长 portal + 孩子 6-11 创作区 + 12+ 学习区入口
+- **`kids-opencode`（本地桌面工具）= 12-15 初中孩子的 AI Coding 主力工具**
+  - 装在孩子自己的电脑上，每天能打开
+  - 用 Airbotix Family Account 登录
+  - 所有 LLM 调用走 DeepRouter（计费 + kid-safe 双重保险）
+  - 真正能让初中孩子做"agent 帮我做项目"这件事
+
+**承接 §4.0 哪些能力**：
+- 主力承载 **C — AI Agent 编程**（live class 难以养成的长期能力）
+- 补充 B — Coding 基础（练习平台）
+- 不承载 A 创作（live class 主战场）/ D Robotics（硬件依赖）/ F 升学（1-on-1 主战场）
+
+**和 live class 关系**：
+- 小班课 / 1-on-1 学生 = 平台早期用户
+- 老师在 live class 教完概念 → 孩子在平台上独立练 → 下次课 review
+- 家长在 portal 看到孩子整周用平台的进度 + agent action replay
+
+**营销站当前阶段**：只暴露 **waitlist 注册**。截图 / 详细 spec 等 platform PRD（parent-portal / learn / api）写完后再展示。
 
 ---
 
