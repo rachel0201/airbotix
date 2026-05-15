@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Airbotix — Design System Preview</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      /* Brand palette */
+      --brand-coral:     #FF7A66;
+      --brand-bubblegum: #FF6BA9;
+      --brand-sunshine:  #FFD43B;
+      --brand-sky:       #5DAEFF;
+      --brand-mint:      #3DD9A9;
+
+      /* Gradients */
+      --grad-coral:     linear-gradient(135deg, #FF9A80 0%, #FF5B7E 100%);
+      --grad-bubblegum: linear-gradient(135deg, #FF8FBE 0%, #FF4F8F 100%);
+      --grad-sunshine:  linear-gradient(135deg, #FFE26B 0%, #FFB638 100%);
+      --grad-sky:       linear-gradient(135deg, #7FC2FF 0%, #3D8FFF 100%);
+      --grad-mint:      linear-gradient(135deg, #6BE7BF 0%, #1FC692 100%);
+
+      /* Washes (pale section bgs) */
+      --wash-coral:     #FFEFE9;
+      --wash-bubblegum: #FFEAF3;
+      --wash-sunshine:  #FFF7D6;
+      --wash-sky:       #E8F2FF;
+      --wash-mint:      #DCF6EC;
+
+      /* Surface */
+      --canvas:        #FFFEF7;
+      --canvas-pure:   #FFFFFF;
+      --surface:       #FFF8EE;
+      --surface-soft:  #FFF1DE;
+      --hairline:      #EFE8DA;
+
+      /* Text */
+      --ink:       #1F1B2D;
+      --ink-soft:  #3D3851;
+      --slate:     #6B6478;
+      --steel:     #9C95AB;
+      --stone:     #C7C0D5;
+      --on-dark:   #FFFEF7;
+
+      /* Brand-tinted shadows */
+      --shadow-coral:     0 16px 40px -8px rgba(255, 122, 102, 0.40);
+      --shadow-bubblegum: 0 16px 40px -8px rgba(255, 107, 169, 0.40);
+      --shadow-sunshine:  0 16px 40px -8px rgba(255, 212, 59, 0.45);
+      --shadow-sky:       0 16px 40px -8px rgba(93, 174, 255, 0.40);
+      --shadow-mint:      0 16px 40px -8px rgba(61, 217, 169, 0.40);
+      --shadow-card:      0 8px 24px -6px rgba(31, 27, 45, 0.10);
+      --shadow-sticker:   4px 4px 0 0 rgba(31, 27, 45, 0.95);
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: 'Plus Jakarta Sans', 'Inter', 'PingFang SC', 'Hiragino Sans GB',
+        'Microsoft YaHei', system-ui, sans-serif;
+      font-size: 17px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ===== Layout ===== */
+    .container { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
+    section { padding: 100px 0; }
+    section + section { padding-top: 0; }
+
+    /* ===== Type primitives ===== */
+    h1, h2, h3, h4, p { margin: 0; }
+
+    .hero-display {
+      font-size: 96px;
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+    }
+    .display-lg {
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+    .heading-lg {
+      font-size: 52px;
+      font-weight: 700;
+      line-height: 1.10;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+    }
+    .heading-md {
+      font-size: 40px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.010em;
+      color: var(--ink);
+    }
+    .heading-sm {
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .card-title {
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 1.30;
+      color: var(--ink);
+    }
+    .lead {
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: var(--ink-soft);
+    }
+    .body { font-size: 17px; line-height: 1.65; color: var(--ink-soft); }
+    .body-sm { font-size: 15px; line-height: 1.55; color: var(--slate); }
+    .caption { font-size: 13px; font-weight: 500; line-height: 1.55; color: var(--slate); }
+    .eyebrow {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      line-height: 1.40;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+    .eyebrow.coral     { color: var(--brand-coral); }
+    .eyebrow.bubblegum { color: var(--brand-bubblegum); }
+    .eyebrow.sunshine  { color: #C99A00; }
+    .eyebrow.sky       { color: #2D7FFF; }
+    .eyebrow.mint      { color: #1FC692; }
+    .eyebrow.ink       { color: var(--ink); }
+
+    /* Caveat (handwritten accent) */
+    .handwritten {
+      font-family: 'Caveat', cursive;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--brand-coral);
+      line-height: 1.2;
+    }
+    .handwritten-lg {
+      font-family: 'Caveat', cursive;
+      font-size: 56px;
+      font-weight: 700;
+      color: var(--brand-coral);
+      line-height: 1;
+    }
+
+    /* ===== Squiggle underline ===== */
+    .squiggle-word {
+      position: relative;
+      display: inline-block;
+      color: var(--brand-coral);
+    }
+    .squiggle-word::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -14px;
+      height: 14px;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 14' preserveAspectRatio='none'><path d='M2 8 Q 7 2, 12 8 T 22 8 T 32 8 T 42 8 T 52 8 T 62 8 T 72 8 T 82 8 T 92 8 T 100 8' stroke='%23FF7A66' stroke-width='3' fill='none' stroke-linecap='round'/></svg>");
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+    }
+
+    /* ===== Buttons ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 9999px;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+      text-decoration: none;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary {
+      background: var(--brand-coral);
+      color: var(--on-dark);
+    }
+    .btn-primary:hover { background: #FF5C46; }
+    .btn-secondary {
+      background: transparent;
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      padding: 12px 28px;
+    }
+    .btn-secondary:hover { background: var(--ink); color: var(--on-dark); }
+    .btn-on-color {
+      background: var(--canvas);
+      color: var(--ink);
+    }
+
+    /* ===== Sticker badge ===== */
+    .sticker {
+      display: inline-block;
+      padding: 7px 16px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      box-shadow: var(--shadow-sticker);
+      transform: rotate(-3deg);
+      transform-origin: center;
+    }
+    .sticker.alt   { transform: rotate(2deg); }
+    .sticker.coral     { background: var(--brand-coral);     color: var(--ink); }
+    .sticker.bubblegum { background: var(--brand-bubblegum); color: var(--ink); }
+    .sticker.sunshine  { background: var(--brand-sunshine);  color: var(--ink); }
+    .sticker.sky       { background: var(--brand-sky);       color: var(--ink); }
+    .sticker.mint      { background: var(--brand-mint);      color: var(--ink); }
+
+    /* ===== Cards ===== */
+    .card-base {
+      background: var(--canvas-pure);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: var(--shadow-card);
+    }
+
+    /* ===== Stat tiles ===== */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .stat-tile {
+      background: var(--canvas-pure);
+      border-radius: 32px;
+      padding: 48px 32px;
+      text-align: center;
+      position: relative;
+      box-shadow: var(--shadow-card);
+    }
+    .stat-tile.coral     { box-shadow: var(--shadow-coral); }
+    .stat-tile.bubblegum { box-shadow: var(--shadow-bubblegum); }
+    .stat-tile.sky       { box-shadow: var(--shadow-sky); }
+    .stat-tile .stat-num {
+      font-size: 80px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      margin-bottom: 12px;
+    }
+    .stat-tile .stat-num.coral     { color: var(--brand-coral); }
+    .stat-tile .stat-num.bubblegum { color: var(--brand-bubblegum); }
+    .stat-tile .stat-num.sky       { color: var(--brand-sky); }
+    .stat-tile .stat-num.text {
+      font-size: 48px;
+      letter-spacing: -0.02em;
+    }
+    .stat-tile .stat-label {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+    .stat-tile .sticker-overlay {
+      position: absolute;
+      top: -10px;
+      right: 20px;
+    }
+
+    /* ===== Vibrant program cards ===== */
+    .program-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+    }
+    .program-card {
+      border-radius: 40px;
+      padding: 36px 28px;
+      min-height: 320px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      color: var(--on-dark);
+    }
+    .program-card.coral     { background: var(--grad-coral);     box-shadow: var(--shadow-coral); }
+    .program-card.bubblegum { background: var(--grad-bubblegum); box-shadow: var(--shadow-bubblegum); }
+    .program-card.sunshine  { background: var(--grad-sunshine);  box-shadow: var(--shadow-sunshine); color: var(--ink); }
+    .program-card.sky       { background: var(--grad-sky);       box-shadow: var(--shadow-sky); }
+    .program-card.mint      { background: var(--grad-mint);      box-shadow: var(--shadow-mint); }
+
+    .program-card .pc-tag {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 14px;
+    }
+    .program-card h3 {
+      font-size: 30px;
+      font-weight: 700;
+      line-height: 1.10;
+      letter-spacing: -0.015em;
+      margin-bottom: 10px;
+      color: inherit;
+    }
+    .program-card p {
+      font-size: 14px;
+      line-height: 1.55;
+      opacity: 0.92;
+      margin: 0;
+    }
+    .program-card .pc-cta {
+      margin-top: 24px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      align-self: flex-start;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 9999px;
+      backdrop-filter: blur(4px);
+    }
+    .program-card.sunshine .pc-cta {
+      background: rgba(31, 27, 45, 0.18);
+    }
+
+    /* Decorative blob inside program card */
+    .program-card .pc-blob {
+      position: absolute;
+      bottom: -60px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      pointer-events: none;
+    }
+    .program-card.sunshine .pc-blob {
+      background: rgba(31, 27, 45, 0.08);
+    }
+
+    /* Sticker overlay on program card */
+    .program-card .sticker-overlay {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+    }
+
+    /* ===== Promo card ===== */
+    .promo-card {
+      background: var(--grad-coral);
+      border-radius: 40px;
+      padding: 80px 64px;
+      color: var(--on-dark);
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-coral);
+    }
+    .promo-card .promo-blob {
+      position: absolute;
+      top: -120px;
+      right: -120px;
+      width: 380px;
+      height: 380px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+      pointer-events: none;
+    }
+    .promo-card h2 {
+      font-size: 56px;
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin: 12px 0 18px;
+      max-width: 600px;
+      color: inherit;
+      position: relative;
+    }
+    .promo-card p {
+      font-size: 18px;
+      max-width: 560px;
+      opacity: 0.9;
+      line-height: 1.55;
+      margin: 0 0 32px;
+      position: relative;
+    }
+    .promo-card .promo-sticker {
+      position: absolute;
+      top: 36px;
+      right: 56px;
+    }
+
+    /* ===== Section wash backgrounds ===== */
+    .wash-coral     { background: var(--wash-coral); }
+    .wash-bubblegum { background: var(--wash-bubblegum); }
+    .wash-sunshine  { background: var(--wash-sunshine); }
+    .wash-sky       { background: var(--wash-sky); }
+    .wash-mint      { background: var(--wash-mint); }
+    .wash-cream     { background: var(--surface); }
+
+    /* ===== Color palette swatches ===== */
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+    .swatch {
+      border-radius: 24px;
+      padding: 28px 20px 20px;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: var(--ink);
+      box-shadow: var(--shadow-card);
+    }
+    .swatch.dark { color: var(--on-dark); }
+    .swatch .swatch-name {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .swatch .swatch-role {
+      font-size: 12px;
+      font-weight: 500;
+      opacity: 0.75;
+      letter-spacing: 0.04em;
+    }
+    .swatch .swatch-hex {
+      font-size: 13px;
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-weight: 600;
+      opacity: 0.85;
+    }
+
+    .wash-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .wash-swatch {
+      border-radius: 16px;
+      padding: 20px;
+      min-height: 100px;
+      border: 1px solid var(--hairline);
+    }
+    .wash-swatch .label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .wash-swatch .hex {
+      font-size: 13px;
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      color: var(--ink);
+      margin-top: 6px;
+    }
+
+    /* ===== Polaroid (tilted photo frame) ===== */
+    .polaroid {
+      background: var(--canvas-pure);
+      padding: 14px 14px 24px;
+      border-radius: 8px;
+      box-shadow: var(--shadow-card);
+      transform: rotate(-2deg);
+      display: inline-block;
+    }
+    .polaroid .ph {
+      width: 220px;
+      height: 220px;
+      background: linear-gradient(135deg, #FFE26B 0%, #FFB638 100%);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(31, 27, 45, 0.4);
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .polaroid .caption-line {
+      font-family: 'Caveat', cursive;
+      font-size: 22px;
+      color: var(--ink);
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    /* ===== Soft blob bg ===== */
+    .with-blob {
+      position: relative;
+      overflow: hidden;
+    }
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(40px);
+      opacity: 0.6;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .with-blob > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== Hand-drawn arrow ===== */
+    .hand-arrow {
+      font-family: 'Caveat', cursive;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--brand-bubblegum);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ===== Section divider/labels ===== */
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--steel);
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 40px;
+    }
+
+    /* ===== Type sample table ===== */
+    .type-sample {
+      border-top: 1px solid var(--hairline);
+      padding: 32px 0;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 32px;
+      align-items: baseline;
+    }
+    .type-sample .meta {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ===== Voice/tone block ===== */
+    .voice-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .voice-card {
+      padding: 28px;
+      border-radius: 24px;
+    }
+    .voice-card.do { background: var(--wash-mint); }
+    .voice-card.dont { background: var(--wash-coral); }
+    .voice-card .voice-label {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .voice-card.do .voice-label { color: #1FC692; }
+    .voice-card.dont .voice-label { color: var(--brand-coral); }
+    .voice-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .voice-card li {
+      font-size: 16px;
+      line-height: 1.5;
+      padding: 10px 0;
+      color: var(--ink);
+      border-top: 1px dashed rgba(31, 27, 45, 0.15);
+    }
+    .voice-card li:first-child { border-top: none; }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       Hero — demonstrates the full system at-a-glance
+       ============================================================ -->
+  <section class="with-blob" style="padding-top: 120px;">
+    <div class="blob" style="background: var(--brand-sunshine); width: 480px; height: 480px; top: -80px; right: -120px;"></div>
+    <div class="blob" style="background: var(--brand-mint); width: 320px; height: 320px; bottom: -80px; left: -120px;"></div>
+
+    <div class="container">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+        <span class="sticker bubblegum">DESIGN PREVIEW</span>
+        <span class="caption">Airbotix · K-12 brand system v2</span>
+      </div>
+
+      <h1 class="hero-display" style="max-width: 1000px;">
+        Teach kids to code <span class="squiggle-word">with AI.</span>
+      </h1>
+
+      <p class="lead" style="max-width: 720px; margin-top: 28px;">
+        This page shows every component of the new K-12 design system in one place. Scroll through and tell me what to keep, change, or push further.
+      </p>
+
+      <div style="display: flex; gap: 14px; margin-top: 36px;">
+        <a class="btn btn-primary" href="#palette">Book a Workshop</a>
+        <a class="btn btn-secondary" href="#typography">View Programs</a>
+      </div>
+
+      <div style="margin-top: 36px;" class="hand-arrow">
+        ↘ scroll down to see the system
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Color Palette
+       ============================================================ -->
+  <section id="palette">
+    <div class="container">
+      <div class="section-label">01 · color</div>
+      <h2 class="section-title">Five saturated brand colors. Plus warm canvas.</h2>
+
+      <div class="palette-grid">
+        <div class="swatch dark" style="background: var(--grad-coral);">
+          <div>
+            <div class="swatch-name">Coral</div>
+            <div class="swatch-role">AI Coding · primary CTA</div>
+          </div>
+          <div class="swatch-hex">#FF7A66</div>
+        </div>
+        <div class="swatch dark" style="background: var(--grad-bubblegum);">
+          <div>
+            <div class="swatch-name">Bubblegum</div>
+            <div class="swatch-role">Hackathons · joy</div>
+          </div>
+          <div class="swatch-hex">#FF6BA9</div>
+        </div>
+        <div class="swatch" style="background: var(--grad-sunshine);">
+          <div>
+            <div class="swatch-name">Sunshine</div>
+            <div class="swatch-role">Robotics · creativity</div>
+          </div>
+          <div class="swatch-hex">#FFD43B</div>
+        </div>
+        <div class="swatch dark" style="background: var(--grad-sky);">
+          <div>
+            <div class="swatch-name">Sky</div>
+            <div class="swatch-role">Schools · trust</div>
+          </div>
+          <div class="swatch-hex">#5DAEFF</div>
+        </div>
+        <div class="swatch dark" style="background: var(--grad-mint);">
+          <div>
+            <div class="swatch-name">Mint</div>
+            <div class="swatch-role">Progress · success</div>
+          </div>
+          <div class="swatch-hex">#3DD9A9</div>
+        </div>
+      </div>
+
+      <p class="caption" style="margin-top: 36px; margin-bottom: 12px;">PALE WASH BACKGROUNDS — alternate these on adjacent sections to keep the page lively.</p>
+      <div class="wash-grid">
+        <div class="wash-swatch wash-coral"><div class="label">Coral wash</div><div class="hex">#FFEFE9</div></div>
+        <div class="wash-swatch wash-bubblegum"><div class="label">Bubblegum wash</div><div class="hex">#FFEAF3</div></div>
+        <div class="wash-swatch wash-sunshine"><div class="label">Sunshine wash</div><div class="hex">#FFF7D6</div></div>
+        <div class="wash-swatch wash-sky"><div class="label">Sky wash</div><div class="hex">#E8F2FF</div></div>
+        <div class="wash-swatch wash-mint"><div class="label">Mint wash</div><div class="hex">#DCF6EC</div></div>
+      </div>
+
+      <p class="caption" style="margin-top: 36px; margin-bottom: 12px;">SURFACES & INK</p>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+        <div class="wash-swatch" style="background: var(--canvas);"><div class="label">Canvas (warm)</div><div class="hex">#FFFEF7</div></div>
+        <div class="wash-swatch" style="background: var(--canvas-pure);"><div class="label">Canvas pure</div><div class="hex">#FFFFFF</div></div>
+        <div class="wash-swatch" style="background: var(--ink); color: var(--on-dark);"><div class="label" style="color: rgba(255,255,255,0.65);">Ink</div><div class="hex" style="color: white;">#1F1B2D</div></div>
+        <div class="wash-swatch" style="background: var(--surface);"><div class="label">Surface cream</div><div class="hex">#FFF8EE</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Typography
+       ============================================================ -->
+  <section id="typography" class="wash-cream">
+    <div class="container">
+      <div class="section-label">02 · typography</div>
+      <h2 class="section-title">Plus Jakarta Sans · Bigger, friendlier, looser.</h2>
+
+      <div class="type-sample">
+        <div>
+          <div class="meta">hero-display</div>
+          <div class="caption">96px / 700 / -0.025em</div>
+        </div>
+        <div class="hero-display" style="font-size: 80px;">Coding with AI</div>
+      </div>
+
+      <div class="type-sample">
+        <div>
+          <div class="meta">display-lg</div>
+          <div class="caption">72px / 700 / -0.020em</div>
+        </div>
+        <div class="display-lg" style="font-size: 60px;">Where we are today</div>
+      </div>
+
+      <div class="type-sample">
+        <div>
+          <div class="meta">heading-lg</div>
+          <div class="caption">52px / 700 / -0.015em</div>
+        </div>
+        <div class="heading-lg" style="font-size: 44px;">Four ways kids learn AI with us</div>
+      </div>
+
+      <div class="type-sample">
+        <div>
+          <div class="meta">heading-md</div>
+          <div class="caption">40px / 600</div>
+        </div>
+        <div class="heading-md" style="font-size: 32px;">Build robots that think.</div>
+      </div>
+
+      <div class="type-sample">
+        <div>
+          <div class="meta">card-title</div>
+          <div class="caption">22px / 600</div>
+        </div>
+        <div class="card-title">Hands-on robotics workshops.</div>
+      </div>
+
+      <div class="type-sample">
+        <div>
+          <div class="meta">lead</div>
+          <div class="caption">20px / 500 / line 1.55</div>
+        </div>
+        <div class="lead">A K-12 AI coding & robotics company. Hands-on workshops, AI-native curriculum.</div>
+      </div>
+
+      <div class="type-sample">
+        <div>
+          <div class="meta">body</div>
+          <div class="caption">17px / 400 / line 1.65</div>
+        </div>
+        <div class="body" style="max-width: 640px;">Children born in 2020 graduate university in 2042. By then, AI fluency is table stakes for every knowledge profession — the way using Excel or Google is today.</div>
+      </div>
+
+      <div class="type-sample">
+        <div>
+          <div class="meta">eyebrow</div>
+          <div class="caption">13px / 700 / 0.10em / UPPERCASE</div>
+        </div>
+        <div>
+          <span class="eyebrow coral">OUR PROGRAMS</span>
+          <span class="eyebrow sky" style="margin-left: 24px;">FOR EDUCATORS</span>
+          <span class="eyebrow bubblegum" style="margin-left: 24px;">HACKATHONS</span>
+        </div>
+      </div>
+
+      <div class="type-sample">
+        <div>
+          <div class="meta">handwritten (Caveat)</div>
+          <div class="caption">use sparingly · max 1-2 per page</div>
+        </div>
+        <div>
+          <div class="handwritten-lg">actually 100+ kids!</div>
+          <div class="handwritten" style="margin-top: 16px;">↘ this is what we mean</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Buttons & Stickers
+       ============================================================ -->
+  <section>
+    <div class="container">
+      <div class="section-label">03 · buttons & stickers</div>
+      <h2 class="section-title">Pill buttons. Sticker badges with rotation.</h2>
+
+      <p class="caption" style="margin-bottom: 16px;">PRIMARY CTA — coral pill (replaces ink-black). Reads inviting on K-12 surfaces.</p>
+      <div style="display: flex; gap: 14px; margin-bottom: 48px; align-items: center;">
+        <a class="btn btn-primary" href="#">Book a Workshop</a>
+        <a class="btn btn-secondary" href="#">View Programs</a>
+        <span style="background: var(--ink); padding: 14px 28px; border-radius: 9999px;">
+          <span class="btn btn-on-color" style="padding: 0; box-shadow: none;">On-Color Pill</span>
+        </span>
+      </div>
+
+      <p class="caption" style="margin-bottom: 16px;">STICKER BADGES — each rotated -3° or +2°, hard 4px offset shadow. Use on cards & hero corners.</p>
+      <div style="display: flex; gap: 28px; flex-wrap: wrap; padding: 16px 0 32px;">
+        <span class="sticker coral">NEW</span>
+        <span class="sticker bubblegum alt">ENROLLING</span>
+        <span class="sticker sunshine">AGES 8-13</span>
+        <span class="sticker sky alt">PARTNER PILOT</span>
+        <span class="sticker mint">JUST LAUNCHED</span>
+      </div>
+
+      <p class="caption" style="margin: 32px 0 16px;">SQUIGGLE UNDERLINE — under one keyword in a hero. Max 1 per page.</p>
+      <div class="display-lg" style="font-size: 56px;">
+        Hands-on <span class="squiggle-word">robotics</span> for every kid.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Stat Tiles
+       ============================================================ -->
+  <section class="wash-sky">
+    <div class="container">
+      <div class="section-label">04 · stat tiles</div>
+      <h2 class="section-title">Honest numbers · brand-tinted glow.</h2>
+
+      <div class="stat-grid">
+        <div class="stat-tile coral">
+          <span class="sticker coral sticker-overlay">PILOT</span>
+          <div class="stat-num coral">100+</div>
+          <div class="stat-label">Students Taught</div>
+        </div>
+        <div class="stat-tile bubblegum">
+          <div class="stat-num bubblegum">2</div>
+          <div class="stat-label">Partner Schools</div>
+        </div>
+        <div class="stat-tile sky">
+          <div class="stat-num text sky">Australia</div>
+          <div class="stat-label">Pilot Market</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Vibrant Program Cards
+       ============================================================ -->
+  <section>
+    <div class="container">
+      <div class="section-label">05 · vibrant program cards</div>
+      <h2 class="section-title">5 program identities · 40px radius · brand glow.</h2>
+
+      <div class="program-grid">
+        <div class="program-card coral">
+          <span class="sticker sunshine sticker-overlay">NEW</span>
+          <div class="pc-blob"></div>
+          <div>
+            <div class="pc-tag">AI CODING</div>
+            <h3>Code with AI.</h3>
+            <p>Project-based AI coding for kids ages 8–17. Build, don't just consume.</p>
+          </div>
+          <div class="pc-cta">Explore →</div>
+        </div>
+        <div class="program-card bubblegum">
+          <div class="pc-blob"></div>
+          <div>
+            <div class="pc-tag">HACKATHONS</div>
+            <h3>Show what you build.</h3>
+            <p>Quarterly student hackathons with university admissions partners.</p>
+          </div>
+          <div class="pc-cta">Coming 2026 →</div>
+        </div>
+        <div class="program-card sunshine">
+          <span class="sticker coral sticker-overlay alt">POPULAR</span>
+          <div class="pc-blob"></div>
+          <div>
+            <div class="pc-tag">ROBOTICS</div>
+            <h3>Build robots.</h3>
+            <p>Sensors, navigation, autonomy. The abstract becomes physical.</p>
+          </div>
+          <div class="pc-cta">Enrolling now →</div>
+        </div>
+        <div class="program-card sky">
+          <div class="pc-blob"></div>
+          <div>
+            <div class="pc-tag">SCHOOLS</div>
+            <h3>Partner with us.</h3>
+            <p>Curriculum-aligned programs for AU schools. Recurring partnerships.</p>
+          </div>
+          <div class="pc-cta">For educators →</div>
+        </div>
+        <div class="program-card mint">
+          <div class="pc-blob"></div>
+          <div>
+            <div class="pc-tag">PROGRESS</div>
+            <h3>Parent dashboard.</h3>
+            <p>See what kids are building. Real progress, real projects, real time.</p>
+          </div>
+          <div class="pc-cta">Coming soon →</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Promo Card (vibrant CTA strip)
+       ============================================================ -->
+  <section>
+    <div class="container">
+      <div class="section-label">06 · promo CTA strip</div>
+      <h2 class="section-title">For schools & parents.</h2>
+
+      <div class="promo-card">
+        <div class="promo-blob"></div>
+        <span class="sticker sunshine alt promo-sticker">FREE INTRO CALL</span>
+        <span class="eyebrow" style="color: rgba(255,254,247,0.85);">FOR SCHOOLS & PARENTS</span>
+        <h2>Ready to bring AI coding to your school?</h2>
+        <p>Book a free 30-minute intro call. We'll walk through curriculum, logistics, and what makes a great pilot.</p>
+        <a href="#" class="btn btn-on-color">Book a Workshop</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Personality Elements
+       ============================================================ -->
+  <section class="wash-sunshine">
+    <div class="container">
+      <div class="section-label">07 · personality elements</div>
+      <h2 class="section-title">Touches of human, not cartoon.</h2>
+      <p class="lead" style="max-width: 720px; margin-bottom: 48px;">Use 1–2 per page max. Sticker + squiggle is fine. Sticker + squiggle + blob + polaroid + handwritten is chaos.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;">
+        <div>
+          <p class="caption" style="margin-bottom: 24px;">TILTED POLAROID PHOTO + HAND-DRAWN ARROW</p>
+          <div style="display: flex; align-items: center; gap: 32px;">
+            <div class="polaroid">
+              <div class="ph">[student photo]</div>
+              <div class="caption-line">first AI build · 2025</div>
+            </div>
+            <div>
+              <div class="hand-arrow" style="color: var(--brand-coral); transform: rotate(-8deg);">
+                ← real kids <br/>real builds
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p class="caption" style="margin-bottom: 24px;">SOFT BLOB BACKGROUNDS — pale brand color, very large, low opacity</p>
+          <div class="card-base with-blob" style="height: 220px;">
+            <div class="blob" style="background: var(--brand-mint); width: 280px; height: 280px; top: -80px; right: -80px;"></div>
+            <div class="blob" style="background: var(--brand-bubblegum); width: 200px; height: 200px; bottom: -60px; left: -40px;"></div>
+            <div class="card-title">Mint and bubblegum blobs sit behind content</div>
+            <p class="body-sm" style="margin-top: 12px;">Adds organic depth without geometry overload. Use one or two, not three.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 64px;">
+        <p class="caption" style="margin-bottom: 16px;">HAND-DRAWN ARROWS (Caveat) — between cards, pointing to data, "actually X!"</p>
+        <div style="display: flex; gap: 64px; align-items: center; flex-wrap: wrap;">
+          <span class="hand-arrow" style="color: var(--brand-coral);">← look at this!</span>
+          <span class="hand-arrow" style="color: var(--brand-bubblegum); transform: rotate(8deg);">↗ go here</span>
+          <span class="hand-arrow" style="color: var(--brand-mint);">actually it works ↓</span>
+          <span class="hand-arrow" style="color: var(--brand-sky);">because of this →</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Voice / Tone
+       ============================================================ -->
+  <section>
+    <div class="container">
+      <div class="section-label">08 · voice & tone</div>
+      <h2 class="section-title">Confident, not boastful. Warm, not childish.</h2>
+
+      <div class="voice-grid">
+        <div class="voice-card do">
+          <div class="voice-label">✓ DO</div>
+          <ul>
+            <li>"Teach kids to code with AI."</li>
+            <li>"An early-stage pilot, focused on doing it right."</li>
+            <li>"100+ kids, 2 schools, real curriculum."</li>
+            <li>"Built with educators, in real Australian schools."</li>
+            <li>"You're a parent who wants more for your kid."</li>
+          </ul>
+        </div>
+        <div class="voice-card dont">
+          <div class="voice-label">✗ DON'T</div>
+          <ul>
+            <li>"Transformative AI literacy paradigm."</li>
+            <li>"Industry-leading K-12 EdTech innovator."</li>
+            <li>"5,000+ students globally" <span class="caption">(if not real)</span></li>
+            <li>"Empower the next generation of digital natives."</li>
+            <li>"Unlock your child's full potential."</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Footer note
+       ============================================================ -->
+  <section class="wash-cream" style="padding: 80px 0;">
+    <div class="container">
+      <p class="caption" style="margin-bottom: 12px;">END OF PREVIEW · v2 K-12 system</p>
+      <p class="lead" style="max-width: 800px;">
+        If this direction feels right, the next step is migrating the pitch deck and Home page to use this system. If not, point at what to fix — palette, type, spacing, personality density — and we iterate.
+      </p>
+    </div>
+  </section>
+
+</body>
+</html>
