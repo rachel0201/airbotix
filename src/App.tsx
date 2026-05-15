@@ -12,6 +12,10 @@ import Media from './pages/Media';
 import BlogList from './pages/Blog/BlogList';
 import BlogDetail from './pages/Blog/BlogDetail';
 import FAQ from './pages/FAQ';
+import Programs from './pages/programs/Programs';
+import OneOnOne from './pages/programs/OneOnOne';
+import Classes from './pages/programs/Classes';
+import Platform from './pages/programs/Platform';
 
 // Auth pages
 import Login from './auth/pages/Login';
@@ -64,6 +68,10 @@ function App() {
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/programs" element={<Programs />} />
+              <Route path="/programs/one-on-one" element={<OneOnOne />} />
+              <Route path="/programs/classes" element={<Classes />} />
+              <Route path="/programs/platform" element={<Platform />} />
               <Route path="/workshops" element={<Workshops />} />
               <Route path="/workshops/:id" element={<WorkshopDetail />} />
               <Route path="/about" element={<About />} />
