@@ -72,6 +72,8 @@ function App() {
               <Route path="/programs/one-on-one" element={<OneOnOne />} />
               <Route path="/programs/classes" element={<Classes />} />
               <Route path="/programs/platform" element={<Platform />} />
+              <Route path="/programs/workshops" element={<Workshops />} />
+              <Route path="/programs/workshops/:id" element={<WorkshopDetail />} />
               <Route path="/workshops" element={<Workshops />} />
               <Route path="/workshops/:id" element={<WorkshopDetail />} />
               <Route path="/about" element={<About />} />

@@ -16,7 +16,7 @@ const tracks = [
     title: 'School & holiday camps',
     desc: '1–3 day intensive AI & robotics workshops. mBots, sensors, generative AI. Run in real Australian schools today.',
     cta: 'View workshops →',
-    href: '/workshops',
+    href: '/programs/workshops',
     sticker: { label: 'POPULAR', color: 'coral', alt: true },
   },
   {
