@@ -306,7 +306,7 @@
      Legal page prose styling — for Markdown-rendered content
      ============================================================ */
   .legal-prose {
-    color: theme('colors.ink-soft');
+    color: theme('colors.ink.soft');
     font-size: 16px;
     line-height: 1.7;
   }
@@ -316,7 +316,7 @@
   .legal-prose h1 {
     font-size: 32px;
     font-weight: 700;
-    color: theme('colors.ink');
+    color: theme('colors.ink.DEFAULT');
     line-height: 1.15;
     margin-top: 2em;
     margin-bottom: 0.5em;
@@ -325,7 +325,7 @@
   .legal-prose h2 {
     font-size: 24px;
     font-weight: 700;
-    color: theme('colors.ink');
+    color: theme('colors.ink.DEFAULT');
     line-height: 1.2;
     margin-top: 2em;
     margin-bottom: 0.4em;
@@ -333,7 +333,7 @@
   .legal-prose h3 {
     font-size: 19px;
     font-weight: 700;
-    color: theme('colors.ink');
+    color: theme('colors.ink.DEFAULT');
     line-height: 1.3;
     margin-top: 1.5em;
     margin-bottom: 0.4em;
@@ -341,19 +341,19 @@
   .legal-prose h4 {
     font-size: 16px;
     font-weight: 700;
-    color: theme('colors.ink');
+    color: theme('colors.ink.DEFAULT');
     margin-top: 1.3em;
     margin-bottom: 0.3em;
   }
   .legal-prose p {
-    color: theme('colors.ink-soft');
+    color: theme('colors.ink.soft');
   }
   .legal-prose strong {
-    color: theme('colors.ink');
+    color: theme('colors.ink.DEFAULT');
     font-weight: 700;
   }
   .legal-prose a {
-    color: theme('colors.brand-coral');
+    color: theme('colors.brand.coral');
     text-decoration: underline;
     text-underline-offset: 2px;
   }
@@ -381,10 +381,10 @@
     margin-top: 0.4em;
   }
   .legal-prose blockquote {
-    border-left: 3px solid theme('colors.brand-sky');
+    border-left: 3px solid theme('colors.brand.sky');
     padding: 0.5em 0 0.5em 1.25em;
     margin: 1em 0;
-    color: theme('colors.ink-soft');
+    color: theme('colors.ink.soft');
     background: rgba(93, 174, 255, 0.05);
     border-radius: 0 0.5rem 0.5rem 0;
   }
@@ -392,19 +392,19 @@
     margin-top: 0.5em;
   }
   .legal-prose blockquote strong {
-    color: theme('colors.ink');
+    color: theme('colors.ink.DEFAULT');
   }
   .legal-prose code {
     background: rgba(255, 122, 102, 0.08);
-    color: theme('colors.brand-coral');
+    color: theme('colors.brand.coral');
     padding: 0.15em 0.4em;
     border-radius: 0.25rem;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.9em;
   }
   .legal-prose pre {
-    background: theme('colors.ink');
-    color: theme('colors.canvas');
+    background: theme('colors.ink.DEFAULT');
+    color: theme('colors.canvas.DEFAULT');
     padding: 1em 1.25em;
     border-radius: 0.75rem;
     overflow-x: auto;
@@ -417,7 +417,7 @@
   }
   .legal-prose hr {
     border: none;
-    border-top: 1px solid theme('colors.hairline');
+    border-top: 1px solid theme('colors.hairline.DEFAULT');
     margin: 2em 0;
   }
   .legal-prose table {
@@ -427,16 +427,16 @@
     font-size: 14px;
   }
   .legal-prose th {
-    background: theme('colors.wash-sky');
-    color: theme('colors.ink');
+    background: theme('colors.wash.sky');
+    color: theme('colors.ink.DEFAULT');
     font-weight: 600;
     padding: 0.5em 0.75em;
     text-align: left;
-    border-bottom: 2px solid theme('colors.hairline');
+    border-bottom: 2px solid theme('colors.hairline.DEFAULT');
   }
   .legal-prose td {
     padding: 0.5em 0.75em;
-    border-bottom: 1px solid theme('colors.hairline');
+    border-bottom: 1px solid theme('colors.hairline.DEFAULT');
     vertical-align: top;
   }
   .legal-prose tr:last-child td {
