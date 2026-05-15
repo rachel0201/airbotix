@@ -82,7 +82,6 @@ const Footer = () => {
                   hello@airbotix.ai
                 </a>
               </li>
-              <li className="text-white/60 text-sm">ABN: 37 689 925 219</li>
             </ul>
           </div>
         </div>
