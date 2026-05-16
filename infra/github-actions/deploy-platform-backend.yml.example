@@ -1,0 +1,99 @@
+# Copy into Airbotix-AI/platform-backend/.github/workflows/deploy.yml
+# Fill in <ACCOUNT_ID>, <EC2_HOST>, and rotate SSH key into GitHub secrets:
+#   - EC2_SSH_PRIVATE_KEY   (PEM of an SSH key pair you generated)
+#   - EC2_HOST_KEY          (output of `ssh-keyscan <eip>`)
+
+name: Deploy platform-backend
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: ap-southeast-2
+  ECR_REPO: airbotix/platform-backend
+  EC2_USER: ubuntu
+  EC2_HOST: <EC2_HOST>           # e.g. api.airbotix.ai or the EIP directly
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test --if-present
+
+  build_and_push:
+    needs: test
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.meta.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve tag (short sha)
+        id: meta
+        run: echo "tag=$(echo ${GITHUB_SHA} | cut -c1-12)" >> $GITHUB_OUTPUT
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::<ACCOUNT_ID>:role/gh-actions-build-platform-backend
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: ECR login
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build + push image
+        env:
+          REGISTRY: ${{ steps.ecr.outputs.registry }}
+          TAG: ${{ steps.meta.outputs.tag }}
+        run: |
+          docker build -t $REGISTRY/${{ env.ECR_REPO }}:$TAG -t $REGISTRY/${{ env.ECR_REPO }}:latest .
+          docker push $REGISTRY/${{ env.ECR_REPO }}:$TAG
+          docker push $REGISTRY/${{ env.ECR_REPO }}:latest
+
+  deploy:
+    needs: build_and_push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "${{ secrets.EC2_HOST_KEY }}" > ~/.ssh/known_hosts
+
+      - name: SSH deploy
+        env:
+          IMAGE_TAG: ${{ needs.build_and_push.outputs.image_tag }}
+        run: |
+          ssh ${{ env.EC2_USER }}@${{ env.EC2_HOST }} \
+            "cd /opt/airbotix && \
+             aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin <ACCOUNT_ID>.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com && \
+             IMAGE_TAG=$IMAGE_TAG docker compose pull && \
+             IMAGE_TAG=$IMAGE_TAG docker compose up -d --remove-orphans && \
+             docker image prune -f"
+
+      - name: Health check
+        run: |
+          for i in 1 2 3 4 5; do
+            if curl -fsS https://api.airbotix.ai/health > /dev/null; then
+              echo "Healthy."
+              exit 0
+            fi
+            echo "Waiting for service to come up... ($i/5)"
+            sleep 5
+          done
+          echo "Service did not become healthy in time." >&2
+          exit 1

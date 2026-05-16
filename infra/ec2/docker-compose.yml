@@ -1,0 +1,40 @@
+# /opt/airbotix/docker-compose.yml
+# Runs platform-backend on api.airbotix.ai. Image is built + pushed to ECR by
+# the GitHub Actions deploy workflow; this host only pulls.
+
+services:
+  platform-backend:
+    image: ${ECR_REGISTRY}/airbotix/platform-backend:${IMAGE_TAG:-latest}
+    container_name: platform-backend
+    restart: unless-stopped
+    env_file:
+      - /opt/airbotix/secrets/.env
+    ports:
+      - "127.0.0.1:3000:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    # No external storage volume — kid artifacts go straight to S3 via signed URLs.
+    # Postgres = Neon (managed). Only logs live on the host.
+    volumes:
+      - /opt/airbotix/logs:/app/logs
+
+# Optional: a Redis container if/when we move @nestjs/throttler off in-memory.
+# Uncomment + add REDIS_URL=redis://redis:6379 to /opt/airbotix/secrets/.env
+#  redis:
+#    image: redis:7-alpine
+#    restart: unless-stopped
+#    command: ["redis-server", "--save", "60", "1"]
+#    volumes:
+#      - redis-data:/data
+#
+# volumes:
+#   redis-data:

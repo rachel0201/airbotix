@@ -1,0 +1,62 @@
+# Copy into Airbotix-AI/teacher-console/.github/workflows/deploy.yml
+# Identical to deploy-airbotix-app, only the bucket + DIST_ID differ.
+
+name: Deploy teacher-console
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: ap-southeast-2
+  BUCKET: teacher-console-prod
+  DIST_ID: <DIST_ID>
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test --if-present
+
+      - run: npm run build
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::<ACCOUNT_ID>:role/gh-actions-deploy-teacher-console
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Upload hashed assets
+        run: |
+          aws s3 sync dist/ s3://${{ env.BUCKET }}/ \
+            --delete \
+            --exclude "index.html" \
+            --cache-control "public, max-age=31536000, immutable"
+
+      - name: Upload index.html (no-cache)
+        run: |
+          aws s3 cp dist/index.html s3://${{ env.BUCKET }}/index.html \
+            --cache-control "no-cache, must-revalidate" \
+            --content-type "text/html; charset=utf-8"
+
+      - name: Invalidate CloudFront /index.html
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${{ env.DIST_ID }}" \
+            --paths "/index.html"

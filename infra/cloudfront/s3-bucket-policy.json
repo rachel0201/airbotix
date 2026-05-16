@@ -1,0 +1,19 @@
+{
+  "_comment": "Apply to the SPA S3 bucket AFTER the CloudFront distribution is created (you need DIST_ID). Buckets remain PRIVATE — public access blocked, CloudFront OAC is the only reader.",
+
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowCloudFrontOACReadOnly",
+      "Effect": "Allow",
+      "Principal": { "Service": "cloudfront.amazonaws.com" },
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::${BUCKET_NAME}/*",
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceArn": "arn:aws:cloudfront::${ACCOUNT_ID}:distribution/${DIST_ID}"
+        }
+      }
+    }
+  ]
+}

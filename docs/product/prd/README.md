@@ -1,44 +1,36 @@
 # 产品需求文档 (PRD)
 
-## 概述
+本目录包含 Airbotix 在售与规划产品的 PRD，组织上对齐 `CLAUDE.md` 中的 repo 拓扑。已下线产品的 PRD 已移到 `_archived/`。
 
-本目录包含 Airbotix 项目的所有产品需求文档，定义了产品的功能需求、用户流程、技术要求和业务目标。
+## 当前活跃 PRD
 
-## 📁 文档列表
+### 平台主线（Layer 2 — Kids AI Platform）
+- [`kids-ai-platform-prd.md`](./kids-ai-platform-prd.md) — 平台总 PRD v0.4（6-11 岁创作平台 + 12+ Kids OpenCode 双线）
+- [`kids-opencode-client-prd.md`](./kids-opencode-client-prd.md) — Kids OpenCode 客户端架构 PRD v0.3（A→C 分阶段：V0a TUI 插件先上、V0b 自有 client 后接；opencode-as-kernel；含安装/onboarding）
+- [`kids-opencode-spec.md`](./kids-opencode-spec.md) — Kids OpenCode 技术 spec v0.2（pre-pivot，部分章节被 `kids-opencode-client-prd.md` 取代，标记 stale）
 
-### 认证系统
-- [教师认证系统 PRD](./teacher-auth-system-prd.md) - 基于邮箱 + OTP 的教师登录注册系统
+### Cloud 子产品（Airbotix-AI org）
+- [`airbotix-app-learn-prd.md`](./airbotix-app-learn-prd.md) — `app.airbotix.ai/learn/*` kid surface
+- [`parent-portal-prd.md`](./parent-portal-prd.md) — `app.airbotix.ai/portal/*` parent surface
+- [`teacher-console-prd.md`](./teacher-console-prd.md) — `teacher.airbotix.ai` teacher + admin + super-admin operational console
+- [`platform-backend-api-spec.md`](./platform-backend-api-spec.md) — NestJS API + Prisma schema
+- [`auth-system-prd.md`](./auth-system-prd.md) — JWT(15min) + Refresh(30d rotating) + Email OTP + Kid PIN + Class code + Super-admin TOTP（取代 `_archived/teacher-auth-system-prd.md`）
 
-### 管理系统
-- [超级管理系统 PRD](./super-admin-mangement-system-prd.md) - 超级管理员管理系统需求
-- [工作坊管理系统 PRD](./super-admin-workshop-management-system-prd.md) - 工作坊管理功能需求
+### Marketing 与基础设施
+- [`marketing-site-refresh-prd.md`](./marketing-site-refresh-prd.md) — airbotix.ai 主站改版
 
-## 📋 PRD 模板
+### 跨产品依赖
+- [`deeprouter-prd.md`](./deeprouter-prd.md) — LLM gateway PRD（独立产品，sibling repo `deeprouter-ai/deeprouter`）
+- [`deeprouter-coupling-plan.md`](./deeprouter-coupling-plan.md) — Airbotix ↔ DeepRouter 耦合策略
 
-### 标准 PRD 结构
-1. **产品概述** - 产品目标和价值主张
-2. **用户分析** - 目标用户和使用场景
-3. **功能需求** - 详细的功能描述
-4. **技术需求** - 技术实现要求
-5. **用户体验** - 用户界面和交互设计
-6. **验收标准** - 功能完成的判断标准
-7. **实施计划** - 开发时间线和里程碑
+## 已归档
 
-### PRD 编写指南
-- 使用清晰、简洁的语言
-- 包含具体的用户场景和用例
-- 定义明确的验收标准
-- 考虑技术可行性和约束
-- 定期更新和审查
+`_archived/` 下保留下线产品的历史 PRD（教师认证、Supabase super-admin、工作坊管理后台等）。不再维护，仅供历史追溯。
 
-## 🔄 文档维护
+## 编写约定
 
-- **版本控制**: 使用语义化版本号
-- **变更记录**: 记录所有重要变更
-- **审查流程**: 产品团队审查和批准
-- **定期更新**: 根据项目进展更新文档
-
----
-
-**维护团队**: Airbotix 产品团队  
-**最后更新**: 2025-01-15
+- 文件名：`<scope>-<topic>-prd.md`（kebab-case），版本号写在文档头部 `v0.x`，不进文件名
+- 文档头部要有 metadata 块：状态、日期、作者、上游文档、平行文档
+- 重大决策走 "决策记录表"（D-XX1, D-XX2…），便于跨 PRD 引用
+- 跨 repo 的 handoff PRD（如 `kids-opencode-client-prd.md`）必须有"实施 owner"字段标明下游 session
+- 修订历史在文档末尾，倒序，每条带版本号 + 日期 + 一句话说明
