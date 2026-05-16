@@ -1,0 +1,12 @@
+[submodule "platform-backend"]
+	path = platform-backend
+	url = git@github.com:Airbotix-AI/platform-backend.git
+[submodule "airbotix-app"]
+	path = airbotix-app
+	url = git@github.com:Airbotix-AI/airbotix-app.git
+[submodule "teacher-console"]
+	path = teacher-console
+	url = git@github.com:Airbotix-AI/teacher-console.git
+[submodule "planning"]
+	path = planning
+	url = git@github.com:Airbotix-AI/planning.git
