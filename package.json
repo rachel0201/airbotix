@@ -9,6 +9,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "sync:kids-installer": "gh api repos/kidsinai/kids-opencode/contents/install.sh -H 'Accept: application/vnd.github.raw' > public/install/kids && echo \"synced public/install/kids ($(wc -l <public/install/kids) lines)\"",
+    "check:installer-drift": "scripts/check-installer-drift.sh",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },

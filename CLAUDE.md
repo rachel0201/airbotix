@@ -88,7 +88,7 @@ github.com/Airbotix-AI/
 └── planning              # Master cross-product plan (private)
 ```
 
-**kidsinai org** — community / events / open-distribution brand. **Managed by a different AI agent — do NOT make architectural decisions for these repos from the airbotix repo session.** Monetization moat lives in DeepRouter (LLM gateway), not in code access.
+**kidsinai org** — community / events / open-distribution brand. Historically owned by a separate AI session; **as of 2026-05-16, cross-repo coordination is permitted with explicit user consent on a per-task basis** — the airbotix session may implement / commit / push to kids-opencode when Lightman authorizes a specific deliverable (e.g., Phase 2.5 own-client TUI was implemented from this session on 2026-05-16). Default stance without explicit authorization: do not change architecture there; route discussion to the kids-opencode session. Monetization moat lives in DeepRouter (LLM gateway), not in code access.
 
 ```
 github.com/kidsinai/
@@ -111,9 +111,9 @@ github.com/deeprouter-ai/
 ├── kidsinai/teacher-console/       # → Airbotix-AI/teacher-console
 ├── kidsinai/platform-backend/      # → Airbotix-AI/platform-backend
 ├── kidsinai/planning/              # → Airbotix-AI/planning
-├── kidsinai/kids-opencode/         # → kidsinai/kids-opencode (out of scope)
-├── kidsinai/opencode-kernel/       # → kidsinai/opencode-kernel (out of scope)
-└── deeprouter-ai/deeprouter/       # → deeprouter-ai/deeprouter (out of scope)
+├── kidsinai/kids-opencode/         # → kidsinai/kids-opencode (cross-repo with explicit task scope)
+├── kidsinai/opencode-kernel/       # → kidsinai/opencode-kernel (cross-repo with explicit task scope)
+└── deeprouter-ai/deeprouter/       # → deeprouter-ai/deeprouter (cross-repo with explicit task scope)
 ```
 
 ## Development Standards
