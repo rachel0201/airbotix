@@ -130,6 +130,37 @@ Non-negotiable:
 - No magic strings/numbers — use named constants
 - Explicit error handling at boundaries
 
+### MANDATORY DESIGN SYSTEM RULES
+
+**All UI development MUST follow the Airbotix K-12 design system. No exceptions.**
+
+Source of truth (in priority order):
+1. `DESIGN.md` (repo root) — full spec: palette, type scale, spacing, component patterns, voice
+2. `tailwind.config.js` — design tokens (colors, fonts, radius, shadows, gradients)
+3. `src/index.css` `@layer components` — pre-built K-12 classes: `.sticker-*`, `.program-card-*`, `.btn-k12-*`
+4. `public/design-preview.html` — visual reference (open in browser to see all tokens rendered)
+
+Applies to: `airbotix` (marketing site) + `airbotix-app/` (parent + kid SPA) + `teacher-console/` (internal admin) submodules.
+Does NOT apply to: `platform-backend/` (no UI), `planning/` (docs only).
+
+**Non-negotiable for any new UI work or refactor:**
+
+- **Colors** — only use design tokens: `bg-brand-{coral|bubblegum|sunshine|sky|mint}`, `bg-wash-*`, `text-ink`, `text-ink-soft`, `bg-canvas`. **Never** hardcode hex values, never use Tailwind defaults like `bg-blue-500` or `text-gray-700`.
+- **Legacy tokens** (`primary-*`, `secondary-*`, `charcoal`, `bg-blue-*`, `text-gray-*`) are kept for unmigrated legacy pages only. **New code must use the K-12 tokens**, and any page you touch should be migrated off legacy in the same PR if practical.
+- **Typography** — Plus Jakarta Sans for everything; Caveat reserved for max 1–2 hand-drawn accents per page. No other fonts.
+- **Radius** — `rounded-2xl` (24px) for cards, `rounded-hero` (40px) for hero/program cards, `rounded-full` for pill buttons and stickers.
+- **Spacing** — sections at 120–160px rhythm (`py-24`/`py-32`/`py-40`); cards `p-10` (40px) interior; no Tailwind default `py-12` or denser for top-level sections.
+- **Components** — prefer the pre-built classes in `index.css` (`.sticker-coral`, `.program-card-sky`, etc.) over re-implementing tokens inline. If a new pattern needs to repeat ≥3 times, add it to `index.css` `@layer components` rather than copy-pasting Tailwind chains.
+- **Shadows** — use brand-tinted shadows (`shadow-brand-coral`, `shadow-card-soft`, `shadow-sticker`) — never default `shadow-lg` etc.
+- **What "kids feel" looks like** — saturated colors, generous radius, soft canvas background, sticker badges, occasional hand-drawn squiggle. **Never** cartoonish illustrations, generic SaaS gradients, or pure white backgrounds.
+
+**Before submitting any UI PR:**
+1. Open `public/design-preview.html` in a browser and cross-check your new component reads as part of the same family
+2. Grep your diff for hex values, `bg-blue-`, `bg-gray-`, `text-gray-` — if any appear, justify or replace with design tokens
+3. If you introduced any new `@layer components` class, document it in `DESIGN.md` under "Component patterns"
+
+If a design decision isn't covered in `DESIGN.md` / `tailwind.config.js`, **ask the user before improvising** — do not invent new tokens unilaterally.
+
 ### Git Workflow
 - Branch naming: `feature/<desc>`, `fix/<issue>`
 - Conventional Commits
