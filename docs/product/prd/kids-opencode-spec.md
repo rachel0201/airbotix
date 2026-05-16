@@ -1,5 +1,12 @@
 # Kids OpenCode — Technical Spec v0.1
 
+> **部分章节 STALE（2026-05-15）** —— 本文档的"客户端形态"与"开发架构"章节已被 [`kids-opencode-client-prd.md`](./kids-opencode-client-prd.md) v0.1 取代。
+>
+> **仍然有效**：合规分析、Stars 经济模型、家长 dashboard 设计、Course Pack 结构、教学法论证。
+> **已被替代**：服务端 hosted web UI / 浏览器 iframe 沙盒 / 服务端虚拟 FS / Airbotix 服务端 agent runtime —— 这些在 V0 pivot 之后改为本机 `opencode serve` + 自有 client 架构，详见新 PRD。
+>
+> 阅读建议：先看 `kids-opencode-client-prd.md` 了解当前架构，再回本文档读未被替代的章节作为补充。
+
 > 文档状态：Draft v0.1 · 待评审
 > 编写日期：2026-05-11
 > 作者：Airbotix
