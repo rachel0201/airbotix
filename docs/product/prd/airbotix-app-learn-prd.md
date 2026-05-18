@@ -1,10 +1,14 @@
 # Kid Learn Surface — airbotix-app `/learn/*` — PRD
 
-> **Status**: Draft v0.1 · 2026-05-15
+> **Status**: Draft v0.2 · 2026-05-17
 > **Repo**: `Airbotix-AI/airbotix-app` (React + Vite SPA, same as Parent Portal)
 > **Domain**: `app.airbotix.ai`
 > **Author**: Airbotix engineering
 > **Depends on**: `platform-backend-api-spec.md` · `parent-portal-prd.md` (same SPA, shared auth)
+
+### Changelog
+- **v0.2 — 2026-05-17** — Adds `/learn/workspace` as a first-class ChatGPT-style 3-pane surface (Sessions / Chat / Preview) and an age-banded Missions browser. Reframes the "no open chat" constraint into a **bounded multi-turn chat inside a Learning Session** (still kid-safe via Stars cost, audit, prompt filtering, idle close). Persistence via `SessionMessage` model (see `platform-backend-api-spec.md`).
+- **v0.1 — 2026-05-15** — Initial draft (mission-driven single-shot create flows + project workspace).
 
 ---
 
@@ -13,15 +17,16 @@
 `/learn/*` is **where kids actually make things**. It's the cloud creative surface for ages 8-11 (Line A AI Creative Lab), plus an on-ramp for 12+ kids who'll eventually graduate to Kids OpenCode desktop.
 
 Key constraints baked into every decision:
-- **Kid-safe by design** — no open chat, all flows mission-driven, every action audited to parent dashboard
+- **Kid-safe by design** — every turn audited to the parent dashboard, every call costs Stars (soft rate-limit), prompts pass the kid-safety filter, Sessions auto-close on idle
 - **Big, visual, low text** — 8-11 audience can't read dense UIs
 - **Always show progress** — kids need feedback every 5 seconds
 - **Stars are visible but not scary** — kids see "this will cost 2⭐", but never see balance bottoming out unexpectedly (the soft-stop + approval flow handles that)
+- **Conversations are persistent, not one-shot** — kids can keep iterating ("make it bigger", "now add a hat") inside a Session; each turn is one audited LLM call, not a free-form chatroom
 
 What this surface **doesn't** do:
 - ❌ AI Coding (Kids OpenCode local desktop tool, separate AI agent)
 - ❌ Robotics (workshop/in-school only)
-- ❌ Open-ended chat with AI (everything is inside Missions)
+- ❌ Unbounded chat — every turn is a single Stars-costed LLM call inside a Session, with prompt filtering and audit. There is no "always-on" assistant background channel.
 
 ---
 
@@ -35,15 +40,16 @@ Public:
 ├── /learn/login/class-code         One-shot login via 6-char class code
 
 Authenticated (kid token):
-├── /learn                          Home — today's classes + missions + recent work
-├── /learn/missions                 Browse Course Pack + Missions
+├── /learn                          Home — Workspace card + today's classes + missions + recent work
+├── /learn/workspace                💬 Workspace — 3-pane (Sessions / Chat / Preview), primary daily entry (v0.2)
+├── /learn/missions                 Browse Course Pack + Missions, grouped by age band (v0.2)
 ├── /learn/missions/:slug           Mission detail / start
 │
-├── /learn/create/image             Image creation flow (in or out of a Mission)
+├── /learn/create/image             Image studio (single-purpose flow; also reachable inside Workspace)
 ├── /learn/create/story             Story writing flow
-├── /learn/create/music             Music generation flow
-├── /learn/create/video             Short video / animation flow
-├── /learn/create/voice             TTS / voice flow
+├── /learn/create/music             Music studio
+├── /learn/create/video             Short video / animation studio
+├── /learn/create/voice             TTS / voice studio
 │
 ├── /learn/projects                 My Works (portfolio)
 ├── /learn/projects/:id             Single project workspace
@@ -54,11 +60,13 @@ Authenticated (kid token):
 └── /learn/help                     Help / how to ask parent / contact teacher
 ```
 
-### Top navigation (kid-tuned)
+### Top navigation (kid-tuned, v0.2)
 
 ```
-Logo  · 🎨 Make  · 📂 My Works  · 🏫 Classroom  · ⭐ 14    Mia 🧒 ▼
+Logo  · 💬 Workspace  · 🎯 Missions  · 📂 My Works  · 🏫 Classroom  · ⭐ 14    Mia 🧒 ▼
 ```
+
+`💬 Workspace` is the first (and default) link — the persistent multi-turn surface kids use day-to-day. `🎯 Missions` is the structured curriculum, browsed by age band.
 
 (Stars balance always visible. Avatar opens kid menu: switch profile / logout / ask parent.)
 
@@ -176,6 +184,14 @@ UI mode flag derived once on session start from `KidProfile.age`. Stored in clie
 │ │ [Continue →] │ │ [Continue →] │                              │
 │ └──────────────┘ └──────────────┘                              │
 │                                                                 │
+│ ── Pick up where you left off ── (v0.2)                        │
+│                                                                 │
+│ ┌──────────────────────────────────────────────────────────┐   │
+│ │  💬 Workspace                                              │   │
+│ │  3 chats today · last: Robot dog on the moon · ★12 spent  │   │
+│ │  [Open Workspace →]                                       │   │
+│ └──────────────────────────────────────────────────────────┘   │
+│                                                                 │
 │ ── What would you like to make today? ──                       │
 │                                                                 │
 │ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐        │
@@ -185,7 +201,105 @@ UI mode flag derived once on session start from `KidProfile.age`. Stored in clie
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### 5.2 Mission flow `/learn/missions/:slug`
+### 5.1bis `/learn/workspace` — Persistent Workspace (v0.2, primary daily entry)
+
+> **Why this exists**: kids work iteratively, not one-shot. "Make a robot. Now make it blue. Add wings." Each turn needs to live in a thread the kid can scroll back to, switch tools inside, and return to tomorrow. The single-shot Studios (§5.3-5.5) stay as focused on-ramps, but Workspace is where ongoing creative work lives.
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────┐
+│  💬 Sessions (left)     │      Chat thread (middle)         │  Preview (right)    │
+│  ────────────────────   │  ───────────────────────────────  │  ─────────────────  │
+│  + New chat             │  🎨 You: a robot dog on the moon  │  ┌───────────────┐  │
+│                         │     ⭐2                            │  │               │  │
+│  Today                  │                                   │  │  [robot dog   │  │
+│  • 🎨 Robot dog (★4)    │  🤖 Created image (image/png)     │  │   on the moon │  │
+│  • 💬 Story brainstorm  │     [thumbnail · 512×512]         │  │   image]      │  │
+│                         │                                   │  │               │  │
+│  Yesterday              │  🎨 You: make it bigger and add a │  │               │  │
+│  • 🎵 Birthday song     │     red hat ⭐2                    │  └───────────────┘  │
+│                         │                                   │  [Copy link][Save]  │
+│  Earlier                │  🤖 Created image (image/png)     │                     │
+│  • 🎬 Pet intro video   │     [thumbnail · 512×512]         │                     │
+│                         │  ────────────────────────────── ↓ │                     │
+│                         │  [💬][🎨][🎵][🗣️][🎬]            │                     │
+│                         │  ┌──────────────────────────────┐ │                     │
+│                         │  │ Type your idea…  ⭐2 [Send] │ │                     │
+│                         │  └──────────────────────────────┘ │                     │
+└────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+**Three panes**:
+
+1. **Sessions (left)** — every `LearningSession` the kid owns, grouped by **Today / Yesterday / Earlier**. Each row shows the tool emoji (chat / image / music / voice / video / mission) + a short auto-derived title + total Stars spent. `+ New chat` opens a fresh session. Closed sessions remain browsable.
+2. **Chat thread (middle)** — persistent `SessionMessage` rows for the active session, rendered as alternating bubbles (kid = brand-coral, AI = surface). Auto-scrolls on new messages. Below the thread: a **Tool picker** (`💬 chat` / `🎨 image` / `🎵 music` / `🗣️ voice` / `🎬 video`) lets the kid switch the next turn's modality without leaving the conversation. The Send button shows the upcoming `⭐n` cost.
+3. **Preview (right)** — renders the **latest artifact** in the session at full fidelity: `<img>` for image, `<audio controls>` for music/voice, `<video controls>` for video. Source comes from `GET /projects/:pid/artifacts/:aid/signed-download`. Buttons: `Copy link`, `Save to project`. Empty state when the session has no artifact yet ("Make something and it'll appear here").
+
+**Session lifecycle**:
+- Created lazily on the first tool action (or explicitly via `POST /learning-sessions`)
+- Heartbeat every 60s while the tab is foreground; `pagehide` sends a final beacon
+- Auto-closed by backend cron after 30 min of no heartbeat (`SessionsService.sweepIdle`)
+- Closed sessions are read-only; "Resume" reopens by creating a new session pre-loaded with the last few turns as context
+
+**Safety re-asserted**:
+- Every turn = one `/llm/*` call = one debit + one audit row (`llm.text.completed` / `llm.image.completed` / …)
+- Prompts go through the kid-safety filter on every turn (no "earned trust" carve-out)
+- Sustained pattern of harmful prompts → silent audit flag for parent + admin (same rule as Studios)
+- Soft-stop: if balance hits 0 mid-session, Send disables with "Ask a parent for more Stars →"
+
+**Why this is NOT an open chatroom**:
+- Each turn costs Stars (built-in rate-limit; no spamming)
+- No streaming "always on" channel — every message is a discrete debit + audit event
+- Every turn is visible to the parent's audit feed in near-real-time (WS event `audit.event`)
+- Idle close + per-turn cost mean the maximum harm-per-day envelope is the daily Stars cap
+
+**Backend dependencies** (already shipped in v0.2):
+- `LearningSession` + `SessionMessage` Prisma models
+- `POST /learning-sessions` (open) · `POST /learning-sessions/:id/heartbeat` · `POST /learning-sessions/:id/end`
+- `GET /learning-sessions/:id/messages` (paginated)
+- `LlmService` auto-appends user + assistant rows on every `/llm/*` call and returns `session_id` in the response
+
+### 5.2 `/learn/missions` — Course Pack browser (v0.2, age-banded)
+
+> **Why this changed in v0.2**: a flat grid of every Course Pack mixed 7-year-old and 14-year-old content together. Kids opened things they couldn't read and skipped things they would have loved. v0.2 groups packs by **age fit** relative to the logged-in kid's `KidProfile.age`.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ 🎯 Missions                                         ⭐ 14 / day │
+│                                                                 │
+│ ── Just right for age 9 ──                                      │  ← highlighted band
+│ ┌────────────┐ ┌────────────┐ ┌────────────┐                    │
+│ │ AI Pet     │ │ Story Lab  │ │ Music Maker│                    │
+│ │ 8 missions │ │ 6 missions │ │ 5 missions │                    │
+│ │ ages 8-10  │ │ ages 8-11  │ │ ages 9-12  │                    │
+│ └────────────┘ └────────────┘ └────────────┘                    │
+│                                                                 │
+│ ── A little harder ──                                           │  ← stretch
+│ ┌────────────┐ ┌────────────┐                                    │
+│ │ Video Lab  │ │ Code Critter│                                  │
+│ │ ages 11-14 │ │ ages 12-15 │                                    │
+│ └────────────┘ └────────────┘                                    │
+│                                                                 │
+│ ── Easier warm-ups ──                                           │  ← collapsed by default
+│ ┌────────────┐                                                  │
+│ │ First Draw │                                                  │
+│ │ ages 6-8   │                                                  │
+│ └────────────┘                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Banding rule** (frontend, no backend filter):
+- Pull all visible packs via `GET /course-packs` (visibility=published)
+- For each pack, compare kid's `age` to pack's `target_age_min` / `target_age_max`:
+  - `age ∈ [min, max]` → **Just right** (top band, full saturation)
+  - `age < min` → **A little harder** (middle, slightly muted)
+  - `age > max` → **Easier warm-ups** (bottom, collapsed by default, lower saturation)
+- "Just right" section header dynamically reads "Just right for age {kid.age}"
+- Within each band, sort by `created_at desc` (newest first) — promotes fresh content
+- Empty "Just right" → show friendly empty-state CTA "Ask your teacher for new missions →"
+
+**Why age-band over recommendation engine** (V0): static and explainable; no cold-start; no privacy-sensitive behavioral profile; can be replaced later with a learned model without changing the UI contract.
+
+### 5.2bis Mission flow `/learn/missions/:slug`
 
 Missions are the **structured backbone** of /learn. A Mission = step-by-step guided project with acceptance criteria.
 
