@@ -174,7 +174,7 @@
 | C10 | 公开合规声明页（airbotix.ai/compliance 或类似 URL） | Anthropic 明文要求 | 🟡 **草稿完成** [`../legal/compliance-statement.md`](../../legal/compliance-statement.md) — 待律师确认 + 上线 |
 | C11 | 隐私政策 + 服务条款 + 家长授权书 | 全部法规 | 🟡 **三份全部起草完成** — [`../legal/privacy-policy.md`](../../legal/privacy-policy.md) · [`../legal/terms-of-service.md`](../../legal/terms-of-service.md) · [`../legal/parental-consent.md`](../../legal/parental-consent.md) — 待律师确认 + 上线 |
 | C12 | 不将孩子数据用于训练任何 AI 模型 + 在隐私政策明示 | COPPA 2026 更新 | 🟡 已写入 [`../legal/privacy-policy.md`](../../legal/privacy-policy.md) §3 + [`../legal/compliance-statement.md`](../../legal/compliance-statement.md) §4 |
-| C13 | 异常事件人工 review + 家长告警 | Anthropic + OpenAI 监控要求 | 🟡 NDB runbook 完成 [kids-opencode/docs/runbook/ndb-incident.md](https://github.com/kidsinai/kids-opencode/blob/main/docs/runbook/ndb-incident.md) — V0 实现 pending |
+| C13 | 异常事件人工 review + 家长告警 | Anthropic + OpenAI 监控要求 | ✅ V0 detection pipeline 已 ship — `platform-backend/src/incidents/` (commit 4a2281a)：moderation_spike / wallet_anomaly / family_paused 滑动窗规则；HIGH 级 WS 推家长 banner；`GET/POST /admin/incidents`；teacher-console-prd §4.13。NDB runbook：[kids-opencode/docs/runbook/ndb-incident.md](https://github.com/kidsinai/kids-opencode/blob/main/docs/runbook/ndb-incident.md) |
 | C14 | 不投放第三方广告 | AU + 行业最佳实践 | ✅ 商业模式已锁定；在 [`../legal/privacy-policy.md`](../../legal/privacy-policy.md) §3 公开承诺 |
 | C15 | 留存可审计证据（system prompt 版本 / 过滤命中 / consent 记录） | Anthropic 审计 | 🟡 [kids-opencode/docs/safety-assessment.md](https://github.com/kidsinai/kids-opencode/blob/main/docs/safety-assessment.md) §3 guardrail-9 — V0 实现 pending |
 
@@ -268,8 +268,8 @@
 | L2 | 起草 / 律师审 / 上线公开合规声明页（airbotix.ai/compliance） | 律师 + 产品 | 🟡 草稿完成（[`compliance-statement.md`](../../legal/compliance-statement.md)），待律师 + 上线 | V0 上线前 |
 | L3 | 起草 / 律师审 / 上线隐私政策、服务条款、家长授权书 | 律师 + 产品 | 🟡 三份草稿完成（见 §4.1.1），待律师 + 上线 | V0 上线前 |
 | L4 | DeepRouter 实现 OpenAI ZDR 强制注入 | Team A | ✅ 已 ship（DeepRouter commits `2620e4d7` + `54fc4cf0`） | — |
-| L5 | C9 数据导出 + 一键销户 UI + 后端 | platform-backend | 🔴 未启动 | Week 10 |
-| L6 | C13 异常事件 review 队列 + 家长告警 pipeline | platform-backend + Team B | 🟡 NDB runbook 完成；pipeline 工程 pending | Week 10 |
+| L5 | C9 数据导出 + 一键销户 UI + 后端 | platform-backend | ✅ 后端 ship — `GET /families/:id/export`（内联 JSON：parents/kids/wallet/transactions/projects/artifacts/audit/approvals/payments）+ `DELETE /families/:id` 软删 + 30 天 grace。UI 待 airbotix-app 拉通 | Week 10 |
+| L6 | C13 异常事件 review 队列 + 家长告警 pipeline | platform-backend + Team B | ✅ V0 ship — `IncidentsService.checkOnAuditEvent` fire-and-forget 接 AuditService；3 条规则（moderation_spike HIGH / wallet_anomaly MED / family_paused LOW）；admin live feed + parent banner WS；14 单测全过（commit 4a2281a） | Week 10 |
 | L7 | C15 审计证据留存 schema | Team A + B | 🟡 plugin 端 stderr 发出已实现；platform-backend 端持久化 pending | Week 8 |
 | L8 | 申请 Anthropic / OpenAI / Doubao "organizations serving minors" outreach | Lightman | 🟡 措辞模板在 [au-lawyer-pass.md](https://github.com/kidsinai/kids-opencode/blob/main/docs/compliance/au-lawyer-pass.md#au-8-anthropic-organizations-serving-minors-approval) AU-8；待 Lightman 发邮件 | V0 前 |
 | **L9** | **OAIC Children's Online Privacy Code 咨询提交** | Lightman | 🟡 草稿完成（[au-oaic-copc-submission-draft.md](https://github.com/kidsinai/kids-opencode/blob/main/docs/compliance/au-oaic-copc-submission-draft.md)），待 Lightman 润色 + 发邮件 | **2026-06-05 COB（硬截止）** |

@@ -695,13 +695,20 @@ Every admin write action emits `AuditEvent` with `actor=admin` (see platform-bac
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-V0 incident sources:
-- Moderation rejection spike per kid (>3 in 10 min)
-- DeepRouter error rate >5% over 5 min (system-level)
-- Stars wallet anomaly (single kid > 50⭐ in 10 min)
-- Family `paused=true` set via panic action (parent or admin)
+V0 incident sources (✅ shipped — `IncidentsService.checkOnAuditEvent`):
+- ✅ Moderation rejection spike per kid (≥3 in 10 min) → HIGH + parent banner via WS
+- 🟡 DeepRouter error rate >5% over 5 min (system-level) — schema supports `deeprouter_errors` kind; detection rule deferred to V0.1
+- ✅ Stars wallet anomaly (single kid > 50⭐ in 10 min) → MEDIUM
+- ✅ Family `paused=true` set via panic action → LOW (informational, dedup'd)
 
-**API**: `GET /admin/incidents` (V1+ — V0 may stub with manual list from audit query).
+**API** (✅ V0 live):
+- `GET /admin/incidents` — list with `status=active|resolved|all`, `kind`, `family_id`, `since` filters
+- `POST /admin/incidents` — manual open
+- `POST /admin/incidents/:id/resolve` — resolve with note (idempotent)
+
+**WS**:
+- `admin:global` room receives `incident.opened` on every new incident
+- `family:<id>` room receives `family.incident_opened` ONLY on HIGH severity (avoids parent banner spam)
 
 ---
 

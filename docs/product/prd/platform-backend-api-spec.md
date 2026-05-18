@@ -543,6 +543,45 @@ enum ApprovalType {
 enum ApprovalStatus { pending granted denied expired }
 ```
 
+### 4.7 Incidents (compliance C13 / launch L6)
+
+> Auto-opened by `IncidentsService.checkOnAuditEvent` (fire-and-forget from `AuditService`) when sliding-window safety rules trip. Also manually openable by admin from teacher-console. Resolved by admin with a note. HIGH severity opens a parent banner via WS.
+
+V0 detection rules:
+- **moderation_spike** (HIGH) — ≥3 `safety.content_rejected` events for one kid in 10 min
+- **wallet_anomaly** (MEDIUM) — single kid spent >50⭐ in 10 min
+- **family_paused** (LOW) — wallet pause toggled (informational, dedup'd to one open per family)
+
+Dedup: never opens a second incident of the same kind while one is still active for the same scope.
+
+```prisma
+model Incident {
+  id            String           @id @default(cuid())
+  kind          IncidentKind
+  severity      IncidentSeverity @default(medium)
+  family_id     String?
+  kid_id        String?
+  title         String
+  payload       Json             @default("{}")
+  opened_at     DateTime         @default(now())
+  resolved_at   DateTime?
+  resolved_by   String?  // user.id of resolving admin
+  resolved_note String?
+}
+
+enum IncidentKind {
+  moderation_spike
+  wallet_anomaly
+  family_paused
+  deeprouter_errors  // system-level rule (planned, not in V0 rule set)
+  manual             // opened by admin
+}
+
+enum IncidentSeverity { low medium high }
+```
+
+FKs to Family + KidProfile use `onDelete: SetNull` — incidents outlive deleted resources so ops can still investigate post-deletion.
+
 ---
 
 ## 5. REST API
@@ -667,10 +706,11 @@ Webhook signature: HMAC-SHA256 with shared secret. Reject unverified.
 | Method | Path | Roles | Purpose |
 |---|---|---|---|
 | POST | `/llm/text-completion` | kid (own), parent (own) | Server-side proxy to DeepRouter — Stars metered, audit emitted, kid-safe prompt injected |
-| POST | `/llm/image` | same | Image generation |
-| POST | `/llm/tts` | same | Text-to-speech |
-| POST | `/llm/music` | same | Music generation |
-| POST | `/llm/video` | same | Short video generation |
+| POST | `/llm/image` | same | Image generation (DeepRouter `/v1/images/generations`) |
+| POST | `/llm/tts` | same | Text-to-speech (DeepRouter `/v1/audio/speech`, binary → data: URL) |
+| POST | `/llm/music` | same | Music generation (routed to `/v1/audio/speech` in V0 — no native music endpoint) |
+| POST | `/llm/music-score` | same | Structured Tone.js score JSON; rendered client-side, 3⭐ — cheaper alt to `/llm/music` |
+| POST | `/llm/video` | same | Short video generation (async submit + 60s poll on DeepRouter `/v1/video/generations`) |
 
 All `/llm/*` calls:
 1. Auth check
@@ -689,6 +729,9 @@ All `/llm/*` calls:
 | POST | `/admin/wallet/*/adjust` | admin | Manual Stars credit/debit (above) |
 | POST | `/admin/kids/:id/suspend` | admin | Emergency suspend kid (content incident) |
 | POST | `/admin/families/:id/refund` | admin | Issue Airwallex refund |
+| GET | `/admin/incidents` | admin | List incidents (filters: `status=active|resolved|all`, `kind`, `family_id`, `since`) |
+| POST | `/admin/incidents` | admin | Manually open an incident (kind, severity, family/kid scope, title, payload) |
+| POST | `/admin/incidents/:id/resolve` | admin | Resolve with a note; idempotent on already-resolved |
 
 All admin actions emit AuditEvent with `actor=admin` and `event_type=admin.*`.
 
@@ -725,6 +768,8 @@ Server validates JWT, derives `family_id` + `role`, joins relevant rooms automat
 | `class.kid_stuck` | class:* | `{ kid_id, project_id, last_action_at }` | Teacher gets a nudge |
 | `agent.stream.delta` | kid:* | `{ delta_text, token_count }` | Streaming AI output to kid UI |
 | `agent.stream.done` | kid:* | `{ stars_charged, summary }` | End of stream |
+| `incident.opened` | admin:global | `{ id, kind, severity, family_id, kid_id, title, opened_at }` | Admin live ops feed (C13 / L6) |
+| `family.incident_opened` | family:* | `{ id, kind, severity, title, opened_at }` | HIGH-severity only — parent banner (C13) |
 
 ### Events client → server
 
