@@ -23,6 +23,11 @@
 > - **三团队并行执行**：Team A DeepRouter / Team B Kids OpenCode / Team C 低龄创作，12 周窗口（详见 §18 执行计划）。
 >
 > **v0.3 锁定项**（继续生效）：商业模式 D1 = 纯 Pay-as-you-go（无订阅）。Stars 永不过期，B2B 学校授权承担经常性收入。
+>
+> **2026-05-25 修订（v0.4 内）—— 自动续充 + 家长侧用量统计**：
+> - **D-WAL-01**：V0 即支持自动续充（opt-in，off by default）。理由是 pay-as-you-go 下"晚 9 点钱包空"会直接吃掉中度/重度用户留存。强制双层 AUD 硬上限 + 失败熔断 + 冷却 + 新卡前 24h 限额。详见 §8.3 + parent-portal-prd §4.4.1。
+> - **D-WAL-02**：充值整体反欺诈硬上限（manual + auto 合计），默认 A$200/日 + A$1000/月，验证手机后 A$500/日 + A$3000/月。详见 §8.3 + parent-portal-prd §4.4.2。
+> - **D-USE-01**：家长侧新增 `/portal/usage` AI 用量统计页（tokens、stars、sessions、按任务/模型/项目分布、近 28 天趋势、CSV 导出）。指标与对话分离（prompts 仍只在 audit feed）。详见 §9.8 + parent-portal-prd §4.9 + platform-backend-api-spec §4.2 `UsageDaily` / §5.13。
 
 > **本文档定位**：本 PRD 描述 Airbotix 3-Layer Stack 中 **Layer 2 — Kids-Safe AI Platform** 的产品需求。它是已 Live 的 Layer 1（Curriculum & Workshops）的数字延伸，也是 Layer 3（Hackathons & University Pipeline）的能力底座。Layer 2 本身由两条产品线组成（见 §1.2）。
 
@@ -416,8 +421,15 @@ T+7 day            目标：≥ 30% 家庭充值/订阅
 | School | $100 | 1500 ⭐ | $0.067 | +50% | 学校/机构 |
 
 - 充值的 Stars **永不过期**（移除"按月清零"机制，因为没有订阅了）
-- 默认**无自动续充**，余额低于阈值时家长收推送提醒
-- V1 可选自动续充（需家长主动开启 + Face ID）
+- 默认**无自动续充**（off by default），余额低于阈值时家长收推送提醒
+- **V0 即支持自动续充（opt-in）**（D-WAL-01，2026-05-25 拍板）：理由是 pay-as-you-go 模型下"晚 9 点钱包空了 → 孩子任务中断"是头号体验杀手，会直接吃掉中度/重度用户的复购意愿。强制性约束：
+  - 默认关，需家长主动开启
+  - 必须配双层硬上限（每日 AUD 上限 + 每月 AUD 上限，超出拒绝自动扣款）
+  - 必须配失败次数熔断（默认 3 次连续失败自动暂停）
+  - 必须配冷却窗口（默认 15 分钟内不重复触发）
+  - 新卡前 24h 自动续充封顶 A$50（反信用卡测试）
+  - 详细 UX 与数据模型见 [parent-portal-prd §4.4.1](./parent-portal-prd.md#441-auto-topup-portalwalletauto-topup) + [platform-backend-api-spec §4.2 / §5.4](./platform-backend-api-spec.md#42-wallet--payments-stars)
+- **充值整体硬上限**（manual + auto 合计，D-WAL-02）：未验证手机 A$200/日 + A$1000/月；验证后 A$500/日 + A$3000/月。无论 auto-topup 设置多激进都不能突破。
 
 ### 8.4 家庭年化 ARPU 模型（Pay-as-you-go 下的可行性）
 
@@ -605,6 +617,24 @@ V0 上线前必须通过：
 - 跨产品并发：Line A + Line B 同时扣，最终 balance 准确
 - 触顶 race：余额刚好够、上限刚好到，并发请求只放过满足条件的部分
 
+### 9.8 用量统计与家长可见性（D-USE-01，2026-05-25）
+
+**问题**：仅有"账本"（WalletTransaction，"花了多少 ⭐"）不足以维系家长信任。家长需要回答"我家孩子这周用 AI 在做什么？涨没涨？被拦截过吗？"——这是续费 / 续期的核心决策依据。
+
+**设计原则**：
+
+1. **指标与对话分离**：用量统计页**只看数字**（tokens、stars、sessions、active_seconds、按任务/模型/项目的分布、被审核拦截的次数）。**不显示 prompt 文本或响应文本**，避免把家长侧变成监视面板。具体 prompt 内容仍在 §4.6 audit feed，需家长主动点入查看——是"我可以查"而不是"我总在看"。
+2. **聚合表 ≠ 流水表**：用量统计走 `usage_daily` 聚合（一行 = 一个 kid 一天），由 `/llm/*` 代理在扣费成功时增量 upsert，凌晨 04:30 从 `consumption_ledger` 做一次对账重写。流水仍在 `WalletTransaction`，两者用不同存储与查询路径。
+3. **家长侧 vs Admin 侧**：家长只能看自己家庭；admin / super-admin 看跨家庭聚合（Top-N、模型分布、flag rate），见 `super-admin-prd §5.7`。两者共享同一 `usage_daily` 数据源，权限边界在 API 层强制。
+
+**家长侧 V0 必交付**（详见 [parent-portal-prd §4.9](./parent-portal-prd.md#49-portalusage--ai-usage-analytics-)）：
+- `/portal/usage` 家庭总览：本周 stars/tokens/sessions、与上周对比、按 kid 拆分
+- `/portal/usage/:kidId` 单 kid 下钻：按任务类型、按模型、按项目、近 28 天趋势图
+- CSV 导出（家长可拉走，用于自留记录、学校问责、homeschool 报税等）
+- 28 天热数据，365 天归档（冷数据导出异步）
+
+**数据模型字段见** [platform-backend-api-spec §4.2 `UsageDaily`](./platform-backend-api-spec.md#42-wallet--payments-stars)；API 端点见 §5.13。
+
 ---
 
 ## 10. 课程包（Course Pack） — 一等公民
@@ -782,9 +812,11 @@ V0 防御层（已大幅简化，因为没有命令执行）：
 - Airwallex 接入（AUD 本地 + 跨境 FX，2026-05-14 替代 Stripe）
 - **Stars Pack 充值（4 档：Starter $10 / Family $30 / Mega $50 / School $100）**
 - 钱包余额（永不过期）+ 消费明细
-- 每日/周/月上限 + 单次上限
+- 每日/周/月 Stars 消费上限 + 单次上限
 - 触顶软停 + 加额请求 + 家长批准
-- 低余额自动提醒（无自动续充）
+- 低余额自动提醒
+- **自动续充（opt-in，D-WAL-01）**：保存卡（Airwallex tokenized）+ 阈值触发 + 每日/每月 AUD 双层硬上限 + 失败熔断 + 冷却窗口（详见 §8.3）
+- **充值反欺诈整体上限**（D-WAL-02）：默认 A$200/日 + A$1000/月，验证手机后 A$500/日 + A$3000/月
 - 一键 Pause
 
 **孩子端（双产品线）**：
@@ -821,7 +853,8 @@ V0 防御层（已大幅简化，因为没有命令执行）：
 - 今日活动流（缩略图 + Kids OpenCode 项目进度卡）
 - Agent audit log replay（V0 简化版）
 - 待审批（加额 / 公开分享 / 命令"永远允许"）
-- 钱包 + 设置
+- 钱包 + 自动续充设置 + 设置
+- **AI 用量统计页 `/portal/usage`（D-USE-01）**：家庭总览 + 单 kid 下钻（tokens/stars/sessions、按任务/模型/项目分布、近 28 天趋势、CSV 导出）；详见 §9.8
 
 **底层基础设施**：
 - DeepRouter 作为唯一 LLM 出口（外部依赖，由 Team A 交付）

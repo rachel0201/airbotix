@@ -1,11 +1,13 @@
 # platform-backend — API Spec & Data Model
 
-> **Status**: Draft v0.1 · 2026-05-15
+> **Status**: Draft v0.2 · 2026-05-25
 > **Repo**: `Airbotix-AI/platform-backend` (NestJS + Prisma + Neon + S3 Sydney)
 > **Domain**: `api.airbotix.ai`
 > **Consumers**: airbotix-app (`/portal/*` + `/learn/*`), teacher-console, kids-opencode (read-only for audit + wallet)
 > **Author**: Airbotix engineering
 > **Owner**: Airbotix-AI org
+>
+> **2026-05-25 (v0.2)**: §4.2 Wallet 扩展 auto-topup + anti-fraud topup-cap 字段；新增 `PaymentMethod`、`AutoTopupAttempt`、`UsageDaily` 模型；新增 `PaymentInitiator`、`AutoTopupStatus` 枚举；`TxType` 增加 `topup_auto`。§5.4 Wallet 端点扩展（auto-topup、payment-methods）；§5.10 webhook 增加按 initiator 路由 + MIT 注意事项；新增 §5.13 Usage Analytics 端点。§6 WS 增加 `wallet.low_balance` / `wallet.auto_topup_*` / `wallet.topup_limit_hit` 事件。
 
 ---
 
@@ -251,7 +253,34 @@ model Wallet {
   last_reset_weekly  DateTime @default(now())
   last_reset_monthly DateTime @default(now())
 
-  transactions    WalletTransaction[]
+  // ── Auto-topup config (D-WAL-01, parent-portal-prd §4.4.1) ──────────────
+  auto_topup_enabled          Boolean  @default(false)
+  auto_topup_threshold_stars  Int      @default(10)        // refill trigger; 5/10/20/50
+  auto_topup_sku              String?                      // 'starter_10' | 'family_30' | 'mega_50'
+  auto_topup_payment_method_id String?                     // FK PaymentMethod.id (nullable so disabling doesn't cascade)
+  auto_topup_daily_cap_aud_cents   Int  @default(3000)     // A$30/day default, max A$10000
+  auto_topup_monthly_cap_aud_cents Int  @default(20000)    // A$200/month default, max A$50000
+  auto_topup_daily_used_aud_cents   Int @default(0)        // resets at 04:00 local time, same job as daily_used
+  auto_topup_monthly_used_aud_cents Int @default(0)        // resets on calendar month boundary, parent local TZ
+  auto_topup_failure_threshold Int    @default(3)          // consecutive fails before auto-pause
+  auto_topup_consecutive_failures Int  @default(0)         // reset on success
+  auto_topup_cooldown_minutes  Int     @default(15)        // min interval between attempts
+  last_auto_topup_at           DateTime?
+
+  // ── Anti-fraud topup limits (D-WAL-02, parent-portal-prd §4.4.2) ────────
+  // Total topup (manual + auto). Defaults match parent-portal-prd §4.4.2.
+  topup_daily_cap_aud_cents    Int     @default(20000)     // A$200/day; A$500 after phone verify
+  topup_monthly_cap_aud_cents  Int     @default(100000)    // A$1000/month; A$3000 after phone verify
+  topup_daily_used_aud_cents   Int     @default(0)
+  topup_monthly_used_aud_cents Int     @default(0)
+  topup_count_today            Int     @default(0)         // manual topups; rate-limit anti-card-testing
+  topup_count_this_hour        Int     @default(0)
+  last_topup_at                DateTime?
+  phone_verified               Boolean  @default(false)    // unlocks higher topup caps
+
+  transactions     WalletTransaction[]
+  payment_methods  PaymentMethod[]
+  auto_topup_log   AutoTopupAttempt[]
 }
 
 model WalletTransaction {
@@ -272,7 +301,8 @@ model WalletTransaction {
 }
 
 enum TxType {
-  topup_card                  // parent buys Stars Pack via Airwallex
+  topup_card                  // parent buys Stars Pack via Airwallex (manual)
+  topup_auto                  // auto-topup triggered by low balance (recurring charge via saved PaymentMethod)
   workshop_credit             // teacher seeds Stars for a workshop session
   agent_spend                 // kid spent on agent / LLM call
   mission_reward              // kid earned for completing a mission
@@ -287,12 +317,106 @@ model AirwallexPayment {
   status            String                                 // 'pending' | 'succeeded' | 'failed' | 'refunded'
   pack_sku          String                                 // 'starter_10' | 'family_30' | 'mega_50' | 'school_100'
   stars_credited    Int                                    // 0 until status=succeeded
+  initiator         PaymentInitiator @default(parent_manual)
+  payment_method_id String?                                // set for topup_auto and saved-card flows
+  idempotency_key   String?  @unique                       // wallet_id + minute-bucket for auto; client UUID for manual
   webhook_received_at DateTime?
   raw_webhook       Json?                                  // for incident debugging
   created_at        DateTime @default(now())
 
   @@index([family_id, created_at])
   @@index([status])
+  @@index([payment_method_id])
+}
+
+enum PaymentInitiator {
+  parent_manual               // /portal/wallet/topup hosted-checkout flow
+  auto_topup                  // server-initiated MIT (Merchant Initiated Transaction)
+  admin_adjust                // ops created via /admin/wallet/*/adjust
+}
+
+model PaymentMethod {
+  id                  String   @id @default(cuid())
+  wallet_id           String
+  wallet              Wallet   @relation(fields: [wallet_id], references: [id], onDelete: Cascade)
+  family_id           String                               // denormalized for auth filtering
+  airwallex_pm_id     String   @unique                     // Airwallex tokenized payment_method id
+  brand               String                               // 'visa' | 'mastercard' | 'amex'
+  last4               String                               // displayed in UI ("••4242")
+  exp_month           Int
+  exp_year            Int
+  cardholder_name     String?                              // optional, captured at tokenization
+  status              String   @default("active")          // 'active' | 'expired' | 'removed' | 'failed'
+  is_default          Boolean  @default(false)             // exactly one default per wallet (enforced in service layer)
+  added_at            DateTime @default(now())
+  removed_at          DateTime?
+  first_24h_aud_cap   Int      @default(5000)              // A$50 cap on auto-topup in first 24h (card-testing window)
+  added_ip            String?                              // for fraud review
+  added_user_agent    String?  @db.Text
+
+  airwallex_payments  AirwallexPayment[]                   // via payment_method_id (logical FK)
+  auto_topup_attempts AutoTopupAttempt[]
+
+  @@index([wallet_id, status])
+  @@index([family_id])
+}
+
+model AutoTopupAttempt {
+  id                  String   @id @default(cuid())
+  wallet_id           String
+  wallet              Wallet   @relation(fields: [wallet_id], references: [id], onDelete: Cascade)
+  payment_method_id   String
+  payment_method      PaymentMethod @relation(fields: [payment_method_id], references: [id])
+  triggered_by        String                               // 'low_balance' | 'manual_test' | 'webhook_retry'
+  trigger_balance     Int                                  // wallet.stars_balance at trigger time
+  sku                 String                               // requested pack at attempt time
+  amount_aud_cents    Int
+  status              AutoTopupStatus
+  airwallex_payment_id String?                             // FK AirwallexPayment.id once created
+  skip_reason         String?                              // 'daily_cap_reached' | 'monthly_cap_reached' | 'cooldown'
+                                                          // | 'consecutive_failures' | 'card_first_24h_cap' | 'family_paused'
+  failure_code        String?                              // Airwallex error code if status='failed'
+  idempotency_key     String   @unique                     // wallet_id + minute-bucket; prevents double-charge
+  created_at          DateTime @default(now())
+  resolved_at         DateTime?
+
+  @@index([wallet_id, created_at])
+  @@index([status])
+}
+
+enum AutoTopupStatus {
+  skipped                     // never sent to Airwallex (cap, cooldown, etc.)
+  pending                     // sent to Airwallex, awaiting webhook
+  succeeded                   // Stars credited
+  failed                      // Airwallex declined
+}
+
+// ── Usage analytics aggregate (D-USE-01, parent-portal-prd §4.9) ──────────
+// One row per kid per local-date. Populated incrementally by the /llm/* proxy
+// (on every successful spend) AND reconciled nightly from consumption_ledger
+// for accuracy. Read by /portal/usage and /admin/analytics/llm.
+model UsageDaily {
+  id                  String   @id @default(cuid())
+  family_id           String                               // for parent-portal filtering
+  kid_id              String                               // null = family-shared (e.g. workshop credit usage)
+  local_date          String                               // 'YYYY-MM-DD' in parent's TZ; matches daily_used reset boundary
+  tokens_in           Int      @default(0)                 // sum across all models
+  tokens_out          Int      @default(0)
+  requests            Int      @default(0)                 // # LLM proxy calls
+  sessions            Int      @default(0)                 // # distinct kid sessions (heuristic: idle gap > 10 min)
+  active_seconds      Int      @default(0)                 // sum of session durations
+  stars_spent         Int      @default(0)                 // == sum of debit transactions for this kid+date
+  flagged_count       Int      @default(0)                 // # responses flagged by moderation
+  by_task_type        Json     @default("{}")              // { image: {requests, stars, tokens}, tts: {...}, tutor: {...}, code: {...} }
+  by_model            Json     @default("{}")              // { 'image/sdxl-lite': {calls, stars, tokens_in, tokens_out, flagged}, ... }
+  by_project          Json     @default("{}")              // { project_id: {stars, requests} }; null project_id = 'free-play'
+  approvals_asked     Int      @default(0)
+  approvals_granted   Int      @default(0)
+  updated_at          DateTime @updatedAt
+
+  @@unique([kid_id, local_date])
+  @@index([family_id, local_date])
+  @@index([local_date])                                    // for admin cross-family analytics
 }
 ```
 
@@ -627,13 +751,38 @@ FKs to Family + KidProfile use `onDelete: SetNull` — incidents outlive deleted
 
 | Method | Path | Roles | Purpose |
 |---|---|---|---|
-| GET | `/families/:id/wallet` | parent (own), admin | Balance + caps + recent transactions |
-| GET | `/families/:id/wallet/transactions` | parent (own), admin | Paginated transaction history (`?from=&to=&kid_id=&type=`) |
-| POST | `/families/:id/wallet/topup` | parent (own) | Initiate Airwallex payment intent for a Stars Pack SKU |
-| PATCH | `/families/:id/wallet/caps` | parent (own) | Update daily/weekly/monthly caps |
-| POST | `/families/:id/wallet/pause` | parent (own) | One-click pause |
+| GET | `/families/:id/wallet` | parent (own), admin | Balance + caps + auto-topup state + recent transactions |
+| GET | `/families/:id/wallet/transactions` | parent (own), admin | Paginated transaction history (`?from=&to=&kid_id=&type=`; `type=topup_auto` for auto-charges) |
+| POST | `/families/:id/wallet/topup` | parent (own) | Initiate Airwallex payment intent for a Stars Pack SKU (manual hosted checkout). Enforces topup daily/monthly/hourly caps; returns `429 TOPUP_DAILY_LIMIT` / `TOPUP_HOURLY_LIMIT` if exceeded |
+| PATCH | `/families/:id/wallet/caps` | parent (own) | Update daily/weekly/monthly Stars spend caps |
+| POST | `/families/:id/wallet/pause` | parent (own) | One-click pause (also disables auto-topup until resumed) |
 | POST | `/families/:id/wallet/resume` | parent (own) | Resume |
-| POST | `/admin/wallet/:wallet_id/adjust` | admin | Manual adjustment (refund / comp) — fully audited |
+| POST | `/admin/wallet/:wallet_id/adjust` | admin | Manual adjustment (refund / comp) — fully audited; decrements `topup_*_used` counters on refund |
+
+**Auto-topup (D-WAL-01, parent-portal-prd §4.4.1)**:
+
+| Method | Path | Roles | Purpose |
+|---|---|---|---|
+| GET | `/families/:id/wallet/auto-topup` | parent (own), admin | Current auto-topup config + recent attempts (last 20) |
+| PUT | `/families/:id/wallet/auto-topup` | parent (own) | Enable/disable + set threshold, sku, payment_method_id, daily_cap, monthly_cap, failure_threshold. Validates ranges; rejects daily_cap > A$100, monthly_cap > A$500 without `phone_verified=true` |
+| POST | `/families/:id/wallet/auto-topup/test` | parent (own) | Run a A$1 test charge against saved payment method, refund immediately. Confirms card works before relying on it. Counts toward `topup_count_today` rate limit but not daily AUD cap. |
+| GET | `/families/:id/wallet/auto-topup/attempts` | parent (own), admin | Paginated `AutoTopupAttempt` log (`?status=skipped\|pending\|succeeded\|failed&from=&to=`) |
+
+**Payment methods**:
+
+| Method | Path | Roles | Purpose |
+|---|---|---|---|
+| GET | `/families/:id/payment-methods` | parent (own), admin | List saved tokenized cards (Airwallex `payment_method_id`, brand, last4, exp, status) |
+| POST | `/families/:id/payment-methods/setup-intent` | parent (own) | Returns an Airwallex SetupIntent client secret so the browser SDK can tokenize a new card without the PAN ever hitting our servers |
+| POST | `/families/:id/payment-methods/:pm_id/set-default` | parent (own) | Make this the default for auto-topup |
+| DELETE | `/families/:id/payment-methods/:pm_id` | parent (own) | Remove. If this was the auto-topup card and no fallback exists → auto_topup_enabled set to false + email parent |
+
+**Topup limit semantics** (anti-fraud, parent-portal-prd §4.4.2):
+
+- All counters live on `Wallet` (`topup_daily_used_aud_cents`, `topup_monthly_used_aud_cents`, `topup_count_today`, `topup_count_this_hour`). Single SQL `UPDATE … WHERE … RETURNING` is used to reserve the limit slot before any Airwallex call, same atomic pattern as Stars debit (kids-ai-platform-prd §9.7).
+- Daily/hourly counters reset by the existing 04:00-local-time `daily_used` reset job. Monthly counter resets on calendar month boundary in parent local TZ.
+- Successful refund via `/admin/wallet/*/adjust` reverses the AUD counters proportionally (refunded amount decrements `topup_daily_used_aud_cents` for the *current* day, capped at 0).
+- `phone_verified` is set true after a one-time SMS challenge from `/portal/settings`; unlocks the higher topup ceilings (A$500/day, A$3000/month) but does **not** raise the per-auto-topup daily cap (that's separately governed by `auto_topup_daily_cap_aud_cents`, max A$100/day even with phone verify).
 
 ### 5.5 Classes (`/classes`)
 
@@ -701,6 +850,18 @@ FKs to Family + KidProfile use `onDelete: SetNull` — incidents outlive deleted
 
 Webhook signature: HMAC-SHA256 with shared secret. Reject unverified.
 
+**Event routing** (based on `AirwallexPayment.initiator`):
+
+| Initiator | On `payment_succeeded` | On `payment_failed` |
+|---|---|---|
+| `parent_manual` | Credit Stars, `WalletTransaction(type=topup_card)`, increment `topup_daily_used_aud_cents`, emit `wallet.update` WS | Mark `AirwallexPayment.status=failed`; user is on hosted checkout, Airwallex shows error |
+| `auto_topup` | Credit Stars, `WalletTransaction(type=topup_auto)`, increment **both** `topup_daily_used_aud_cents` and `auto_topup_daily_used_aud_cents`, reset `auto_topup_consecutive_failures=0`, update `last_auto_topup_at`, emit `wallet.update` + `wallet.auto_topup_succeeded` WS, queue email | Increment `auto_topup_consecutive_failures`; if ≥ `auto_topup_failure_threshold` → set `auto_topup_enabled=false`, emit `wallet.auto_topup_paused` WS, queue email "auto-topup paused — card declined N times" |
+| `admin_adjust` | No double-credit (Stars already credited inline by `/admin/wallet/*/adjust`); just mark status | Mark status; alert ops |
+
+**Idempotency**: every inbound webhook is keyed by Airwallex `event_id`. Re-delivery is detected via a `processed_webhooks` table (event_id, processed_at) and short-circuited. Combined with `AutoTopupAttempt.idempotency_key` on the outbound side, neither client retry nor webhook re-delivery can double-charge or double-credit.
+
+**MIT (Merchant Initiated Transaction) note**: auto-topup uses Airwallex's stored-credential / MIT flow against a tokenized `payment_method_id`. The first card capture (via SetupIntent in `/portal/wallet/auto-topup`) must include `usage='subsequent_usage'` and capture the cardholder's explicit consent text. Consent text is stored on `PaymentMethod` (TODO: add `mit_consent_text`, `mit_consent_accepted_at` fields in a follow-up migration once legal approves the AU copy).
+
 ### 5.11 LLM Proxy (`/llm`) — DeepRouter gateway
 
 | Method | Path | Roles | Purpose |
@@ -735,6 +896,30 @@ All `/llm/*` calls:
 
 All admin actions emit AuditEvent with `actor=admin` and `event_type=admin.*`.
 
+### 5.13 Usage Analytics (`/usage`)
+
+> Parent-facing AI usage stats. Backs [parent-portal-prd §4.9](./parent-portal-prd.md#49-portalusage--ai-usage-analytics-). All endpoints scope by `family_id` from JWT; cross-family reads are admin-only.
+
+| Method | Path | Roles | Purpose |
+|---|---|---|---|
+| GET | `/families/:id/usage` | parent (own), admin | Family-wide rollup (`?from=&to=&group_by=day\|kid\|model\|task_type`). Returns totals + per-kid breakdown over the range. |
+| GET | `/families/:id/usage/summary` | parent (own), admin | Fast top-of-page summary (`?range=24h\|7d\|28d`): totals, week-over-week delta, top model, top kid. Cached 60s. |
+| GET | `/kids/:id/usage` | parent (own kid), admin | Per-kid drill-down (`?from=&to=`): tokens, stars, sessions, active_seconds, by_task_type, by_model, by_project, flagged_count, approvals_asked/granted |
+| GET | `/kids/:id/usage/trend` | parent (own kid), admin | Daily time series (`?from=&to=&metric=stars\|tokens\|requests\|active_seconds`) for chart rendering |
+| GET | `/kids/:id/usage/export.csv` | parent (own kid), admin | Streaming CSV export (`?from=&to=`); one row per session. Async for ranges > 90d (returns 202 + email). |
+| GET | `/admin/analytics/usage` | admin, super-admin | Cross-family aggregates (top-N kids by spend, model distribution, flag rate). See [super-admin-prd §5.7](./super-admin-prd.md#57-analytics--insights). |
+
+**Aggregation pipeline**:
+
+1. **Inline** — every successful `/llm/*` call writes a `WalletTransaction` (debit), an `audit_events` row (what happened), and **incrementally upserts** the relevant `UsageDaily` row (`local_date` = `now in parent TZ`) bumping `tokens_in`, `tokens_out`, `requests`, `stars_spent`, the `by_task_type`/`by_model`/`by_project` JSONB counters, and `flagged_count` if moderation flagged the response.
+2. **Session bucketing** — `sessions` and `active_seconds` are derived heuristically: a new session = first request after ≥ 10 min idle on the same kid. Service layer keeps a Redis key `usage:session:<kid_id>` with the last request timestamp; bump it on every call.
+3. **Nightly reconciliation job** — at 04:30 local TZ (after the daily reset job), a worker re-derives the previous day's `UsageDaily` rows from `consumption_ledger` (kids-ai-platform-prd §9.7.2) and overwrites any drift. This handles late webhooks and failed inline upserts.
+4. **Retention** — `UsageDaily` rows retained for 365 days hot in Postgres. Older rows archived to S3 Parquet (ap-southeast-2) and pruned. CSV export from cold storage is async.
+
+**Privacy**: `UsageDaily` stores no prompt text and no response text. Surveillance-relevant fields (prompts/responses) stay in `audit_events`, which is scoped to the family and accessible only via §5.8 audit replay. Usage endpoints are metrics-only by design (D-USE-01 rationale in parent-portal-prd §4.9).
+
+**Performance budget**: p50 < 400ms for `/families/:id/usage?range=7d`, p99 < 1.5s. Indexes on `UsageDaily(family_id, local_date)` and `UsageDaily(kid_id, local_date)` make 28-day queries a single index range scan.
+
 ---
 
 ## 6. WebSocket Events (`/ws`)
@@ -762,6 +947,11 @@ Server validates JWT, derives `family_id` + `role`, joins relevant rooms automat
 |---|---|---|---|
 | `audit.event` | family:* | AuditEvent JSON | Parent dashboard live tail |
 | `wallet.update` | family:* | `{ balance, daily_used, weekly_used }` | Live wallet UI |
+| `wallet.low_balance` | family:* | `{ balance, threshold, auto_topup_enabled }` | Push parent to topup or enable auto-topup |
+| `wallet.auto_topup_succeeded` | family:* | `{ amount_aud_cents, stars_credited, balance_after, payment_method_last4 }` | Real-time UI + toast on `/portal/wallet` |
+| `wallet.auto_topup_failed` | family:* | `{ failure_code, consecutive_failures, payment_method_last4 }` | Surface inline warning |
+| `wallet.auto_topup_paused` | family:* | `{ reason: 'consecutive_failures' \| 'payment_method_removed' \| 'family_paused' }` | Highlight pause banner |
+| `wallet.topup_limit_hit` | family:* | `{ scope: 'daily' \| 'monthly' \| 'hourly' \| 'count', resets_at }` | Surface anti-fraud limit message to UI |
 | `approval.new` | family:* | ApprovalRequest | Parent push when kid requests |
 | `approval.resolved` | family:*, kid:* | ApprovalRequest | Kid sees decision instantly |
 | `class.kid_progress` | class:* | `{ kid_id, project_id, status, % }` | Teacher live mode |

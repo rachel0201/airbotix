@@ -1,10 +1,12 @@
 # Parent Portal — airbotix-app `/portal/*` — PRD
 
-> **Status**: Draft v0.1 · 2026-05-15
+> **Status**: Draft v0.2 · 2026-05-25
 > **Repo**: `Airbotix-AI/airbotix-app` (React + Vite SPA)
 > **Domain**: `app.airbotix.ai`
 > **Author**: Airbotix engineering
 > **Depends on**: `platform-backend-api-spec.md` (API contract)
+>
+> **2026-05-25 (v0.2)**: 新增 §4.4.1 自动续充（auto-topup, opt-in, V0 必交付，D-WAL-01）+ §4.4.2 充值反欺诈整体上限（D-WAL-02）+ §4.9 AI 用量统计页 `/portal/usage`（D-USE-01）。IA 与 nav 同步更新。
 
 ---
 
@@ -36,6 +38,10 @@ app.airbotix.ai
 │
 ├── /portal/wallet             [auth] — Balance + transactions + top-up
 ├── /portal/wallet/topup       [auth] — Stars Pack selection + Airwallex redirect
+├── /portal/wallet/auto-topup  [auth] — Auto-topup config + saved payment methods
+│
+├── /portal/usage              [auth] — Per-kid AI usage analytics
+├── /portal/usage/:kidId       [auth] — Single-kid usage drill-down
 │
 ├── /portal/approvals          [auth] — Approval queue (pending + recent)
 │
@@ -52,7 +58,8 @@ app.airbotix.ai
 ```
 🏠 Dashboard
 👨‍👩‍👧 My Family       (2 kids · 1 needs attention)
-⭐ Wallet              42⭐ remaining
+⭐ Wallet              42⭐ remaining · 🔁 Auto-topup ON
+📊 Usage               340 tokens today
 🛎️ Approvals          3 pending  ← red badge
 📜 Activity / Audit
 ⚙️ Settings
@@ -325,7 +332,12 @@ Same form as registration step 4, but no consent re-prompt (parent already conse
 │ │  Weekly:  68/200  ███░░░░░░░ 34%                        │    │
 │ │  Monthly: 142/600 ██░░░░░░░░ 24%                        │    │
 │ │                                                          │    │
+│ │  🔁 Auto-topup ON · refills 30⭐ when balance < 10⭐      │    │
+│ │     Last auto-topup: yesterday A$30 · Visa ••4242        │    │
+│ │     Daily auto-topup cap: A$30/day (A$0 used today)      │    │
+│ │                                                          │    │
 │ │  [⭐ Top up Stars]    [⏸ Pause family]   [Edit caps]    │    │
+│ │  [⚙️ Auto-topup settings]                                │    │
 │ └─────────────────────────────────────────────────────────┘    │
 │                                                                 │
 │ ── Transactions ──            Filter: [All] [Mia] [Leo] [Topup]│
@@ -367,6 +379,133 @@ Same form as registration step 4, but no consent re-prompt (parent already conse
 ```
 
 Buy click → `POST /families/:id/wallet/topup` → backend creates Airwallex PaymentIntent → redirect to Airwallex hosted checkout → Airwallex webhook → backend credits Stars → parent sees update in real-time (WS `wallet.update` event) → redirected back to `/portal/wallet?topup=success`.
+
+#### 4.4.1 Auto-Topup (`/portal/wallet/auto-topup`)
+
+> **Decision (D-WAL-01, 2026-05-25)**: Auto-topup is the **headline parent feature** of the wallet — kids should never have a session interrupted because "the wallet ran out at 9 pm on a school night". V0 ships **opt-in** auto-topup. Off by default.
+
+**UI**:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ ← Wallet                                                        │
+│                                                                 │
+│ Auto-topup                                                      │
+│ ─────────────────────────────────────────────────────────────── │
+│ Keep your kids' Stars topped up automatically so they're never  │
+│ interrupted mid-mission.                                        │
+│                                                                 │
+│ Auto-topup:        [● ON]   [○ OFF]                             │
+│                                                                 │
+│ When balance falls below:                                       │
+│   [10 ⭐ ▼]   (options: 5 / 10 / 20 / 50)                       │
+│                                                                 │
+│ Top up by:                                                      │
+│   ( ) Starter A$10 (100⭐)                                       │
+│   (•) Family  A$30 (350⭐)   ← BEST VALUE                       │
+│   ( ) Mega    A$50 (650⭐)                                       │
+│                                                                 │
+│ Payment method:                                                 │
+│   ● Visa ••4242  exp 12/27   [Change] [Remove]                 │
+│   [+ Add another card]                                          │
+│                                                                 │
+│ ── Safety limits ──                                             │
+│ Max auto-topup per day:    [A$30 ▼]  (max A$100/day)            │
+│ Max auto-topup per month:  [A$200 ▼] (max A$500/month)          │
+│ Email me each time:        [✓] Yes                              │
+│ Pause auto-topup after:    [3] consecutive failed charges       │
+│                                                                 │
+│ [Save changes]    [Run a test topup now (A$1, refunded)]        │
+│                                                                 │
+│ ── Recent auto-topups ──                                        │
+│ ✓ 2026-05-24 21:14   A$30 → 350⭐   Visa ••4242                │
+│ ✓ 2026-05-20 18:02   A$30 → 350⭐   Visa ••4242                │
+│ ✕ 2026-05-15 11:03   A$30   FAILED (insufficient_funds)         │
+│   └─ retried 2026-05-15 13:03 ✓                                 │
+│ [See all →]                                                     │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Decision rules** (enforced server-side, not client-side):
+
+| Rule | V0 default | Configurable range | Why |
+|---|---|---|---|
+| Trigger threshold | 10⭐ | 5 / 10 / 20 / 50 | Below 5⭐ a single image gen can't complete; below 50⭐ avoids unnecessary triggers |
+| Topup SKU | Family A$30 | any published SKU | Parent picks comfort level |
+| **Daily auto-topup cap** | **A$30/day** | **A$10 – A$100/day** | **Hard cap on automated charges per 24h.** Caps damage if device/cookie stolen or kid finds a way to spam triggers. Resets at parent local 04:00 (same job as wallet `daily_used` reset). |
+| **Monthly auto-topup cap** | **A$200/month** | **A$50 – A$500/month** | Belt-and-braces. Resets on calendar month boundary in parent local TZ. |
+| Notification | email on every charge | on/off (email only — push is opt-in via §4.8) | Audit trail; parent can spot anomalies fast |
+| Failure backoff | 3 consecutive fails → pause + email | 1–5 | Avoids hammering a declined card and racking up bank fees |
+| Cooldown between auto-topups | 15 min | not configurable V0 | Stops a thrashing trigger from firing 20x in an hour |
+
+**Auto-topup flow (system, not UI)**:
+
+```
+[Stars debit completes] → wallet.balance_after < auto_topup_threshold?
+   │ no  → done
+   │ yes ↓
+[Check auto_topup_enabled && payment_method.status='active']
+   │ no  → emit wallet.low_balance event (push notification only); done
+   │ yes ↓
+[Check daily_auto_topup_used + sku_amount <= daily_auto_topup_cap]
+[Check monthly_auto_topup_used + sku_amount <= monthly_auto_topup_cap]
+[Check now - last_auto_topup_at >= cooldown_minutes]
+[Check consecutive_failures < failure_threshold]
+   │ any fail → emit wallet.auto_topup_skipped(reason); done
+   │ all pass ↓
+[POST to Airwallex /payment_intents/confirm with saved payment_method_id]
+   │ async webhook → succeeded → credit Stars (same WalletTransaction path as
+   │                              manual topup, type='topup_auto'), increment
+   │                              daily_auto_topup_used, reset failure counter,
+   │                              WS wallet.update + wallet.auto_topup_succeeded,
+   │                              email parent
+   │ async webhook → failed     → increment consecutive_failures; if ≥
+   │                              failure_threshold → set auto_topup_enabled=false,
+   │                              email parent "auto-topup paused"
+```
+
+**Concurrency rule**: the threshold check + the daily-cap check happen in a single SQL `UPDATE … WHERE … RETURNING` against the wallet row (same atomic pattern as `daily_used` enforcement in [kids-ai-platform-prd.md §9.7](./kids-ai-platform-prd.md#97-跨产品扣减的并发与一致性工程硬约束)). The Airwallex confirm call only happens after the wallet row has reserved the daily-cap slot — so two concurrent debits cannot both fire an auto-topup that breaches the cap.
+
+**Idempotency rule**: every auto-topup attempt is keyed by `wallet_id + minute-bucket(now)` (or an explicit idempotency key passed to Airwallex). Retries from a NestJS job runner never produce duplicate charges.
+
+**Manual override**: parent can hit `[Pause auto-topup]` anywhere on `/portal/wallet`. State is `auto_topup_enabled=false`; reversible with one click. Pausing the family (`POST /wallet/pause`) implicitly disables auto-topup until family is resumed.
+
+#### 4.4.2 Topup limits & anti-fraud
+
+**Applies to both manual and automated topup**. Enforced at `POST /wallet/topup` and at the auto-topup decision step.
+
+| Limit | Default | Override | Why |
+|---|---|---|---|
+| Single topup max | A$100 | School Pack only; A$200 with email verification | One stolen-card incident cap |
+| **Manual topups per day** | **10 per day** | Not user-configurable | Anti-card-testing |
+| **Manual topups per hour** | **3 per hour** | Not user-configurable | Anti-card-testing |
+| **Total topup (manual + auto) per day** | **A$200/day** | A$500/day after verified phone | **Hard ceiling regardless of auto-topup settings** — prevents a compromised account from running up unlimited charges |
+| **Total topup (manual + auto) per month** | **A$1,000/month** | A$3,000/month after verified phone | Same |
+| New payment method 24h hold | A$50 cap on auto-topup in first 24h | Off after 24h | Card-testing window |
+
+When a limit is hit, parent sees:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ ⚠️  Daily topup limit reached                                    │
+│                                                                 │
+│ You've topped up A$200 today, which is the daily safety limit. │
+│ This protects your card if your account is ever accessed by     │
+│ someone else.                                                   │
+│                                                                 │
+│ Limit resets at midnight (your local time).                    │
+│                                                                 │
+│ Need a higher limit? [Verify your phone →]                     │
+│                                                                 │
+│ [OK]                                                            │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+Backend returns `429 TOO_MANY_REQUESTS` with `{ code: 'TOPUP_DAILY_LIMIT', resets_at, current_aud_cents, limit_aud_cents }`.
+
+**Audit**: every topup attempt — success, failure, or rejected-by-limit — writes a row to `WalletTransaction` (success/refund) or to `audit_events` (rejection). Visible in `/portal/audit`.
+
+**Refund interaction**: refunds (whether parent-requested via Settings → Billing, or admin-issued) reduce the day/month topup counters proportionally so the parent isn't blocked from legitimate topups after a refund.
 
 ### 4.5 `/portal/approvals` — Approval Queue ⭐
 
@@ -530,6 +669,109 @@ Tabbed:
 **Danger Zone**:
 - "Log out everywhere" (revokes all refresh tokens)
 - "Delete my account" → 30-day grace period, can undo via /portal/login during grace, hard-delete after
+
+### 4.9 `/portal/usage` — AI Usage Analytics ⭐
+
+> **Decision (D-USE-01, 2026-05-25)**: Parents must be able to see *what* the AI did for their kid, not just *what it cost*. Audit feed (§4.6) answers "what happened"; this page answers "how much, on what, and is it growing". Required for parent trust + informed consent renewal.
+
+**Family overview** (`/portal/usage`):
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ AI Usage                            Range: [Last 7 days ▼]      │
+│                                                                 │
+│ ┌─ This week ─────────────────────────────────────────────┐    │
+│ │  142 ⭐ spent          8,420 tokens         34 sessions   │    │
+│ │  -3% vs last week     -8% vs last week     +12%          │    │
+│ └─────────────────────────────────────────────────────────┘    │
+│                                                                 │
+│ ── By kid ──                                                    │
+│ ┌─────────────────────────────────────────────────────────┐    │
+│ │ 🧒 Mia (10) · AI Creative Lab                            │    │
+│ │   84 ⭐  ·  4,820 tokens  ·  22 sessions  ·  3h 14m     │    │
+│ │   ████████████░░░░░░░  (59% of family weekly)            │    │
+│ │   Top use: image gen (62%), TTS (18%), tutor chat (20%) │    │
+│ │   [Open Mia's usage →]                                   │    │
+│ └─────────────────────────────────────────────────────────┘    │
+│ ┌─────────────────────────────────────────────────────────┐    │
+│ │ 🧑 Leo (13) · Kids OpenCode                              │    │
+│ │   58 ⭐  ·  3,600 tokens  ·  12 sessions  ·  2h 02m     │    │
+│ │   ███████░░░░░░░░░░░░  (41% of family weekly)            │    │
+│ │   Top use: code gen (78%), code review (22%)             │    │
+│ │   [Open Leo's usage →]                                   │    │
+│ └─────────────────────────────────────────────────────────┘    │
+│                                                                 │
+│ ── Trend (last 28 days) ──                                      │
+│ Stars/day                                                       │
+│  30 ┤                                ▆                          │
+│  20 ┤              ▆     ▆     ▆▆   ▆▇   ▆                    │
+│  10 ┤  ▂  ▃▄  ▄▅▆▇▆▇  ▇█▇▆▇▇█  ▇▇  ▇▇▇  ▇▇                  │
+│   0 └──────────────────────────────────────────                │
+│      Apr 28                                  May 25             │
+│                                                                 │
+│ [📥 Export CSV (7d)]   [📅 Custom range]                        │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Single-kid drill-down** (`/portal/usage/:kidId`):
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ ← Usage                                                         │
+│                                                                 │
+│ 🧒 Mia's AI usage              Range: [Last 7 days ▼]           │
+│ ─────────────────────────────────────────────────────────────── │
+│                                                                 │
+│ ── Summary ──                                                   │
+│ Stars spent:        84⭐         (avg 12⭐/day)                  │
+│ Tokens in/out:      1,820 / 3,000                               │
+│ Sessions:           22           (avg 3.1/day)                  │
+│ Active time:        3h 14m       (avg 28 min/day)               │
+│ Approvals asked:    2 (1 granted, 1 denied)                    │
+│                                                                 │
+│ ── By task type ──                                              │
+│ Image generation    52⭐  ████████████░░  62%   18 images       │
+│ Text-to-speech      15⭐  ███░░░░░░░░░░  18%   12 clips         │
+│ AI tutor chat       17⭐  ███░░░░░░░░░░  20%   46 turns         │
+│                                                                 │
+│ ── By model (via DeepRouter) ──                                 │
+│ image/sdxl-lite          18 calls  ·  36⭐  ·  0 flags          │
+│ image/sdxl-hd             3 calls  ·  16⭐  ·  0 flags          │
+│ tts/standard-en          12 calls  ·  15⭐  ·  0 flags          │
+│ tutor/claude-haiku-kid   46 turns  ·  17⭐  ·  0 flags          │
+│                                                                 │
+│ ── Daily trend ──                                               │
+│ [bar chart, 7 days, Stars stacked by task type]                 │
+│                                                                 │
+│ ── Top projects this week ──                                    │
+│ • "My Cat Story"          34⭐ · 12 images · 4 sessions         │
+│ • "Birthday card"          8⭐ ·  3 images · 1 session          │
+│ • Free play (no project)  42⭐ ·  3 images · 17 sessions        │
+│                                                                 │
+│ [📥 Export Mia's usage CSV]   [View Mia's audit feed →]         │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Data sources**: All numbers come from `usage_daily` aggregate rollups (one row per kid per day; see [platform-backend-api-spec.md §4.2 Wallet & Payments](./platform-backend-api-spec.md#42-wallet--payments-stars)). Real-time `wallet.update` WS events refresh the current-day row only; historical days are read-through from the aggregate.
+
+**Privacy rules**:
+- Parent only sees their own family's kids. Enforced at API by `family_id` scoping.
+- **No prompt text or response text on this page** — that's the audit feed's job (§4.6). Usage page is metrics-only to avoid normalising surveillance.
+- Token counts are exposed because they're cost-relevant; prompts are not.
+- Flagged-content count is shown ("0 flags") so parents can see if anything tripped moderation; details require clicking through to audit feed.
+
+**Ranges**: 24h / 7d / 28d / custom (max 365 days). Older than 365 days is in cold storage; export-only.
+
+**Export**: `GET /kids/:id/usage/export.csv?from=&to=` returns one row per session with: timestamp, task_type, model, tokens_in, tokens_out, stars_spent, project_id, flagged (bool). Parent can use this for tax (if homeschool), school accountability, or just personal records.
+
+**Performance target**: page p50 < 400ms server-side at 4× current cohort size. Aggregates pre-computed nightly + incrementally updated by `/llm/*` proxy.
+
+**Empty state** (new family, no usage yet):
+```
+"Your kids haven't used any AI yet — once they start a session,
+ you'll see what they're working on here."
+[Browse Course Packs →]
+```
 
 ---
 

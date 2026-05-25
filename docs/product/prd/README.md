@@ -5,15 +5,15 @@
 ## 当前活跃 PRD
 
 ### 平台主线（Layer 2 — Kids AI Platform）
-- [`kids-ai-platform-prd.md`](./kids-ai-platform-prd.md) — 平台总 PRD v0.4（6-11 岁创作平台 + 12+ Kids OpenCode 双线）
+- [`kids-ai-platform-prd.md`](./kids-ai-platform-prd.md) — 平台总 PRD v0.4（6-11 岁创作平台 + 12+ Kids OpenCode 双线；2026-05-25 增 D-WAL-01 自动续充 / D-WAL-02 充值反欺诈上限 / D-USE-01 家长侧用量统计三条决策）
 - [`kids-opencode-client-prd.md`](./kids-opencode-client-prd.md) — Kids OpenCode 客户端架构 PRD v0.3（A→C 分阶段：V0a TUI 插件先上、V0b 自有 client 后接；opencode-as-kernel；含安装/onboarding）
 - [`kids-opencode-spec.md`](./kids-opencode-spec.md) — Kids OpenCode 技术 spec v0.2（pre-pivot，部分章节被 `kids-opencode-client-prd.md` 取代，标记 stale）
 
 ### Cloud 子产品（Airbotix-AI org）
 - [`airbotix-app-learn-prd.md`](./airbotix-app-learn-prd.md) — `app.airbotix.ai/learn/*` kid surface
-- [`parent-portal-prd.md`](./parent-portal-prd.md) — `app.airbotix.ai/portal/*` parent surface
+- [`parent-portal-prd.md`](./parent-portal-prd.md) — `app.airbotix.ai/portal/*` parent surface（v0.2, 2026-05-25 增 §4.4.1 自动续充 / §4.4.2 充值反欺诈上限 / §4.9 AI 用量统计页）
 - [`teacher-console-prd.md`](./teacher-console-prd.md) — `teacher.airbotix.ai` teacher + admin + super-admin operational console
-- [`platform-backend-api-spec.md`](./platform-backend-api-spec.md) — NestJS API + Prisma schema
+- [`platform-backend-api-spec.md`](./platform-backend-api-spec.md) — NestJS API + Prisma schema（v0.2, 2026-05-25 Wallet 增 auto-topup + topup-cap 字段，新增 `PaymentMethod` / `AutoTopupAttempt` / `UsageDaily` 模型 + §5.4 / §5.10 / §5.13 端点）
 - [`auth-system-prd.md`](./auth-system-prd.md) — JWT(15min) + Refresh(30d rotating) + Email OTP + Kid PIN + Class code + Super-admin TOTP（取代 `_archived/teacher-auth-system-prd.md`）
 
 ### Marketing 与基础设施
