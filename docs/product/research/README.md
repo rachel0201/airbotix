@@ -21,6 +21,12 @@
 |---|---|
 | [building-blocks-reference.md](./building-blocks-reference.md) | DeepRouter / kids-opencode / 浏览器沙盒 / Guardrails / Chat UI / LMS / Wallet / Audit Log —— 每个模块的开源选项 + 是否推荐采用 |
 
+### Spike 调研（具体方案验证）
+
+| 文档 | 结论 |
+|---|---|
+| [livecodes-spike.md](./livecodes-spike.md) | LiveCodes ✅ Line A 用 / ❌ Line B 不适用（不支持多文件）。**Line B 推荐评估 Sandpack** |
+
 ## 快速对比
 
 | 维度 | taxinomitis | Cognimates | Day of AI |
