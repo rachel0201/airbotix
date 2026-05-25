@@ -24,10 +24,11 @@
 >
 > **v0.3 锁定项**（继续生效）：商业模式 D1 = 纯 Pay-as-you-go（无订阅）。Stars 永不过期，B2B 学校授权承担经常性收入。
 >
-> **2026-05-25 修订（v0.4 内）—— 自动续充 + 家长侧用量统计**：
+> **2026-05-25 修订（v0.4 内）—— 自动续充 + 家长侧用量统计 + Line B Web Code Studio**：
 > - **D-WAL-01**：V0 即支持自动续充（opt-in，off by default）。理由是 pay-as-you-go 下"晚 9 点钱包空"会直接吃掉中度/重度用户留存。强制双层 AUD 硬上限 + 失败熔断 + 冷却 + 新卡前 24h 限额。详见 §8.3 + parent-portal-prd §4.4.1。
 > - **D-WAL-02**：充值整体反欺诈硬上限（manual + auto 合计），默认 A$200/日 + A$1000/月，验证手机后 A$500/日 + A$3000/月。详见 §8.3 + parent-portal-prd §4.4.2。
 > - **D-USE-01**：家长侧新增 `/portal/usage` AI 用量统计页（tokens、stars、sessions、按任务/模型/项目分布、近 28 天趋势、CSV 导出）。指标与对话分离（prompts 仍只在 audit feed）。详见 §9.8 + parent-portal-prd §4.9 + platform-backend-api-spec §4.2 `UsageDaily` / §5.13。
+> - **D-CODE-01（新）**：Line B AI Coding **V0 主入口确定为 hosted Web Code Studio**，详见新建 PRD [`learn-code-studio-prd.md`](./learn-code-studio-prd.md) v0.1。这是兑现 v0.4 §1.3 "V0 Hosted-first" 战略 + 旗舰产品承诺；同步 reposition 桌面 Kids OpenCode 客户端（`kids-opencode-client-prd.md`）为 V1+ power-user 模式（BYO API key），不再是 V0 主入口。`airbotix-app-learn-prd.md` v0.2 "❌ AI Coding" 例外条款已反转（v0.4）。详见 §13.1（Line B Web）+ §13.4 状态快照。
 
 > **本文档定位**：本 PRD 描述 Airbotix 3-Layer Stack 中 **Layer 2 — Kids-Safe AI Platform** 的产品需求。它是已 Live 的 Layer 1（Curriculum & Workshops）的数字延伸，也是 Layer 3（Hackathons & University Pipeline）的能力底座。Layer 2 本身由两条产品线组成（见 §1.2）。
 
@@ -823,11 +824,13 @@ V0 防御层（已大幅简化，因为没有命令执行）：
 - 年龄分级 UI（6-11 → Line A / 12+ → Line B）
 - Home / Class / Studio / 我的项目 入口
 - **Line A 低龄创作 web**：AI 图像创作（模板 + prompt + 生成 + 保存）、AI 配音故事
-- **Line B Kids OpenCode（Hosted Web，V0 仅 HTML/CSS/JS）**：
-  - 项目工作区（多文件树 + 编辑器 + 浏览器 iframe 预览）
+- **Line B AI Coding（Hosted Web Code Studio，V0 主入口，仅 HTML/CSS/JS）** —— 详见 [`learn-code-studio-prd.md`](./learn-code-studio-prd.md) v0.1（2026-05-25 新增 PRD，补齐"V0 Hosted-first"战略的缺口）：
+  - `/learn/create/code` 起点 hub（4 个模板 + Blank） + `/learn/code/:projectId` 主工作区
+  - **年龄分模式**：8-11 走 Lite 单页面（大预览 + 自然语言对话，藏文件树）；12-17 走 Pro 三栏（Files / Chat / Preview，对标桌面 Kids OpenCode TUI 心智模型）
   - Agent 对话面板（plan / tool call 可见 / approve）
-  - **沙盒模型**：服务端虚拟 FS（每 Project 独立 namespace）+ 浏览器 `<iframe sandbox>` 渲染 HTML/CSS/JS（详见 §11.6 与 `kids-opencode-spec.md` v0.2）
+  - **沙盒模型**：服务端虚拟 FS（每 Project 独立 namespace，S3 prefix）+ 浏览器 `<iframe sandbox>` 渲染 HTML/CSS/JS（详见 §11.6 与 learn-code-studio-prd §6）
   - **工具集（V0）**：`read_file` / `write_file` / `edit_file` / `list_dir` —— 全部作用于虚拟 FS，**无 shell / 无任意命令执行**
+  - **桌面 Kids OpenCode 客户端**（`kids-opencode-client-prd.md`）2026-05-25 起 repositioned 为 V1+ power-user 模式（BYO API key），**不再是 V0 主入口**
 - 作品集（跨产品线统一）
 - 班级墙浏览 + 点赞
 
@@ -907,9 +910,10 @@ V0 防御层（已大幅简化，因为没有命令执行）：
 | **自动续充（D-WAL-01）** | ⬜ | ⬜ | n/a | n/a | **Spec only**（2026-05-25 新增）；schema 8 字段 + PaymentMethod/AutoTopupAttempt 模型 + Airwallex MIT + AutoTopupPage + 4 个 WS 事件 + 邮件模板都待开工 |
 | **充值反欺诈上限（D-WAL-02）** | ⬜ | ⬜ | n/a | n/a | **Spec only**；Wallet schema 字段 + `/wallet/topup` rate-limit + phone-verify 流程都待开工 |
 | Line A 低龄创作 web（图像、TTS 故事） | ✅ | n/a | ✅ | n/a | 主流程跑通；workspace 已 ship |
-| Line B Kids OpenCode（V0a TUI 插件） | 🟡 | n/a | n/a | n/a | TUI 插件已 ship，自有 client (V0b) WIP；细节见 `kids-opencode-client-prd.md` |
-| Line B 服务端虚拟 FS + 浏览器 iframe 沙盒 | 🟡 | n/a | 🟡 | n/a | iframe 已通，多文件树 + 编辑器 UX 迭代中 |
-| Line B 工具集 `read/write/edit/list` on virtual FS | ✅ | n/a | n/a | n/a | 走 platform-backend `llm` 模块 |
+| **Line B Web Code Studio（V0 主入口，learn-code-studio-prd.md）** | ⬜ | ⬜ | ⬜ | n/a | **Spec only**（2026-05-25 新增 PRD）；`/learn/create/code` + `/learn/code/:projectId` Pro/Lite 双层 UX + 新 `tools` + `code-sessions` backend 模块 + iframe sandbox + service-worker VFS shim + `Project.kind` 迁移 + `code_agent_turn` audit event 都待开工 |
+| Line B Desktop Kids OpenCode（V1+ power-user，BYO API key） | 🟡 | n/a | n/a | n/a | V0a TUI 插件已 ship；2026-05-25 起 repositioned 为 V1+ power-user 模式，不再是 V0 主入口；细节见 `kids-opencode-client-prd.md` |
+| Line B 服务端虚拟 FS + 浏览器 iframe 沙盒 | 🟡 | n/a | 🟡 | n/a | iframe 已通；多文件树 + 编辑器 UX 是 Code Studio Pro 的子集，与上一行打包推进 |
+| Line B 工具集 `read/write/edit/list` on virtual FS | ✅ | n/a | n/a | n/a | 服务端层走 platform-backend `llm` 模块；Web Studio 的 `tools` 调度层另立模块 |
 | 作品集（跨产品线统一） | ✅ | ✅ | ✅ | n/a | `/learn/projects` 已 ship |
 | 班级墙浏览 + 点赞 | 🟡 | n/a | 🟡 | n/a | 细节见 `learn-classroom-prd.md` |
 | 老师端 Teacher Console（Class CRUD、二维码、课堂模式） | ✅ | n/a | n/a | ✅ | ~85% 覆盖，含 12 个 admin 页 |
@@ -931,11 +935,15 @@ V0 防御层（已大幅简化，因为没有命令执行）：
 **V0 落地总结**：
 - **核心已 ship**：身份、钱包（手动）、Stars 消费、approvals、audit、LLM proxy、Line A 创作、teacher console 主体、部署管线
 - **持续迭代**：Line B 自有 client、班级墙、课后摘要
-- **三块完全没动**（都是 2026-05-25 新加的 PRD 内容）：
+- **四块完全没动**（都是 2026-05-25 新加的 PRD 内容）：
   1. 自动续充（D-WAL-01）—— 体验头号杀手，建议优先排期
   2. 充值反欺诈上限（D-WAL-02）—— 小但必须，且是 (1) 的前置依赖
   3. 家长用量统计页（D-USE-01）—— 家长留存/续费决策依据
-- **下一步排期建议**：把 (1)(2)(3) 打包成一个 backend sprint（共享 Prisma 迁移），然后一个 frontend sprint，预计 2-3 周
+  4. **Line B Web Code Studio**（`learn-code-studio-prd.md`）—— airbotix 旗舰产品承诺的兑现物，**当前 web 上完全无 coding 入口**；既是产品空白也是 PRD 空白，2026-05-25 才补齐 PRD
+- **下一步排期建议**：
+  - **Sprint A（钱包 + 用量）**：(1)(2)(3) 打包成一个 backend sprint（共享 Prisma 迁移）+ 一个 frontend sprint，预计 2-3 周
+  - **Sprint B（Code Studio V0）**：(4) 单独一个 1.5 backend + 2 frontend sprint，预计 3-4 周（Team-of-3）；与 Sprint A 可部分并行，因为新增的 `tools` + `code-sessions` 模块不依赖钱包改动
+  - 两个 sprint 同步收口，V0 整体到达"可对 cohort 1 dogfood"的状态
 
 ---
 

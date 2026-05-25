@@ -8,11 +8,22 @@
 >
 > **上游/平行文档**：
 > - 上位：`kids-ai-platform-prd.md` v0.4（Layer 2 平台 PRD）
+> - 平行（hosted Web 等价物，V0 主入口）：[`learn-code-studio-prd.md`](./learn-code-studio-prd.md) — 浏览器内 AI Coding Studio，sibling of `/learn/create/image` 等；V0 = Hosted-first 战略落地
 > - 平行：`DeepRouter-PRD.md`（独立 LLM gateway，本产品强依赖）
 > - 替代：`kids-opencode-spec.md` v0.2（pre-pivot 服务端沙盒方案，2026-05-15 标记 stale；本 PRD 取代其中"客户端形态"与"开发架构"两部分）
 > - 实现现状：`~/Documents/sites/kidsinai/kids-opencode/PLAN.md` v0.3（工程已 G1-G12 收官，等架构决策才能进 Phase 2.5）
 >
 > **本文档不取代**：`PLAN.md` 的阶段拆解、`docs/compliance/au.md` 的合规清单、`KIDSINAI.md` 的产品愿景。本文档只回答一个问题——**孩子启动 `kids-opencode` 后看到的是什么，背后的引擎怎么搭，上游升级怎么吃。**
+>
+> ---
+>
+> **2026-05-25 定位修订（重要）**：本桌面客户端 PRD **不再是 Line B 的 V0 主入口**。`kids-ai-platform-prd.md` v0.4 战略明确"V0 Hosted-first，V1+ Local desktop"——但 V0 Hosted 落地一直缺 PRD。2026-05-25 新增 [`learn-code-studio-prd.md`](./learn-code-studio-prd.md) 补齐该缺口，作为 **V0 Line B 主入口**（浏览器内 Code Studio，sibling of `/learn/create/image`，零安装）。
+>
+> 本桌面客户端 PRD 的产品定位据此调整为：
+> - **V0**：作为 hosted Code Studio 的**补充**，面向已 ship 的 TUI dogfood 用户（Workshop trial），不强推。
+> - **V1+ 主线**：repositioned as **"graduate to power mode"** —— 家长 BYO API key、本地文件系统访问、更大 context、更宽 tool 白名单（V1 视情况开 `run_command`）。是 Line B 高端付费用户的可选项，不是 V0 主入口。
+> - **架构不变**：TUI + serve + plugin 的 C 路线决策 (§2)、安装/onboarding (§7)、安全合规 (§6) 继续生效，因为这些约束在 V1+ 桌面端依然成立。
+> - **不重叠**：hosted Studio 和 desktop client 共享同一 `Project.kind=code` 模型 + 同一 audit schema + 同一 Stars 体系；V1 加入 `[Open in Kids OpenCode desktop]` 一键 handoff（见 `learn-code-studio-prd.md` D-CODE-Q4）。
 
 ---
 

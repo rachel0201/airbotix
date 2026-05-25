@@ -7,6 +7,8 @@
 > **Depends on**: `platform-backend-api-spec.md` · `parent-portal-prd.md` (same SPA, shared auth)
 
 ### Changelog
+- **v0.4 — 2026-05-25** — **Code Studio added to `/learn/create/*` family** — see [`learn-code-studio-prd.md`](./learn-code-studio-prd.md). Adds `/learn/create/code` (hub) + `/learn/code/:projectId` (Pro/Lite layouts) + `/learn/code/:projectId/run` (standalone preview). **Reverses the v0.2 / v0.3 exclusion** "❌ AI Coding (Kids OpenCode local desktop tool, separate AI agent)" in §1 and §13 — that exclusion contradicted `kids-ai-platform-prd.md` v0.4 strategic decision "V0 Hosted-first, V1+ Local desktop" for Line B. The hosted web Code Studio is now the V0 primary entry for AI coding; the desktop client (`kids-opencode-client-prd.md`) is repositioned as V1+ power-user mode.
+- **v0.3 — 2026-05-25** — **Missions / My Works / Classroom hereby promoted to dedicated PRDs** — see [`learn-missions-prd.md`](./learn-missions-prd.md) (replaces §5.2 / §5.2bis / §6 / §8.4), [`learn-projects-prd.md`](./learn-projects-prd.md) (replaces §5.6 / §5.7), [`learn-classroom-prd.md`](./learn-classroom-prd.md) (replaces §5.8). Sections in this doc remain as a quick reference for IA + cross-flow context only; **all new spec work for those three surfaces goes in the dedicated PRDs**. New compliance / API deltas raised by the splits (e.g. `ProjectLike` model, `POST /projects/:id/export`, `POST /projects/:id/report`) are tracked there for backend session pickup.
 - **v0.2 — 2026-05-17** — Adds `/learn/workspace` as a first-class ChatGPT-style 3-pane surface (Sessions / Chat / Preview) and an age-banded Missions browser. Reframes the "no open chat" constraint into a **bounded multi-turn chat inside a Learning Session** (still kid-safe via Stars cost, audit, prompt filtering, idle close). Persistence via `SessionMessage` model (see `platform-backend-api-spec.md`).
 - **v0.1 — 2026-05-15** — Initial draft (mission-driven single-shot create flows + project workspace).
 
@@ -24,7 +26,7 @@ Key constraints baked into every decision:
 - **Conversations are persistent, not one-shot** — kids can keep iterating ("make it bigger", "now add a hat") inside a Session; each turn is one audited LLM call, not a free-form chatroom
 
 What this surface **doesn't** do:
-- ❌ AI Coding (Kids OpenCode local desktop tool, separate AI agent)
+- ❌ ~~AI Coding (Kids OpenCode local desktop tool, separate AI agent)~~ — **reversed in v0.4**. AI coding **does** live on this surface now, as the in-browser Code Studio at `/learn/create/code` + `/learn/code/:projectId` — see [`learn-code-studio-prd.md`](./learn-code-studio-prd.md). The desktop Kids OpenCode client is repositioned as V1+ power-user mode (BYO API key)
 - ❌ Robotics (workshop/in-school only)
 - ❌ Unbounded chat — every turn is a single Stars-costed LLM call inside a Session, with prompt filtering and audit. There is no "always-on" assistant background channel.
 
@@ -50,9 +52,13 @@ Authenticated (kid token):
 ├── /learn/create/music             Music studio
 ├── /learn/create/video             Short video / animation studio
 ├── /learn/create/voice             TTS / voice studio
+├── /learn/create/code              Code Studio hub (v0.4 — see learn-code-studio-prd.md)
+│
+├── /learn/code/:projectId          Code Studio Pro/Lite (auto by age; v0.4)
+├── /learn/code/:projectId/run      Standalone iframe preview (v0.4)
 │
 ├── /learn/projects                 My Works (portfolio)
-├── /learn/projects/:id             Single project workspace
+├── /learn/projects/:id             Single project workspace (Project.kind=code redirects to /learn/code/:id)
 │
 ├── /learn/classroom                Class Wall (browse class peers' work)
 ├── /learn/classroom/:classId       Specific class wall
@@ -260,6 +266,9 @@ UI mode flag derived once on session start from `KidProfile.age`. Stored in clie
 
 ### 5.2 `/learn/missions` — Course Pack browser (v0.2, age-banded)
 
+> **⚠️ Moved (v0.3, 2026-05-25)**: full spec — including widget registry, acceptance gate, completion reward, authoring roadmap — lives in [`learn-missions-prd.md`](./learn-missions-prd.md). Sections 5.2 / 5.2bis / 6 / 8.4 below remain for cross-flow context; do not edit in place — edit the dedicated PRD.
+
+
 > **Why this changed in v0.2**: a flat grid of every Course Pack mixed 7-year-old and 14-year-old content together. Kids opened things they couldn't read and skipped things they would have loved. v0.2 groups packs by **age fit** relative to the logged-in kid's `KidProfile.age`.
 
 ```
@@ -421,6 +430,9 @@ Same pattern:
 
 ### 5.6 `/learn/projects` — My Works
 
+> **⚠️ Moved (v0.3, 2026-05-25)**: full spec — including Combine/Export pipeline (PDF + MP4), quotas, retention, ProjectLike model deltas — lives in [`learn-projects-prd.md`](./learn-projects-prd.md). Sections 5.6 / 5.7 below remain for cross-flow context; do not edit in place — edit the dedicated PRD.
+
+
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │ 📂 My Works                                         + New Project│
@@ -474,6 +486,8 @@ Same pattern:
 "Combine" actions auto-generate exports (PDF storybook, video slideshow) — these are the kid's takeaway artifacts.
 
 ### 5.8 `/learn/classroom` — Class Wall
+
+> **⚠️ Moved (v0.3, 2026-05-25)**: full spec — including ShareRequest state machine, Likes/Report data model, compliance hooks (C5/C9/C13), API spec deltas — lives in [`learn-classroom-prd.md`](./learn-classroom-prd.md). Section 5.8 below remains for cross-flow context; do not edit in place — edit the dedicated PRD.
 
 > Default-private. Class wall shows other kids' shared work within the same class.
 
@@ -696,7 +710,7 @@ PWA installable. Offline = "limited mode" (read-only access to own works, no gen
 
 ## 13. Out of Scope (V0)
 
-- ❌ AI coding (Kids OpenCode local desktop tool only; web has a "Download Kids OpenCode" CTA for 12+)
+- ~~❌ AI coding (Kids OpenCode local desktop tool only; web has a "Download Kids OpenCode" CTA for 12+)~~ — **reversed in v0.4**. AI coding **is** in V0 scope, via the in-browser Code Studio — see [`learn-code-studio-prd.md`](./learn-code-studio-prd.md). The "Download Kids OpenCode" CTA is repositioned as a V1+ "graduate to power mode" affordance, not the primary entry
 - ❌ Free-form chat with AI (everything mission/widget-driven)
 - ❌ Comments on class wall (Likes only at V0)
 - ❌ Kid-to-kid direct messaging
