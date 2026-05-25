@@ -1122,3 +1122,58 @@ npx prisma migrate dev --name init
 - `deeprouter-coupling-plan.md` — kids-completions endpoint contract this backend calls
 - `docs/legal/privacy-policy.md` — data export / deletion endpoint requirements
 - `docs/product/compliance/minors-compliance.md` — RBAC + audit requirements
+
+---
+
+## 14. Implementation status snapshot (2026-05-25)
+
+> Source of truth: `platform-backend` submodule at `4a2281a`. Re-derive by listing `src/<module>/` and grepping `prisma/schema.prisma` for new models. Refresh this table when bumping the submodule pointer.
+>
+> Symbols: ✅ shipped · 🟡 partial (built but missing fields/endpoints) · ⬜ not started · n/a not applicable.
+
+### REST modules
+
+| § | Module | Prisma | Controller | Tests | Notes |
+|---|---|---|---|---|---|
+| 5.1 | `/auth` (OTP, refresh, kid PIN, TOTP) | ✅ | ✅ | 🟡 | All flows shipped: `auth/otp`, `auth/refresh`, `auth/kid`, `auth/totp`, `auth/invite` |
+| 5.2 | `/families` | ✅ | ✅ | 🟡 | `families` module wired |
+| 5.3 | `/kids` | ✅ | ✅ | 🟡 | `kids` module + KidProfile w/ PIN |
+| 5.4 | `/wallet` (manual topup, caps, pause) | ✅ | ✅ | 🟡 | Balance, caps, pause/resume, manual topup, transactions — all shipped |
+| 5.4 | `/wallet/auto-topup` (D-WAL-01) | ⬜ | ⬜ | ⬜ | **Spec only.** Need: extend Wallet schema (auto_topup_* fields), add `PaymentMethod` model, add `AutoTopupAttempt` model, add `PaymentInitiator` + `AutoTopupStatus` enums, add `topup_auto` TxType, build `/wallet/auto-topup` GET/PUT/test/attempts controllers, build Airwallex SetupIntent + MIT confirm path, add scheduled job to scan low-balance wallets |
+| 5.4 | `/payment-methods` | ⬜ | ⬜ | ⬜ | **Spec only.** Need: GET list, POST setup-intent, set-default, DELETE handlers; Airwallex tokenized PM lifecycle |
+| 5.4 | Topup anti-fraud caps (D-WAL-02) | ⬜ | ⬜ | ⬜ | **Spec only.** Need: extend Wallet schema (topup_*_cap, topup_*_used, topup_count_*, phone_verified); add rate-limit checks to `/wallet/topup`; phone-verify flow |
+| 5.5 | `/classes` | ✅ | ✅ | 🟡 | Class + ClassEnrollment + DeliveryMode |
+| 5.6 | `/course-packs` | ✅ | ✅ | 🟡 | CoursePack + Mission |
+| 5.7 | `/projects` + `/artifacts` (S3 signed) | ✅ | ✅ | 🟡 | `projects` + `artifacts` + `storage` modules |
+| 5.8 | `/audit` | ✅ | ✅ | 🟡 | AuditEvent with family/kid/project scope |
+| 5.9 | `/approvals` | ✅ | ✅ | 🟡 | ApprovalRequest + enums |
+| 5.10 | `/webhooks/airwallex` | 🟡 | 🟡 | ⬜ | Existing webhook handles `parent_manual` initiator; **needs routing for `auto_topup` initiator** (Stars credit + `topup_auto` tx + reset failure counter + WS emit) and `admin_adjust` no-op path; MIT consent capture pending |
+| 5.11 | `/llm` proxy (DeepRouter) | ✅ | ✅ | 🟡 | All `/llm/*` endpoints shipped: text-completion, image, tts, music, music-score, video; `deeprouter.client.ts` |
+| 5.11 | `/llm/*` → UsageDaily inline upsert | ⬜ | ⬜ | ⬜ | **Spec only.** Need: in `LlmService` after successful debit, upsert `UsageDaily` row (tokens_in/out, requests, by_task_type/by_model/by_project JSONB); Redis session bucketing for sessions/active_seconds |
+| 5.12 | `/admin` | ✅ | ✅ | 🟡 | `admin` module wired |
+| 5.13 | `/usage` analytics (D-USE-01) | ⬜ | ⬜ | ⬜ | **Spec only.** Need: `UsageDaily` model + indexes; controllers for `/families/:id/usage`, `/families/:id/usage/summary`, `/kids/:id/usage`, `/kids/:id/usage/trend`, `/kids/:id/usage/export.csv`; nightly reconcile job from `consumption_ledger` |
+| 6 | WebSocket gateway | ✅ | ✅ | n/a | `ws.gateway.ts` + `AppGateway.emitToFamily()` shipped; events `audit.event` / `wallet.update` / `approval.*` working |
+| 6 | New WS events (`wallet.low_balance`, `wallet.auto_topup_*`, `wallet.topup_limit_hit`) | ⬜ | ⬜ | ⬜ | **Spec only.** Add emit calls in wallet service + auto-topup job |
+| 4.7 | Incidents | ✅ | ✅ | 🟡 | `incidents` module wired |
+| 4.x | `system-config` (super-admin) | ✅ | ✅ | 🟡 | Wired; consumed by teacher-console admin pages |
+| 4.x | `sessions` (chat session model for /learn/workspace) | ✅ | ✅ | 🟡 | `sessions` module + SessionMessage shipped |
+| 4.x | `billing` | ✅ | ✅ | 🟡 | `billing` module wired |
+
+### Prisma schema status
+
+| Model | In schema? | Notes |
+|---|---|---|
+| Identity (Family, ParentUser, KidProfile, Session, RefreshToken, OtpAttempt, TwoFactorEnrollment) | ✅ | All shipped |
+| Wallet (base fields) | ✅ | Base fields shipped (balance, daily_used, caps, paused) |
+| Wallet (auto-topup fields, D-WAL-01) | ⬜ | `auto_topup_enabled`, `auto_topup_threshold_stars`, `auto_topup_sku`, `auto_topup_payment_method_id`, `auto_topup_daily_cap_aud_cents`, `auto_topup_monthly_cap_aud_cents`, `auto_topup_*_used`, `auto_topup_failure_threshold`, `auto_topup_consecutive_failures`, `auto_topup_cooldown_minutes`, `last_auto_topup_at` |
+| Wallet (anti-fraud fields, D-WAL-02) | ⬜ | `topup_daily_cap_aud_cents`, `topup_monthly_cap_aud_cents`, `topup_*_used_aud_cents`, `topup_count_today`, `topup_count_this_hour`, `last_topup_at`, `phone_verified` |
+| WalletTransaction, TxType | ✅ | Base shipped; **need to add `topup_auto` enum value** |
+| AirwallexPayment | ✅ | Base shipped; **need to add `initiator`, `payment_method_id`, `idempotency_key`** + `PaymentInitiator` enum |
+| **PaymentMethod** (NEW) | ⬜ | **Spec only.** Airwallex tokenized card + lifecycle |
+| **AutoTopupAttempt** (NEW) | ⬜ | **Spec only.** Idempotency-keyed attempt log + `AutoTopupStatus` enum |
+| Courses + Classes + Missions + Projects + Artifacts | ✅ | All shipped |
+| AuditEvent + Approvals | ✅ | Shipped |
+| Incidents | ✅ | Shipped |
+| **UsageDaily** (NEW, D-USE-01) | ⬜ | **Spec only.** One row per kid per local-date with JSONB rollups |
+
+**V0 backend gap** = **8 schema deltas + 6 new endpoints + 1 webhook router + 4 new WS events**, plus the inline `UsageDaily` upsert hook in `LlmService` and a nightly reconcile job. Bundled, this is ~1 sprint of backend work behind a single Prisma migration. **No work has started on these yet** — `4a2281a` predates the 2026-05-25 PRD additions.

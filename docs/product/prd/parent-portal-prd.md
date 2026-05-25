@@ -963,3 +963,35 @@ JWT in HttpOnly cookie (refresh) + memory only (access). Access token attached t
 - `marketing-site-refresh-prd.md` §4.6.3 — 5 trust mechanisms operationalised here
 - `docs/legal/privacy-policy.md` — data export endpoint, deletion flow
 - `docs/legal/parental-consent.md` — consent capture text (registration step 5)
+
+---
+
+## 12. Implementation status snapshot (2026-05-25)
+
+> Source of truth: `airbotix-app` submodule at `c38e263` + `platform-backend` at `4a2281a`. Re-derive by re-running the survey (Explore submodule `src/portal/` + `platform-backend/src/wallet/`). Refresh this table when bumping submodule pointers.
+>
+> Symbols: ✅ shipped · 🟡 partial (built but missing fields/UX) · ⬜ not started · n/a not applicable.
+
+| Page / Feature | Backend | Frontend | WS wired | Notes |
+|---|---|---|---|---|
+| §3 Auth & onboarding (OTP, register) | ✅ | ✅ | n/a | `auth/otp` + `LoginPage` + `VerifyOtpPage` shipped |
+| §4.1 `/portal` Dashboard | ✅ | ✅ | ✅ | `DashboardPage` loads family + wallet context |
+| §4.2 `/portal/family` Multi-Kid Manager | ✅ | ✅ | n/a | `FamilyListPage` + `FamilyNewPage` shipped |
+| §4.3 `/portal/family/:kidId` Single kid | ✅ | ✅ | n/a | `FamilyDetailPage` shipped (caps, topic limits, recent activity) |
+| §4.4 `/portal/wallet` (balance, transactions, manual topup, caps, pause) | ✅ | ✅ | ✅ | `WalletPage` shipped; live `wallet.update` events working |
+| §4.4.1 `/portal/wallet/auto-topup` (D-WAL-01) | ⬜ | ⬜ | ⬜ | **Spec only.** Prisma `Wallet` lacks `auto_topup_*` fields; no `PaymentMethod` / `AutoTopupAttempt` models; no Airwallex SetupIntent route; no `AutoTopupPage`; new WS events (`wallet.auto_topup_*`) not emitted |
+| §4.4.2 Topup anti-fraud limits (D-WAL-02) | ⬜ | ⬜ | ⬜ | **Spec only.** Wallet schema lacks `topup_daily_cap_aud_cents` / `topup_count_today` etc.; rate-limit checks not in `/wallet/topup` handler; `wallet.topup_limit_hit` event not emitted |
+| §4.5 `/portal/approvals` Approval queue | ✅ | ✅ | ✅ | `ApprovalsPage` shipped; `approval.new` / `approval.resolved` events wired |
+| §4.6 `/portal/audit` Activity / audit replay | ✅ | ✅ | ✅ | `AuditPage` shipped; live `audit.event` tail working |
+| §4.7 `/portal/audit/project/:id` Project replay | ✅ | ✅ | n/a | `AuditProjectPage` shipped |
+| §4.8 `/portal/settings` Privacy / notifications / billing | ✅ | 🟡 | n/a | `SettingsPage` shipped; saved-payment-methods tab pending (blocked on §4.4.1 PaymentMethod model) |
+| §4.9 `/portal/usage` AI usage analytics (D-USE-01) | ⬜ | ⬜ | n/a | **Spec only.** `UsageDaily` model not in schema; `/families/:id/usage` + `/kids/:id/usage*` controllers don't exist; no `UsagePage` / `KidUsagePage` route; CSV export job not built |
+| §5.6 Accessibility (WCAG AA) | n/a | 🟡 | n/a | Basic semantic markup in place; full audit pending |
+| §6 Mobile responsive | n/a | 🟡 | n/a | Most pages tested; nav drawer mobile UX needs polish |
+
+**Conclusion** — V0 portal is ~80% shipped. The three deltas from the 2026-05-25 PRD update are all ⬜:
+1. **Auto-topup** (§4.4.1) — biggest single piece of work left: needs Prisma migration + Airwallex SetupIntent + MIT flow + AutoTopupPage UI + 4 new WS events + email templates for success/failure/pause. **Owner: TBD.**
+2. **Topup anti-fraud caps** (§4.4.2) — small but blocks (1) — needs Wallet schema fields + rate-limit middleware on `/wallet/topup` + 429 error UX. **Owner: TBD.**
+3. **Usage analytics page** (§4.9) — needs `UsageDaily` model + inline upsert in `/llm/*` proxy + nightly reconcile job + `/usage` REST endpoints + UsagePage UI + CSV export worker. **Owner: TBD.**
+
+Everything else in scope for V0 parent portal is shipped or partial-but-functional.

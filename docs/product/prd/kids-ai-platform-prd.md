@@ -872,7 +872,7 @@ V0 防御层（已大幅简化，因为没有命令执行）：
 - 多家长协作（V1）
 - iOS/Android 原生 app（V0 PWA）
 - 海外市场（仅 AU）
-- 自动续充
+- ~~自动续充~~ —— **已移到 V0**（D-WAL-01，2026-05-25）
 - 公开精选页
 - **Local Desktop 应用（Tauri/Electron）**（V1，power-user 模式，家长自带 API key）
 - **机器人代码下发**（V1，关键差异化但暂留）
@@ -892,6 +892,51 @@ V0 防御层（已大幅简化，因为没有命令执行）：
 6. 复充率（首充家庭 60 日内 ≥ 1 次复充）≥ 40%
 7. 零内容安全事故（90 日窗口）
 
+### 13.4 Implementation status snapshot (2026-05-25)
+
+> Submodule pins at survey time: `airbotix-app` `c38e263` · `teacher-console` `3f26bed` · `platform-backend` `4a2281a`。每次 bump submodule 时刷新本表。明细见 [parent-portal-prd §12](./parent-portal-prd.md#12-implementation-status-snapshot-2026-05-25) 与 [platform-backend-api-spec §14](./platform-backend-api-spec.md#14-implementation-status-snapshot-2026-05-25)。
+>
+> 符号：✅ 已交付 · 🟡 部分交付（已建但缺字段/UX） · ⬜ 未开始 · n/a 不适用。
+
+| §13.1 V0 area | Backend | airbotix-app `/portal` | airbotix-app `/learn` | teacher-console | 备注 |
+|---|---|---|---|---|---|
+| 身份与账号（OTP、Family、KidProfile、Consent） | ✅ | ✅ | ✅ | ✅ | 全栈跑通 |
+| Airwallex 接入 + Stars Pack 充值（manual） | ✅ | ✅ | n/a | n/a | Stripe → Airwallex 切换已完成 |
+| 钱包余额 + 消费明细 + 每日/周/月上限 + 一键 Pause | ✅ | ✅ | n/a | n/a | WS `wallet.update` 实时刷新 |
+| 触顶软停 + 加额请求 + 家长批准 | ✅ | ✅ | ✅ | n/a | Approvals 全链路通 |
+| **自动续充（D-WAL-01）** | ⬜ | ⬜ | n/a | n/a | **Spec only**（2026-05-25 新增）；schema 8 字段 + PaymentMethod/AutoTopupAttempt 模型 + Airwallex MIT + AutoTopupPage + 4 个 WS 事件 + 邮件模板都待开工 |
+| **充值反欺诈上限（D-WAL-02）** | ⬜ | ⬜ | n/a | n/a | **Spec only**；Wallet schema 字段 + `/wallet/topup` rate-limit + phone-verify 流程都待开工 |
+| Line A 低龄创作 web（图像、TTS 故事） | ✅ | n/a | ✅ | n/a | 主流程跑通；workspace 已 ship |
+| Line B Kids OpenCode（V0a TUI 插件） | 🟡 | n/a | n/a | n/a | TUI 插件已 ship，自有 client (V0b) WIP；细节见 `kids-opencode-client-prd.md` |
+| Line B 服务端虚拟 FS + 浏览器 iframe 沙盒 | 🟡 | n/a | 🟡 | n/a | iframe 已通，多文件树 + 编辑器 UX 迭代中 |
+| Line B 工具集 `read/write/edit/list` on virtual FS | ✅ | n/a | n/a | n/a | 走 platform-backend `llm` 模块 |
+| 作品集（跨产品线统一） | ✅ | ✅ | ✅ | n/a | `/learn/projects` 已 ship |
+| 班级墙浏览 + 点赞 | 🟡 | n/a | 🟡 | n/a | 细节见 `learn-classroom-prd.md` |
+| 老师端 Teacher Console（Class CRUD、二维码、课堂模式） | ✅ | n/a | n/a | ✅ | ~85% 覆盖，含 12 个 admin 页 |
+| 课后家长摘要（每堂课邮件） | 🟡 | n/a | n/a | 🟡 | 模板待定稿 |
+| 课程包（3 个 V0 自研课程包） | ✅ | n/a | ✅ | ✅ | 内容运营 vs 工程交付独立线 |
+| Mission 步骤化引导 | ✅ | n/a | ✅ | n/a | 细节见 `learn-missions-prd.md` |
+| Workshop Credit Pool | 🟡 | n/a | n/a | 🟡 | backend wallet 支持，老师 UI 简化版 |
+| 内容安全：prompt 黑名单 + LLM classifier | ✅ | n/a | n/a | n/a | 走 DeepRouter 内置 + 平台兜底 |
+| 内容安全：图像 NSFW 过滤 | ✅ | n/a | n/a | n/a | 走 DeepRouter |
+| 内容安全：Agent 安全护栏（§11.6） | ✅ | n/a | n/a | n/a | 虚拟 FS namespace + iframe sandbox + tool 白名单 |
+| 数据留存 90 天 | ✅ | n/a | n/a | n/a | retention job 已跑 |
+| 家长 Dashboard：今日活动流 + audit replay + 待审批 | ✅ | ✅ | n/a | n/a | 全栈跑通 |
+| **家长 AI 用量统计页 `/portal/usage`（D-USE-01）** | ⬜ | ⬜ | n/a | n/a | **Spec only**（2026-05-25 新增）；UsageDaily 模型 + 5 个 `/usage*` 端点 + UsagePage/KidUsagePage + CSV 导出 worker + 凌晨对账 job + LlmService 内联 upsert 都待开工 |
+| Admin 侧 LLM analytics（super-admin §5.7） | ✅ | n/a | n/a | 🟡 | backend 已 ship；UI 图表待补 |
+| DeepRouter 作为唯一 LLM 出口 | ✅ | n/a | n/a | n/a | 跨 repo 依赖；DeepRouter 侧媒体接口已就绪 |
+| platform-backend 部署：AWS EC2 Sydney + nginx + ACM | ✅ | n/a | n/a | n/a | `api.airbotix.ai` live |
+| airbotix-app / teacher-console 部署：S3 + CloudFront Sydney | ✅ | n/a | n/a | n/a | `app.airbotix.ai` + `teacher.airbotix.ai` live |
+
+**V0 落地总结**：
+- **核心已 ship**：身份、钱包（手动）、Stars 消费、approvals、audit、LLM proxy、Line A 创作、teacher console 主体、部署管线
+- **持续迭代**：Line B 自有 client、班级墙、课后摘要
+- **三块完全没动**（都是 2026-05-25 新加的 PRD 内容）：
+  1. 自动续充（D-WAL-01）—— 体验头号杀手，建议优先排期
+  2. 充值反欺诈上限（D-WAL-02）—— 小但必须，且是 (1) 的前置依赖
+  3. 家长用量统计页（D-USE-01）—— 家长留存/续费决策依据
+- **下一步排期建议**：把 (1)(2)(3) 打包成一个 backend sprint（共享 Prisma 迁移），然后一个 frontend sprint，预计 2-3 周
+
 ---
 
 ## 14. Roadmap
@@ -908,7 +953,6 @@ V0 防御层（已大幅简化，因为没有命令执行）：
 - 多家长协作
 - 周报摘要 + 学习曲线
 - 班级评论
-- 自动续充
 - **100-200 付费家庭 + 复购数据**（BP 里程碑）
 - **Token margin 单位经济验证**（BP 里程碑，与 DeepRouter 联合产出）
 
