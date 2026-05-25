@@ -18,7 +18,7 @@ The Teacher Console is **the surface where Airbotix instructors and admins run c
 2. **Curate content** — review and approve `share_request`s before kid work reaches the class wall or public web
 3. **Operate the business** — admins handle wallet adjustments, refunds, incident response, family search, content suspensions
 
-The Teacher Console is **not** the parent surface (that's `/portal/*` on `app.airbotix.ai`) and **not** where teachers create course packs (V0: only admin creates course packs; V1+ may open to teachers — see §11).
+The Teacher Console is **not** the parent surface (that's `/portal/*` on `app.airbotix.ai`) and **not** where teachers create course packs. Per the authoring roadmap in [`learn-missions-prd.md`](./learn-missions-prd.md) §9 (D-M6 / D-M7): **V0/V1 — Airbotix admin authors only; teachers select published packs when creating a Class. V2 — schools compose `CurriculumBundle`s from the catalog (no Mission authoring). V3+ — teacher authoring only after the moderation tooling lands.**
 
 ### 1.1 Scope: teacher + admin + super_admin in one app
 
@@ -715,6 +715,12 @@ V0 incident sources (✅ shipped — `IncidentsService.checkOnAuditEvent`):
 ### 4.14 `/admin/course-packs` — Course pack authoring
 
 > Admin-only. Full CRUD on CoursePack + Mission. Imports content_md from the curriculum repo (see V1+ note).
+>
+> **Authoring scope** (per `learn-missions-prd.md` §9): V0/V1 — admin only; teachers do not have create/edit access to this page. V2 — institution admins may build `CurriculumBundle`s from this catalog via the institution surface (see `institution-prd.md`); they still cannot edit Missions. V3+ — teacher authoring with a pre-publish review queue rendered above this list.
+>
+> **Publish requires TOTP step-up** (D-M8 / super-admin-prd.md §3.2) — `POST /course-packs/:id/publish` is gated even for admin role; pressing **Publish** opens the `<StepUpGate>` modal.
+>
+> **Reference example to clone**: [`coursepack-ai-pet-lab-prd.md`](./coursepack-ai-pet-lab-prd.md) is the V0 launch pack and the canonical template for any new Course Pack. The editor should ship with "Create from template — AI Pet Lab" as the default new-pack flow.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -917,7 +923,7 @@ Backend enforces all of the above; client-side gating is for UX only (see §3.4)
 | Q2 | Should `super_admin` actions be visible to other `super_admin`s but not `admin`? Drafted yes (§4.16) but creates an audit blind spot for admin-tier ops. | Compliance / governance review needed |
 | Q3 | Class-code distribution: QR posted in the classroom, printed kid login cards mailed, parent-portal-shared link, or all three? | Affects `qr_payload` schema in Class + Print roster UX (§4.4) |
 | Q4 | Workshop credit Stars: charge to which budget? Teacher org account (B2B), or a system "ops" account refunded by an invoice run? | Affects WalletTransaction.reason + admin onboarding flow |
-| Q5 | Should course-pack authoring be admin-form-driven (V0 draft above) or pull from the curriculum repo via webhook (cleaner long-term)? | Affects §4.14 design + ops workflow |
+| Q5 | Should course-pack authoring be admin-form-driven (V0 draft above) or pull from the curriculum repo via webhook (cleaner long-term)? Note: the teacher-authoring branch of this question is now **closed** per `learn-missions-prd.md` D-M6 — teachers do not author at V1. | Affects §4.14 design + ops workflow (admin-only scope) |
 | Q6 | V0 stuck detection is heuristic (no-progress 15 min). Should we also surface an in-mission "kid clicked Help button" signal? | Requires `/learn/*` UI to add Help button + new audit event type |
 | Q7 | Does the teacher need a "rewind class" view (replay first 15 min of last week's class)? Useful for relief teachers picking up a class. | V0 stub with class audit feed; V1+ proper player |
 | Q8 | Multi-region: when AU compliance allows DR replicas, do teacher-console reads hit a Sydney read replica or always primary? | Affects live-mode latency on AU east coast vs Perth |
