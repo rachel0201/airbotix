@@ -685,17 +685,25 @@ Course Pack
 
 ## 11. 安全与审核（家长信任的核心）
 
-### 11.1 双层过滤
+> **⚠️ 2026-05-25 起 §11.1 / §11.3 / §11.6 的安全 spec 已分别拆到 4 份独立 PRD**（保留本节作为高层概览，落地细节看下面引用）：
+> - **基础数据/年龄分档** → [`safety-age-policy-prd.md`](./safety-age-policy-prd.md)（`SafetyPolicy` 模型 + early/core_a/early_b/late_b 4 档矩阵）
+> - **输入侧防火墙** → [`safety-prompt-firewall-prd.md`](./safety-prompt-firewall-prd.md)（5 段流水线、500ms p95 预算、fail-closed、sustained-pattern 升级）
+> - **输出侧审核** → [`safety-response-moderation-prd.md`](./safety-response-moderation-prd.md)（按 modality 分流水线、quarantine 桶、full refund）
+> - **PII 跨切面保护** → [`safety-pii-protection-prd.md`](./safety-pii-protection-prd.md)（16 类 taxonomy、3 检查点、WARN/BLOCK 决策树、家长 sanitized 可视）
+>
+> 本节下面 11.1–11.6 保留为**架构层概览** + 历史决策记录；具体阈值、流水线步骤、PII 检测算法、家长可视化文案以那 4 份 PRD 为准。
+
+### 11.1 双层过滤（→ [`safety-prompt-firewall-prd.md`](./safety-prompt-firewall-prd.md) + [`safety-response-moderation-prd.md`](./safety-response-moderation-prd.md)）
 
 **入口（Prompt）**：
-- 儿童敏感词黑名单（暴力、性、毒品、自残、政治极端等）
-- LLM-as-classifier 二次判断（拒绝时不消耗 Stars）
-- 温柔引导（"这个话题不适合哦，试试 XX？"）
+- 儿童敏感词黑名单（暴力、性、毒品、自残、政治极端等）— 阈值按年龄档（详见 prompt firewall §3.1 + age policy §4 矩阵）
+- LLM-as-classifier 二次判断（拒绝时不消耗 Stars）— 详见 prompt firewall §3.3
+- 温柔引导（"这个话题不适合哦，试试 XX？"）— 完整文案表见 prompt firewall §4
 
 **出口（Output）**：
-- 图像：NSFW + 暴力 + 恐怖分类
-- 文本/代码：再次过滤（防止生成不当评论或恶意代码）
-- 命中 → 不返回 + 不扣 + 记录到家长面板
+- 图像：NSFW + 暴力 + 恐怖分类 — 详见 response moderation §4
+- 文本/代码：再次过滤（防止生成不当评论或恶意代码）— 详见 response moderation §3 + §7
+- 命中 → 不返回 + 不扣 + 记录到家长面板（家长侧只见 sanitized 摘要，不见原文 — D-PF4 / D-PI4）
 
 ### 11.2 分模型策略（统一走 DeepRouter 路由）
 

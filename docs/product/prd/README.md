@@ -30,6 +30,10 @@
 
 ### Cross-cutting — 合规 / 安全 / 跨切面
 - [`incidents-and-mandatory-reporting-prd.md`](./incidents-and-mandatory-reporting-prd.md) — 端到端事件 + 法定报告 v0.1（kid panic 按钮 D-INC3、admin triage、Designated Officer 流程、NDB 72h+30d 时钟 D-INC4、`IncidentEvent` append-only D-INC5、evidence bundle S3 合约、AU Online Safety Act + Mandatory Notifiers 合规）
+- [`safety-age-policy-prd.md`](./safety-age-policy-prd.md) — **安全策略基础** v0.1（`SafetyPolicy` Prisma 模型 + 4 档 early/core_a/early_b/late_b 矩阵：topic 黑名单/白名单/分类器阈值/PII 模式/sustained-pattern 阈值/Stars 上限；super-admin 编辑 + TOTP step-up + 版本化不可变 D-SP3；其余 3 份 safety PRD 的依赖根 D-SP1）
+- [`safety-prompt-firewall-prd.md`](./safety-prompt-firewall-prd.md) — **输入侧防火墙** v0.1（5 段流水线 regex / PII / topic classifier / injection guard / kid-safe sysprompt，500ms p95 预算，fail-closed D-PF1，sustained-pattern M/N 升级路径，Code Studio 特例，redacted 家长可视 D-PF4）
+- [`safety-response-moderation-prd.md`](./safety-response-moderation-prd.md) — **输出侧审核** v0.1（按 modality text/image/audio/video/code 分流水线，PII/secret 在文本/代码侧 redact 而不 reject D-RM5，rejected 输出 30 天 quarantine 桶 D-RM4，DeepRouter 主链路 + OpenAI Moderation 兜底，full refund + 反滥用阈值）
+- [`safety-pii-protection-prd.md`](./safety-pii-protection-prd.md) — **PII 跨切面保护** v0.1（16 类闭合 taxonomy，三层检测 family dict / regex / NER，三检查点 input / output / artifact save，WARN-vs-BLOCK 决策树 + 出现次数升级，parent contact 永远 BLOCK D-PI3，code 沙箱数据例外 D-PI6，家长侧 sanitized + categorized 不见原文 D-PI4）
 
 ### Cloud 子产品 — Platform infrastructure
 - [`platform-backend-api-spec.md`](./platform-backend-api-spec.md) — NestJS API + Prisma schema（v0.2, 2026-05-25 Wallet 增 auto-topup + topup-cap 字段，新增 `PaymentMethod` / `AutoTopupAttempt` / `UsageDaily` 模型 + §5.4 / §5.10 / §5.13 端点）

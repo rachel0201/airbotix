@@ -659,15 +659,24 @@ WebSocket: kid joins `kid:<kid_id>` room. Receives:
 
 ## 9. Safety Mechanisms (implementation hooks)
 
+> **⚠️ Moved (v0.5, 2026-05-25)**: the four LLM-traffic safety rows below have been promoted to dedicated PRDs. Edit those, not this table:
+> - **Inappropriate kid prompt** → [`safety-prompt-firewall-prd.md`](./safety-prompt-firewall-prd.md) (5-stage pipeline, age-banded thresholds)
+> - **Inappropriate AI output** → [`safety-response-moderation-prd.md`](./safety-response-moderation-prd.md) (per-modality post-screens, quarantine, refund)
+> - **Prompt injection** → [`safety-prompt-firewall-prd.md`](./safety-prompt-firewall-prd.md) §3.4 (Stage 4 injection guard) + Stage 5 sysprompt
+> - **Personal info leak** → [`safety-pii-protection-prd.md`](./safety-pii-protection-prd.md) (16-category taxonomy, WARN/BLOCK, 3 checkpoints)
+> - **Cross-cutting age policy** that all of the above read from → [`safety-age-policy-prd.md`](./safety-age-policy-prd.md) (`SafetyPolicy` model + 4-band matrix)
+>
+> The remaining rows below (Class wall harassment, Cap circumvention, Account compromise, Time-bombing) are not LLM-traffic safety and stay in this PRD's scope (or in the Class Wall / Auth PRDs as noted).
+
 | Concern | Implementation |
 |---|---|
-| Inappropriate kid prompt | Backend pre-screen (regex blacklist) + LLM classifier; reject with friendly message |
-| Inappropriate AI output | Backend post-screen; if rejected, refund Stars, audit emit |
-| Prompt injection | Kid-safe system prompt is **DeepRouter server-side** (kid can't see/edit). See `deeprouter-coupling-plan.md` |
-| Personal info leak | Forbid Saving real names / addresses / contact info to projects; warn on detect |
-| Class wall harassment | No comments, only likes; reporting button; teacher reviews shares |
-| Cap circumvention | Server enforces; client UI is a cooperative copy of state |
-| Account compromise (kid PIN guessed) | 5 wrong PIN → 5min lockout + parent push notification |
+| Inappropriate kid prompt | → [`safety-prompt-firewall-prd.md`](./safety-prompt-firewall-prd.md) |
+| Inappropriate AI output | → [`safety-response-moderation-prd.md`](./safety-response-moderation-prd.md) |
+| Prompt injection | → [`safety-prompt-firewall-prd.md`](./safety-prompt-firewall-prd.md) §3.4 / §3.5 |
+| Personal info leak | → [`safety-pii-protection-prd.md`](./safety-pii-protection-prd.md) |
+| Class wall harassment | → [`class-wall-moderation-prd.md`](./class-wall-moderation-prd.md) + [`learn-classroom-prd.md`](./learn-classroom-prd.md) §6 |
+| Cap circumvention | Server enforces in `/llm/*` proxy (wallet check before firewall); client UI is a cooperative copy of state |
+| Account compromise (kid PIN guessed) | 5 wrong PIN → 5min lockout + parent push notification (see `auth-system-prd.md`) |
 | Time-bombing | Sessions auto-expire on inactivity (30min); idle warning at 25min |
 
 ---
