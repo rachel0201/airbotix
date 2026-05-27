@@ -2,119 +2,153 @@
 
 ## 概述
 
-产品文档包含所有与产品需求、功能规格、用户故事、验收标准相关的业务文档。
+产品文档包含所有与产品需求、功能规格、竞品调研、合规策略相关的业务文档。
 
 ## 📁 目录结构
 
+> 图例：正常条目 = 文件/目录已存在；`← ⚠️ 待创建` = 规划中但尚未落地，后续按需补充。
+
 ```
 product/
-├── README.md              # 本文件 - 产品文档概览
-├── prd/                   # 产品需求文档
-│   ├── README.md         # PRD 概览
-│   ├── teacher-auth/     # 教师认证系统 PRD
-│   ├── super-admin/      # 超级管理系统 PRD
-│   └── workshop-mgmt/    # 工作坊管理 PRD
-├── specs/                # 功能规格说明
-│   ├── README.md         # 规格概览
-│   ├── mvp/              # MVP 规格
-│   ├── features/         # 功能规格
-│   └── integrations/     # 集成规格
-├── user-stories/         # 用户故事
-│   ├── README.md         # 用户故事概览
-│   ├── teacher/          # 教师用户故事
-│   ├── admin/            # 管理员用户故事
-│   └── student/          # 学生用户故事
-└── acceptance-criteria/  # 验收标准
-    ├── README.md         # 验收标准概览
-    ├── functional/       # 功能验收标准
-    ├── performance/      # 性能验收标准
-    └── security/         # 安全验收标准
+├── README.md                        # 本文件 - 产品文档概览
+├── compliance/                      # 合规文档
+│   └── minors-compliance.md         # C1–C15 未成年人合规清单（AU 法规对齐）
+├── prd/                             # 产品需求文档（24 份活跃 PRD）
+│   ├── README.md                    # PRD 总索引（分类导航）
+│   │
+│   │── 平台主线 ──────────────────────────────────────────────
+│   ├── kids-ai-platform-prd.md      # 平台总 PRD（6–11 创作 + 12+ Line B）
+│   ├── kids-opencode-client-prd.md  # 桌面客户端 PRD（V1+ power-user）
+│   ├── kids-opencode-spec.md        # 桌面客户端技术 spec（部分 stale）
+│   │
+│   │── Kid surface (app.airbotix.ai/learn/*) ─────────────────
+│   ├── airbotix-app-learn-prd.md    # /learn/* SPA 总 PRD
+│   ├── learn-classroom-prd.md       # /learn/classroom/* Class Wall
+│   ├── learn-missions-prd.md        # /learn/missions/* 任务页
+│   ├── learn-projects-prd.md        # /learn/projects/* 我的作品
+│   ├── learn-code-studio-prd.md     # /learn/create/code Code Studio（Line B Web）
+│   ├── class-wall-moderation-prd.md # UGC 审核
+│   │
+│   │── Parent surface (app.airbotix.ai/portal/*) ──────────────
+│   ├── parent-portal-prd.md         # /portal/* 家长端
+│   │
+│   │── Operator console (teacher.airbotix.ai) ─────────────────
+│   ├── teacher-console-prd.md       # Teacher + Admin + Super-Admin console
+│   ├── super-admin-prd.md           # /admin/system/* 深规格
+│   ├── teacher-employment-prd.md    # 合同教师生命周期
+│   │
+│   │── B2B (teacher.airbotix.ai/school/*) ─────────────────────
+│   ├── institution-prd.md           # 学校/机构层（V1 = 首份签约触发）
+│   │
+│   │── 合规 / 安全 / 跨切面 ──────────────────────────────────
+│   ├── incidents-and-mandatory-reporting-prd.md
+│   ├── safety-age-policy-prd.md     # SafetyPolicy 基础（其余 safety PRD 的根）
+│   ├── safety-prompt-firewall-prd.md
+│   ├── safety-response-moderation-prd.md
+│   ├── safety-pii-protection-prd.md
+│   │
+│   │── Platform infrastructure ─────────────────────────────────
+│   ├── platform-backend-api-spec.md # NestJS API + Prisma schema
+│   ├── auth-system-prd.md           # JWT + OTP + PIN + TOTP
+│   ├── audit-event-schema-prd.md    # 跨产品审计事件 schema
+│   │
+│   │── Course Pack ────────────────────────────────────────────
+│   ├── coursepack-ai-pet-lab-prd.md # AI Pet Lab v1（V0 启动课 / PRD 模板）
+│   │
+│   │── Marketing & infra ──────────────────────────────────────
+│   ├── marketing-site-refresh-prd.md
+│   ├── deeprouter-prd.md            # LLM gateway PRD（sibling repo）
+│   ├── deeprouter-coupling-plan.md  # Airbotix ↔ DeepRouter 耦合策略
+│   │
+│   └── _archived/                   # 已下线历史 PRD（仅供追溯，不再维护）
+│       ├── super-admin-mangement-system-prd.md
+│       ├── super-admin-workshop-management-system-prd.md
+│       └── teacher-auth-system-prd.md
+│
+├── research/                        # 竞品与技术调研
+│   ├── README.md
+│   ├── building-blocks-reference.md
+│   ├── cognimates-reference.md
+│   ├── day-of-ai-reference.md
+│   ├── livecodes-spike.md
+│   └── taxinomitis-reference.md
+│
+└── specs/                           # 功能规格说明
+    ├── README.md                    ← ⚠️ 待创建（规格概览）
+    ├── mvp_docs.md
+    ├── mvp/                         ← ⚠️ 待创建
+    ├── features/                    ← ⚠️ 待创建
+    └── integrations/                ← ⚠️ 待创建
 ```
+
+> 以下目录在原规划中存在，尚未落地：
+> - `user-stories/` ← ⚠️ 待创建（teacher / admin / student / parent 用户故事）
+> - `acceptance-criteria/` ← ⚠️ 待创建（functional / performance / security 验收标准）
 
 ## 🎯 文档类型
 
 ### PRD (Product Requirements Document)
 - **目的**: 定义产品功能和业务需求
 - **受众**: 产品经理、开发团队、设计师
-- **内容**: 功能描述、用户流程、技术需求
+- **内容**: 功能描述、用户流程、技术需求、决策记录（D-XX1…）
 
-### 功能规格说明
+### 竞品 & 技术调研
+- **目的**: 评估竞品、验证技术方案可行性
+- **受众**: 产品团队、架构师
+- **内容**: 竞品分析、技术 spike 报告
+
+### 合规文档
+- **目的**: 追踪 AU 法规（Privacy Act / Online Safety Act / Mandatory Notifiers）合规状态
+- **受众**: 产品、法务、工程
+- **内容**: 合规清单（C1–C18）、风险评估
+
+### 功能规格说明（specs/）
 - **目的**: 详细描述功能实现规格
 - **受众**: 开发团队、测试团队
-- **内容**: 技术实现、接口定义、数据模型
-
-### 用户故事
-- **目的**: 从用户角度描述功能需求
-- **受众**: 产品团队、开发团队
-- **内容**: 用户角色、使用场景、期望结果
-
-### 验收标准
-- **目的**: 定义功能完成的判断标准
-- **受众**: 开发团队、测试团队、产品团队
-- **内容**: 功能标准、性能标准、质量标准
+- **内容**: 接口定义、数据模型、业务规则
 
 ## 📚 核心概念
 
 ### 用户角色定义
-- **教师**: 使用系统进行教学管理
-- **管理员**: 管理用户和系统配置
-- **超级管理员**: 系统最高权限管理
-- **学生**: 参与工作坊学习
+- **Kid（6–11 岁）**: /learn/* 创作平台（AI Pet Lab、Code Studio、Class Wall）
+- **Kid Line B（12+ 岁）**: /learn/create/code Code Studio（Web hosted-first；V1+ 桌面 kids-opencode）
+- **Parent / 监护人**: /portal/* 家庭钱包、用量统计、设置
+- **Teacher**: teacher.airbotix.ai 班级管理、课程分配、实时监控
+- **School Admin**: /school/* B2B 学校管理（V1 = 首份机构签约触发）
+- **Super Admin**: /admin/system/* 系统配置、模型注册表、审计
 
-### 功能模块
-- **认证系统**: 用户登录、注册、权限管理
-- **工作坊管理**: 工作坊创建、编辑、发布
-- **用户管理**: 用户信息、角色分配
-- **内容管理**: 教学资源、媒体文件
-- **数据统计**: 使用情况、性能指标
+### 平台模块（platform-backend）
+- **Auth**: JWT + Refresh + OTP + Kid PIN + Class Code + TOTP
+- **Family / Wallet**: 家庭账户、Airwallex 充值、自动续充、用量统计
+- **Course Pack**: 课程内容、Mission、Stars 激励
+- **Class / Teacher Employment**: 班级管理、合同教师薪酬
+- **Safety Pipeline**: Prompt Firewall → Response Moderation → PII Protection
+- **Audit**: append-only 审计事件（`AuditEvent` 表）
+- **Incident**: 端到端事件 + 法定报告（AU Online Safety Act）
 
-### 业务流程
-- **用户注册**: 邮箱验证码注册流程
-- **工作坊创建**: 从草稿到发布的完整流程
-- **权限管理**: 基于角色的访问控制
-- **数据同步**: 前后端数据一致性
-
-## 🔧 文档编写指南
-
-### PRD 编写
-1. 明确产品目标和用户需求
-2. 定义功能范围和优先级
-3. 描述用户流程和交互
-4. 列出技术要求和约束
-5. 定义成功指标和验收标准
-
-### 用户故事编写
-1. 确定用户角色和使用场景
-2. 描述用户目标和期望结果
-3. 定义验收条件和测试场景
-4. 评估故事复杂度和优先级
-5. 关联相关技术任务
-
-### 验收标准编写
-1. 定义功能完成的标准
-2. 设置性能和质量指标
-3. 明确测试方法和工具
-4. 建立验收流程和责任人
-5. 定期更新和审查标准
+### LLM 流量
+- 所有 LLM 请求必须经 **DeepRouter `/v1`**（OpenAI-compatible），不得直接调用上游模型
 
 ## 📖 相关文档
 
-- [PRD 文档](./prd/README.md)
-- [功能规格](./specs/README.md)
-- [用户故事](./user-stories/README.md)
-- [验收标准](./acceptance-criteria/README.md)
+- [PRD 总索引](./prd/README.md)
+- [未成年人合规清单](./compliance/minors-compliance.md)
+- [竞品与技术调研](./research/README.md)
+- [功能规格](./specs/README.md) ← ⚠️ 待创建
+- [用户故事](./user-stories/README.md) ← ⚠️ 待创建
+- [验收标准](./acceptance-criteria/README.md) ← ⚠️ 待创建
 
 ## 🤖 AI 助手提示
 
 当 AI 助手需要了解产品相关功能时，请参考：
 
-1. **功能需求**: 查看 `prd/` 目录下的产品需求文档
-2. **技术规格**: 查看 `specs/` 目录下的功能规格说明
-3. **用户场景**: 查看 `user-stories/` 目录下的用户故事
-4. **质量标准**: 查看 `acceptance-criteria/` 目录下的验收标准
-5. **业务流程**: 结合多个文档了解完整业务流程
+1. **平台全貌**: `prd/kids-ai-platform-prd.md`（总 PRD，优先阅读）
+2. **具体子产品**: 对应子 PRD（见上方目录树）
+3. **API + 数据模型**: `prd/platform-backend-api-spec.md`
+4. **安全 / 合规**: `safety-*-prd.md` 系列 + `compliance/minors-compliance.md`
+5. **竞品参考**: `research/` 目录下各 reference 文件
 
 ---
 
 **维护团队**: Airbotix 产品团队  
-**最后更新**: 2025-01-15
+**最后更新**: 2026-05-27

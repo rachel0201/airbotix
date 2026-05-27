@@ -4,79 +4,112 @@
 
 ## 📚 文档结构
 
+> 图例：正常条目 = 文件/目录已存在；`← ⚠️ 待创建` = 目录规划中但尚未落地，后续按需补充。
+
 ```
 docs/
-├── README.md                    # 本文件 - 文档概览
-├── frontend/                    # 前端文档
-│   ├── README.md               # 前端文档概览
-│   ├── components/             # 组件文档
-│   ├── pages/                  # 页面文档
-│   ├── hooks/                  # Hooks 文档
-│   ├── services/               # 前端服务文档
-│   ├── types/                  # 类型定义文档
-│   └── utils/                  # 工具函数文档
-├── backend/                     # 后端文档
-│   ├── README.md               # 后端文档概览
-│   ├── api/                    # API 文档
-│   ├── database/               # 数据库文档
-│   ├── auth/                   # 认证系统文档
-│   ├── services/               # 业务服务文档
-│   └── middleware/             # 中间件文档
-├── product/                     # 产品文档
-│   ├── README.md               # 产品文档概览
-│   ├── prd/                    # 产品需求文档
-│   ├── specs/                  # 功能规格说明
-│   ├── user-stories/           # 用户故事
-│   └── acceptance-criteria/    # 验收标准
-├── infrastructure/              # 基础设施文档
-│   ├── README.md               # 基础设施文档概览
-│   ├── deployment/             # 部署文档
-│   ├── monitoring/             # 监控文档
-│   ├── security/               # 安全文档
-│   └── ci-cd/                  # CI/CD 文档
-└── ai/                         # AI 助手文档
-    ├── README.md               # AI 助手文档概览
-    ├── prompts/                # 提示词模板
-    ├── context/                # 上下文管理
-    ├── guidelines/             # AI 使用指南
-    └── examples/               # 示例和模板
+├── README.md                         # 本文件 - 文档概览
+├── ai/                               # AI 助手文档
+│   ├── README.md
+│   ├── install-kids-hosting.md       # Kids 本地托管安装指南
+│   ├── context/                      # AI 上下文文件
+│   │   ├── coding-standards.md
+│   │   ├── project-overview.md
+│   │   └── tech-stack.md
+│   ├── prompts/                      ← ⚠️ 待创建（提示词模板库）
+│   ├── guidelines/                   ← ⚠️ 待创建（AI 使用指南）
+│   └── examples/                     ← ⚠️ 待创建（示例与模板）
+├── backend/                          # 后端文档
+│   ├── README.md                     ← ⚠️ 待创建（后端文档概览）
+│   ├── api/
+│   │   ├── README.md
+│   │   └── teacher-auth-api.md
+│   ├── database/
+│   │   └── README.md
+│   ├── auth/                         ← ⚠️ 待创建（JWT / OTP / TOTP 认证）
+│   ├── services/                     ← ⚠️ 待创建（业务服务文档）
+│   └── middleware/                   ← ⚠️ 待创建（中间件文档）
+├── frontend/                         # 前端文档
+│   ├── README.md
+│   ├── components/                   ← ⚠️ 待创建（组件文档）
+│   ├── pages/                        ← ⚠️ 待创建（页面文档）
+│   ├── hooks/                        ← ⚠️ 待创建（自定义 Hooks）
+│   ├── services/                     ← ⚠️ 待创建（前端服务文档）
+│   ├── types/                        ← ⚠️ 待创建（TypeScript 类型文档）
+│   └── utils/                        ← ⚠️ 待创建（工具函数文档）
+├── infrastructure/                   # 基础设施文档
+│   ├── README.md
+│   ├── install-endpoint.md           # 端点安装部署指南
+│   ├── deployment/                   ← ⚠️ 待创建（S3 + CloudFront / EC2 部署）
+│   ├── monitoring/                   ← ⚠️ 待创建（系统监控与日志）
+│   ├── security/                     ← ⚠️ 待创建（安全策略配置）
+│   └── ci-cd/                        ← ⚠️ 待创建（GitHub Actions CI/CD）
+├── legal/                            # 法律合规文档
+│   ├── compliance-statement.md
+│   ├── parental-consent.md
+│   ├── privacy-policy.md
+│   └── terms-of-service.md
+└── product/                          # 产品文档（详见 product/README.md）
+    ├── README.md
+    ├── compliance/
+    │   └── minors-compliance.md      # C1–C15 未成年人合规清单
+    ├── prd/                          # 活跃 PRD（24 份 + _archived/）
+    │   └── README.md                 # PRD 总索引
+    ├── research/                     # 竞品与技术调研
+    │   └── README.md
+    └── specs/
+        ├── README.md                 ← ⚠️ 待创建（规格概览）
+        ├── mvp_docs.md
+        ├── mvp/                      ← ⚠️ 待创建
+        ├── features/                 ← ⚠️ 待创建
+        └── integrations/             ← ⚠️ 待创建
 ```
 
 ## 🚀 快速导航
 
 ### 前端开发
-- [前端文档概览](./frontend/README.md) - 前端技术文档和指南
-- [组件库文档](./frontend/components/README.md) - 可复用组件文档
-- [页面文档](./frontend/pages/README.md) - 页面组件文档
-- [Hooks 文档](./frontend/hooks/README.md) - 自定义 Hooks 文档
-- [服务文档](./frontend/services/README.md) - 前端服务文档
+- [前端文档概览](./frontend/README.md)
+- [组件库文档](./frontend/components/README.md) ← ⚠️ 待创建
+- [页面文档](./frontend/pages/README.md) ← ⚠️ 待创建
+- [Hooks 文档](./frontend/hooks/README.md) ← ⚠️ 待创建
+- [服务文档](./frontend/services/README.md) ← ⚠️ 待创建
 
 ### 后端开发
-- [后端文档概览](./backend/README.md) - 后端技术文档和指南
-- [API 文档](./backend/api/README.md) - 后端 API 文档
-- [数据库文档](./backend/database/README.md) - 数据库设计和操作
-- [认证系统](./backend/auth/README.md) - 用户认证和授权
-- [业务服务](./backend/services/README.md) - 业务逻辑服务
+- [后端文档概览](./backend/README.md) ← ⚠️ 待创建
+- [API 文档](./backend/api/README.md)
+- [数据库文档](./backend/database/README.md)
+- [认证系统](./backend/auth/README.md) ← ⚠️ 待创建
+- [业务服务](./backend/services/README.md) ← ⚠️ 待创建
 
 ### 产品管理
-- [产品文档概览](./product/README.md) - 产品需求和规格文档
-- [产品需求文档](./product/prd/README.md) - PRD 文档集合
-- [功能规格](./product/specs/README.md) - 功能规格说明
-- [用户故事](./product/user-stories/README.md) - 用户故事和场景
-- [验收标准](./product/acceptance-criteria/README.md) - 功能验收标准
+- [产品文档概览](./product/README.md)
+- [产品需求文档](./product/prd/README.md)
+- [未成年人合规](./product/compliance/minors-compliance.md)
+- [竞品与技术调研](./product/research/README.md)
+- [功能规格](./product/specs/README.md) ← ⚠️ 待创建
+- [用户故事](./product/user-stories/README.md) ← ⚠️ 待创建
+- [验收标准](./product/acceptance-criteria/README.md) ← ⚠️ 待创建
 
 ### 基础设施
-- [基础设施文档概览](./infrastructure/README.md) - 部署和运维文档
-- [部署文档](./infrastructure/deployment/README.md) - 应用部署指南
-- [监控文档](./infrastructure/monitoring/README.md) - 系统监控和日志
-- [安全文档](./infrastructure/security/README.md) - 安全策略和配置
-- [CI/CD 文档](./infrastructure/ci-cd/README.md) - 持续集成和部署
+- [基础设施文档概览](./infrastructure/README.md)
+- [端点安装指南](./infrastructure/install-endpoint.md)
+- [部署文档](./infrastructure/deployment/README.md) ← ⚠️ 待创建
+- [监控文档](./infrastructure/monitoring/README.md) ← ⚠️ 待创建
+- [安全文档](./infrastructure/security/README.md) ← ⚠️ 待创建
+- [CI/CD 文档](./infrastructure/ci-cd/README.md) ← ⚠️ 待创建
+
+### 法律合规
+- [合规声明](./legal/compliance-statement.md)
+- [家长同意书](./legal/parental-consent.md)
+- [隐私政策](./legal/privacy-policy.md)
+- [服务条款](./legal/terms-of-service.md)
 
 ### AI 助手
-- [AI 助手文档概览](./ai/README.md) - AI 编程助手使用指南
-- [项目上下文](./ai/context/project-overview.md) - 项目整体概览
-- [技术栈详解](./ai/context/tech-stack.md) - 技术选型和架构
-- [编码标准](./ai/context/coding-standards.md) - 代码规范和最佳实践
+- [AI 助手文档概览](./ai/README.md)
+- [项目上下文](./ai/context/project-overview.md)
+- [技术栈详解](./ai/context/tech-stack.md)
+- [编码标准](./ai/context/coding-standards.md)
+- [Kids 本地托管安装](./ai/install-kids-hosting.md)
 
 ## 🎯 项目目标
 
@@ -90,26 +123,31 @@ Airbotix 项目旨在：
 
 ## 🛠️ 技术栈
 
-### 前端技术
+> 以下为锁定技术栈（2026-05-14 确认，详见 `CLAUDE.md`）。
+
+### 前端技术（各端统一）
 - **框架**: React 18 + TypeScript + Vite
-- **样式**: TailwindCSS + 自定义设计系统
+- **样式**: TailwindCSS + Airbotix K-12 设计系统
 - **路由**: React Router v6
-- **状态管理**: React Context + useReducer
-- **HTTP 客户端**: Axios
 
 ### 后端技术
-- **运行时**: Node.js 18+ + Express.js
-- **数据库**: MongoDB + Mongoose
-- **认证**: JWT + bcrypt
-- **邮件**: Nodemailer + SendGrid
-- **缓存**: Redis
+- **框架**: NestJS + TypeScript
+- **ORM**: Prisma
+- **数据库**: Neon Serverless Postgres（`aws-ap-southeast-2`）
+- **认证**: JWT(15min) + Refresh Token(30d rotating) + Email OTP + Kid PIN + TOTP（自建，无 Supabase）
+- **邮件**: SendGrid
+- **对象存储**: AWS S3（ap-southeast-2 Sydney）
+- **实时通信**: WebSocket（NestJS Gateway）
 
-### 部署和运维
-- **容器化**: Docker
-- **云平台**: AWS / 阿里云
-- **CDN**: CloudFlare
-- **监控**: Winston + ELK Stack
-- **CI/CD**: GitHub Actions
+### 部署与运维
+- **营销站**: GitHub Pages（`airbotix.ai`）
+- **前端 SPA**: AWS S3 + CloudFront（Sydney，`app.airbotix.ai` / `teacher.airbotix.ai`）
+- **后端 API**: AWS EC2 t3.small + Docker Compose + nginx + Let's Encrypt（`api.airbotix.ai`）
+- **DNS / DDoS**: Cloudflare DNS
+- **支付**: Airwallex（AUD 本地 + 跨境 FX，**非** Stripe）
+- **LLM 网关**: DeepRouter `/v1`（sibling repo，OpenAI 兼容）
+
+> ❌ 禁止引入：Supabase、Stripe、Fly.io、Vercel、Cloudflare Pages
 
 ## 📖 如何使用文档
 
@@ -122,7 +160,7 @@ Airbotix 项目旨在：
 ### 开发贡献
 1. 查看 [开发规范](../rules/README.md) 了解代码标准
 2. 阅读相关技术文档了解实现细节
-3. 遵循 [Git 工作流](../rules/git-workflow.md) 进行代码提交
+3. 遵循 Conventional Commits 进行代码提交（`../rules/git-workflow.md` ← ⚠️ 待创建）
 4. 编写测试用例确保代码质量
 
 ### AI 助手使用
@@ -140,25 +178,7 @@ Airbotix 项目旨在：
 - **包含示例** - 提供代码示例和实际案例
 - **获取反馈** - 请团队成员审查文档变更
 
-## 📞 需要帮助？
-
-- **技术问题**: 查看相关技术文档或联系开发团队
-- **产品问题**: 查看产品文档或联系产品团队
-- **部署问题**: 查看基础设施文档或联系运维团队
-- **建议改进**: 欢迎提出文档改进建议！
-
-## 🎉 贡献文档
-
-我们鼓励所有团队成员贡献文档：
-
-1. **发现不清楚的地方？** - 更新并提交 PR
-2. **添加了新功能？** - 在这里记录它
-3. **解决了棘手问题？** - 添加到相关文档
-4. **有好的示例？** - 在相关章节中包含它们
-
 ---
 
-**最后更新**: 2025-01-15  
+**最后更新**: 2026-05-27  
 **维护团队**: Airbotix 开发团队
-
-*Happy coding! 🚀*
